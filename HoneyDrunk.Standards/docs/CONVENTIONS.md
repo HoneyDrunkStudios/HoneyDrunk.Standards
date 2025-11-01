@@ -373,7 +373,7 @@ public sealed record EmailAddress(string Value)
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Email cannot be empty", nameof(value));
         if (!value.Contains('@'))
-      throw new ArgumentException("Invalid email format", nameof(value));
+            throw new ArgumentException("Invalid email format", nameof(value));
     }
 }
 

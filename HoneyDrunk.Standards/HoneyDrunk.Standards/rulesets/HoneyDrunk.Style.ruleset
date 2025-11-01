@@ -570,7 +570,7 @@
     <Rule Id="SA1625" Action="Warning" /> <!-- Element documentation should not be copied and pasted -->
     <Rule Id="SA1626" Action="Warning" /> <!-- Single-line comments should not use documentation style slashes -->
     <Rule Id="SA1627" Action="Warning" /> <!-- Documentation text should not be empty -->
-    <Rule Id="SA1628" Action="None" /><!-- Documentation text should begin with a capital letter (deprecated) -->
+    <Rule Id="SA1628" Action="None" /> <!-- Documentation text should begin with a capital letter (deprecated) -->
     <Rule Id="SA1629" Action="Warning" /> <!-- Documentation text should end with a period -->
     <Rule Id="SA1630" Action="None" />    <!-- Documentation text should contain whitespace (deprecated) -->
     <Rule Id="SA1631" Action="None" />    <!-- Documentation should meet character percentage (deprecated) -->

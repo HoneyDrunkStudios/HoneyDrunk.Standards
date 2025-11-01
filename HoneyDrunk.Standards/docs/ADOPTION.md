@@ -137,9 +137,9 @@ All HoneyDrunk.Standards behavior can be customized via MSBuild properties.
 **Use Case:** Targeted suppression of specific rules without disabling entire analyzer packages.
 
 **Example Rules to Consider Suppressing:**
-- `CA1062` — Validate arguments of public methods (can be noisy with nullable enabled)
-- `SA1101` — Prefix local calls with `this` (conflicts with modern C# style)
-- `SA1633` — File should have header (if you don't use file headers)
+- `CA1062` â€” Validate arguments of public methods (can be noisy with nullable enabled)
+- `SA1101` â€” Prefix local calls with `this` (conflicts with modern C# style)
+- `SA1633` â€” File should have header (if you don't use file headers)
 
 ### Combining Customizations
 
@@ -276,7 +276,7 @@ This is informational. Either:
 **Symptoms:** Conflicting formatting or style rules.
 
 **Solution:**
-1. HoneyDrunk.Standards' `.editorconfig` has `root = true` — it wins by default
+1. HoneyDrunk.Standards' `.editorconfig` has `root = true` â€” it wins by default
 2. To use your own root config, suppress the package's config:
    ```xml
    <ItemGroup>
@@ -342,6 +342,6 @@ MSBuild properties are evaluated in this order (last wins):
 - **Bugs:** File an [issue](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues)
 - **Rule Changes:** Submit a [pull request](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/pulls) with rationale
 
----
-
 **Next Steps:** Review [CONVENTIONS.md](./CONVENTIONS.md) for HoneyDrunk coding standards and architectural guidelines.
+
+---

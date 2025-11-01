@@ -1,9 +1,45 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Package Metadata -->
+    <PackageId>HoneyDrunk.Standards</PackageId>
+    <Authors>HoneyDrunk Studios</Authors>
+    <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
+    <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+    <!-- Package Configuration -->
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    
+    <!-- No runtime assets, build-time only -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
+
+  <!-- Include buildTransitive content in package -->
+  <ItemGroup>
+    <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
+    <None Include=".editorconfig" Pack="true" PackagePath="contentFiles\any\any\" />
+    <None Include="stylecop.json" Pack="true" PackagePath="contentFiles\any\any\" />
+    <None Include="rulesets\**\*" Pack="true" PackagePath="contentFiles\any\any\rulesets\" />
+  </ItemGroup>
+
+  <!-- Analyzer Dependencies (PrivateAssets=all so consumers don't see transitive deps) -->
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="all" GeneratePathProperty="true">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

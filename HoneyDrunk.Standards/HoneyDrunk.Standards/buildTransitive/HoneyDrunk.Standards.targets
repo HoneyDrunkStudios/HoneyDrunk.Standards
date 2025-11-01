@@ -1,0 +1,39 @@
+<!--
+  HoneyDrunk.Standards - Build Transitive Targets
+  Runtime validation and guardrails for consuming projects.
+-->
+<Project>
+
+  <!-- ============================================
+       SDK Version Validation
+       ============================================ -->
+  <Target Name="HD_ValidateSdkVersion" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <_NetCoreSdkVersion>$(NETCoreSdkVersion)</_NetCoreSdkVersion>
+      <_NetCoreSdkMajorVersion>$(_NetCoreSdkVersion.Split('.')[0])</_NetCoreSdkMajorVersion>
+    </PropertyGroup>
+    
+    <Error
+      Condition="'$(_NetCoreSdkMajorVersion)' != '' AND $(_NetCoreSdkMajorVersion) &lt; 8"
+      Text="HoneyDrunk.Standards requires .NET SDK 8.0 or higher. Current: $(_NetCoreSdkVersion). Please upgrade your SDK." />
+  </Target>
+
+  <!-- ============================================
+       SourceLink / CI Build Validation
+       ============================================ -->
+  <Target Name="HD_ValidateSourceLinkConfiguration" BeforeTargets="BeforeBuild">
+    <Warning
+      Condition="'$(PublishRepositoryUrl)' == '' AND '$(ContinuousIntegrationBuild)' == 'true'"
+      Text="PublishRepositoryUrl is not set. Consider adding HoneyDrunk.Build for automatic SourceLink configuration." />
+  </Target>
+
+  <!-- ============================================
+       Analyzer Toggle Enforcement
+       ============================================ -->
+  <Target Name="HD_ReportAnalyzerStatus" BeforeTargets="CoreCompile" Condition="'$(HD_EnableAnalyzers)' == 'false'">
+    <Message
+      Importance="high"
+      Text="HoneyDrunk.Standards analyzers are DISABLED via HD_EnableAnalyzers=false. Code quality checks will not run." />
+  </Target>
+
+</Project>

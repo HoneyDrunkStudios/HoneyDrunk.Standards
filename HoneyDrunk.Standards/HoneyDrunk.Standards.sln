@@ -1,9 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11123.170 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoneyDrunk.Standards", "HoneyDrunk.Standards\HoneyDrunk.Standards.csproj", "{DBFD3569-1BA4-4797-9636-68DA137F78FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consumer.Sample", "Consumer.Sample\Consumer.Sample.csproj", "{4BEDEBF9-4DC7-482C-B504-E5D82E975EEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{84FD8CE8-BB9D-4D1E-AC32-2CA975C22984}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ADOPTION.md = docs\ADOPTION.md
+		docs\CONVENTIONS.md = docs\CONVENTIONS.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,10 @@ Global
 		{DBFD3569-1BA4-4797-9636-68DA137F78FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBFD3569-1BA4-4797-9636-68DA137F78FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBFD3569-1BA4-4797-9636-68DA137F78FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BEDEBF9-4DC7-482C-B504-E5D82E975EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BEDEBF9-4DC7-482C-B504-E5D82E975EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BEDEBF9-4DC7-482C-B504-E5D82E975EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BEDEBF9-4DC7-482C-B504-E5D82E975EEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -122,7 +122,7 @@
     <Rule Id="CA1012" Action="Warning" /> <!-- Abstract types should not have constructors -->
     <Rule Id="CA1014" Action="None" />    <!-- Mark assemblies with CLSCompliant (opt-in) -->
     <Rule Id="CA1016" Action="Warning" /> <!-- Mark assemblies with AssemblyVersionAttribute -->
-    <Rule Id="CA1017" Action="None" />  <!-- Mark assemblies with ComVisibleAttribute (legacy) -->
+    <Rule Id="CA1017" Action="None" /> <!-- Mark assemblies with ComVisibleAttribute (legacy) -->
     <Rule Id="CA1018" Action="Warning" /> <!-- Mark attributes with AttributeUsageAttribute -->
     <Rule Id="CA1019" Action="Warning" /> <!-- Define accessors for attribute arguments -->
     <Rule Id="CA1021" Action="Warning" /> <!-- Avoid out parameters -->

@@ -446,7 +446,7 @@ public async Task ProcessOrdersAsync(CancellationToken cancellationToken)
     
     foreach (var order in orders)
     {
-    await ProcessOrderAsync(order, cancellationToken);
+        await ProcessOrderAsync(order, cancellationToken);
     }
 }
 ```

@@ -164,7 +164,7 @@
 
     <!-- CA1200-CA1299: Documentation rules -->
     <!-- Rationale: CA1303 disabled - localization not required for internal tools -->
-    <Rule Id="CA1303" Action="None" />  <!-- Do not pass literals as localized parameters -->
+    <Rule Id="CA1303" Action="None" /> <!-- Do not pass literals as localized parameters -->
 
     <!-- CA1304-CA1310: Globalization rules -->
     <Rule Id="CA1304" Action="Warning" /> <!-- Specify CultureInfo -->

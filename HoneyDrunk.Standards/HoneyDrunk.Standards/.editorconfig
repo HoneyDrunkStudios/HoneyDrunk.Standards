@@ -76,7 +76,8 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_conditional_delegate_call = true:warning
 csharp_style_prefer_null_check_over_type_check = true:suggestion
 
-# Code block preferences - Minimize braces
+# Code block preferences - Minimize braces (single-line statements allowed without braces)
+# Aligns with SA1503=None in ruleset. Use braces only for multi-line blocks.
 csharp_prefer_braces = when_multiline:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 

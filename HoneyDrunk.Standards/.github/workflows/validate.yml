@@ -20,16 +20,15 @@ jobs:
         with:
           dotnet-version: 9.0.x
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore HoneyDrunk.Standards.sln
       - name: Build solution
         run: >-
-          dotnet build -c Release --no-restore
+          dotnet build HoneyDrunk.Standards.sln -c Release --no-restore
           /p:ContinuousIntegrationBuild=true /p:TreatWarningsAsErrors=true
       - name: Pack HoneyDrunk.Standards
         run: >-
           dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c
-          Release --no-build -o ./artifacts /p:IncludeSymbols=true
-          /p:SymbolPackageFormat=snupkg /p:ContinuousIntegrationBuild=true
+          Release --no-build -o ./artifacts /p:ContinuousIntegrationBuild=true
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -37,10 +36,3 @@ jobs:
           path: ./artifacts/*.nupkg
           retention-days: 30
           if-no-files-found: error
-      - name: Upload symbol packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: standards-symbols
-          path: ./artifacts/*.snupkg
-          retention-days: 30
-          if-no-files-found: warn

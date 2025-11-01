@@ -122,73 +122,64 @@ public interface ILogger
 // INTENTIONAL VIOLATIONS (COMMENTED OUT)
 // Uncomment these to see analyzer warnings
 // ============================================
+/// <summary>
+/// Example class with intentional violations for testing.
+/// </summary>
+//public class ViolationDemo
+//{
+//    // ❌ CA1051: Do not declare visible instance fields
+//    public string PublicField = string.Empty;
+//    // ❌ CA1822: Member can be made static
+//    public string GetConstantValue() { return "constant"; }
+//    // ❌ CA1031: Do not catch general exception types (in business logic)
+//    public void CatchAllExceptions()
+//    {
+//        try
+//        {
+//            throw new InvalidOperationException();
+//        }
+//        catch (Exception)
+//        {
+//            // Should catch specific exceptions
+//        }
+//    }
+//    // ❌ CA1849: Call async methods when in an async method
+//    public async Task BadAsyncPattern()
+//    {
+//        Task.Delay(100).Wait(); // Should use await
+//    }
+//    // ❌ CA2007: ConfigureAwait(disabled in our rules, but shown for reference)
+//    public async Task MissingConfigureAwait()
+//    {
+//        await Task.Delay(100); // In library code, might want ConfigureAwait(false)
+//    }
 
-/*
-/ <summary>
-/ Example class with intentional violations for testing.
-/ </summary>
-public class ViolationDemo
-{
-  ❌ CA1051: Do not declare visible instance fields
-    public string PublicField = string.Empty;
+//    // ❌ IDE0161: Use file-scoped namespace
+//    // This file uses file-scoped namespace, but block-scoped would trigger
+//    // warning
 
-     ❌ CA1822: Member can be made static
-    public string GetConstantValue()
-    {
-     return "constant";
-    }
+//    // ❌ CA2227: Collection properties should be read only
+//    public List<string> MutableCollection { get; set; } = new();
 
-     ❌ CA1031: Do not catch general exception types (in business logic)
-    public void CatchAllExceptions()
-    {
-        try
-        {
-   throw new InvalidOperationException();
-        }
-        catch (Exception)
-        {
-       Should catch specific exceptions
-        }
-    }
+//    //  ❌ CA1062: Validate arguments of public methods
+//    public void NoNullCheck(string value)
+//    {
+//        Console.WriteLine(value.Length); // Missing null check
+//    }
 
-     ❌ CA1849: Call async methods when in an async method
-    public async Task BadAsyncPattern()
-    {
-        Task.Delay(100).Wait(); // Should use await
-    }
+//    // ❌ CA2000: Dispose objects before losing scope
+//    public void MissingDispose()
+//    {
+//        var stream = new MemoryStream();
+//        // Missing using or Dispose call
+//    }
+//}
 
-  ❌ CA2007: ConfigureAwait (disabled in our rules, but shown for reference)
-    public async Task MissingConfigureAwait()
-    {
-   await Task.Delay(100); // In library code, might want ConfigureAwait(false)
-    }
+//❌ SA1649: File name should match first type name
+//If this file was named differently, StyleCop would warn
 
-     ❌ IDE0161: Use file-scoped namespace
-  This file uses file-scoped namespace, but block-scoped would trigger warning
+//❌ SA1633: File should have header
+//We've disabled this rule, but if enabled, would require copyright header
 
-     ❌ CA2227: Collection properties should be read only
-    public List<string> MutableCollection { get; set; } = new();
-
-     ❌ CA1062: Validate arguments of public methods
-    public void NoNullCheck(string value)
-    {
-        Console.WriteLine(value.Length); // Missing null check
-    }
-
-     ❌ CA2000: Dispose objects before losing scope
-    public void MissingDispose()
-    {
-        var stream = new MemoryStream();
-      Missing using or Dispose call
-    }
-}
-
- ❌ SA1649: File name should match first type name
- If this file was named differently, StyleCop would warn
-
- ❌ SA1633: File should have header
- We've disabled this rule, but if enabled, would require copyright header
-
- ❌ IDE0005: Remove unnecessary using directives
- using System.Linq; // If unused, would trigger warning
-*/
+//❌ IDE0005: Remove unnecessary using directives
+//using System.Linq; // If unused, would trigger warning

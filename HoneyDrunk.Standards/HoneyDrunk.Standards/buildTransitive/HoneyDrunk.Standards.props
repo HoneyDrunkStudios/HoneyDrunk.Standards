@@ -22,8 +22,9 @@
     <!-- Deterministic builds for reproducibility -->
     <Deterministic>true</Deterministic>
     
-    <!-- Enable continuous integration build mode by default -->
-    <ContinuousIntegrationBuild Condition="'$(ContinuousIntegrationBuild)' == ''">true</ContinuousIntegrationBuild>
+    <!-- Enable CI build mode only in actual CI environments (GitHub Actions, Azure Pipelines, etc.) -->
+    <!-- Detects common CI environment variables. Local dev remains false to avoid absolute path embedding. -->
+    <ContinuousIntegrationBuild Condition="'$(ContinuousIntegrationBuild)' == '' AND ('$(CI)' == 'true' OR '$(TF_BUILD)' == 'true' OR '$(GITHUB_ACTIONS)' == 'true')">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <!-- ============================================

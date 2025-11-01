@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
     <Authors>HoneyDrunk Studios</Authors>
@@ -17,9 +17,8 @@
     <!-- Package Configuration -->
     <IsPackable>true</IsPackable>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
     
     <!-- No runtime assets, build-time only -->
     <NoWarn>$(NoWarn);NU5128</NoWarn>

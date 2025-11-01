@@ -274,6 +274,7 @@ var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 | `CA2007` | `ConfigureAwait(false)` not required in modern .NET | Use in libraries if supporting .NET Framework |
 | `SA1101` | `this.` prefix conflicts with modern C# style | Rely on IDE hints for clarity |
 | `SA1309` | Underscore prefix is C# community convention | Use `_fieldName` for private fields |
+| `SA1503` | Minimalist approach - braces only when multiline | Use braces for multi-line blocks, omit for single-line |
 | `SA1633` | File headers add noise | Use where legally required |
 
 ---

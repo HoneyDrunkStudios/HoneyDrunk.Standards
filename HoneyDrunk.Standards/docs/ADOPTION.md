@@ -38,7 +38,7 @@ While developing or testing standards changes:
    <?xml version="1.0" encoding="utf-8"?>
    <configuration>
      <packageSources>
-       <clear />
+     <clear />
        <add key="local" value="./artifacts" />
        <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
      </packageSources>
@@ -71,6 +71,42 @@ dotnet build -v:detailed | Select-String "Nullable"
 dotnet build -v:detailed | Select-String "StyleCop"
 # Expected output: Loading analyzer from StyleCop.Analyzers
 ```
+
+## Understanding Build Modes
+
+### ContinuousIntegrationBuild Behavior
+
+HoneyDrunk.Standards automatically detects CI environments and enables deterministic builds:
+
+**Local Development (Default):**
+- `ContinuousIntegrationBuild` = `false`
+- Source file paths are relative
+- PDB files contain absolute paths for better debugging
+- Faster incremental builds
+
+**CI Environment (Auto-detected):**
+- `ContinuousIntegrationBuild` = `true`
+- Source file paths are embedded deterministically
+- Reproducible builds across machines
+- Optimized for build servers
+
+**Detected CI Environments:**
+- GitHub Actions (`GITHUB_ACTIONS=true`)
+- Azure Pipelines (`TF_BUILD=true`)
+- Generic CI (`CI=true`)
+
+**Manual Override:**
+```xml
+<PropertyGroup>
+  <!-- Force CI mode locally (for testing) -->
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+```
+
+**Why This Matters:**
+- **Local Dev:** Absolute paths in PDBs allow debuggers to find source files
+- **CI/CD:** Deterministic paths ensure identical outputs for the same source
+- **NuGet Publishing:** Required for SourceLink to work correctly
 
 ## Customizing Settings
 
@@ -116,6 +152,8 @@ All HoneyDrunk.Standards behavior can be customized via MSBuild properties.
 
 **Use Case:** Rare edge cases where build timestamps are required.
 
+**Warning:** Disabling deterministic builds breaks reproducibility and SourceLink integration.
+
 ### Overriding Language Version
 
 ```xml
@@ -130,7 +168,7 @@ All HoneyDrunk.Standards behavior can be customized via MSBuild properties.
 
 ```xml
 <PropertyGroup>
-<NoWarn>$(NoWarn);CA1062;SA1101</NoWarn>
+  <NoWarn>$(NoWarn);CA1062;SA1101</NoWarn>
 </PropertyGroup>
 ```
 
@@ -253,6 +291,27 @@ error : HoneyDrunk.Standards requires .NET SDK 8.0 or higher. Current: 7.0.x. Pl
    dotnet --version
    ```
 
+### Different Build Outputs Between Local and CI
+
+**Symptoms:** Assemblies differ between local builds and CI builds.
+
+**Cause:** `ContinuousIntegrationBuild` mode affects path embedding.
+
+**Solution:**
+This is **expected behavior**. To test CI-like builds locally:
+```bash
+dotnet build /p:ContinuousIntegrationBuild=true
+```
+
+Or add to your project:
+```xml
+<PropertyGroup>
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+```
+
+**Note:** Local debugging may be affected with CI mode enabled due to different path resolution.
+
 ### SourceLink Warning Appears
 
 **Warning Message:**
@@ -266,10 +325,10 @@ This is informational. Either:
 - **Add HoneyDrunk.Build** (when available) for automatic SourceLink setup
 - **Suppress** if not relevant:
 ```xml
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);HD_SourceLink</NoWarn>
-  </PropertyGroup>
-  ```
+<PropertyGroup>
+  <NoWarn>$(NoWarn);HD_SourceLink</NoWarn>
+</PropertyGroup>
+```
 
 ### Conflicts with Existing .editorconfig
 
@@ -307,6 +366,7 @@ MSBuild properties are evaluated in this order (last wins):
 1. **HoneyDrunk.Standards** `Directory.Build.props` (package defaults)
 2. **Your project's** `Directory.Build.props` (overrides)
 3. **Your `.csproj`** `<PropertyGroup>` (final override)
+4. **Command-line** `/p:PropertyName=Value` (highest priority)
 
 **Example:**
 
@@ -322,19 +382,21 @@ MSBuild properties are evaluated in this order (last wins):
 
 ## Best Practices
 
-### ? DO
+### ✅ DO
 - Use `PrivateAssets="all"` on the package reference
 - Test standards changes locally with project references before packing
 - Document any suppressions with rationale in comments
 - Adopt standards early in new projects (not retroactively)
 - File issues for rules that don't make sense in your context
+- Let `ContinuousIntegrationBuild` auto-detect (don't override unless needed)
 
-### ? DON'T
+### ❌ DON'T
 - Suppress entire analyzer packages unless absolutely necessary
 - Override defaults without understanding the rationale
 - Disable `TreatWarningsAsErrors` in production CI builds
 - Ignore security-related analyzers (CA2100, CA5* rules)
 - Copy `.editorconfig` or `stylecop.json` into consuming projects (rely on transitive files)
+- Force `ContinuousIntegrationBuild=true` in local dev (breaks debugging)
 
 ## Getting Help
 
@@ -342,6 +404,6 @@ MSBuild properties are evaluated in this order (last wins):
 - **Bugs:** File an [issue](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues)
 - **Rule Changes:** Submit a [pull request](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/pulls) with rationale
 
-**Next Steps:** Review [CONVENTIONS.md](./CONVENTIONS.md) for HoneyDrunk coding standards and architectural guidelines.
-
 ---
+
+**Next Steps:** Review [CONVENTIONS.md](./CONVENTIONS.md) for HoneyDrunk coding standards and architectural guidelines.

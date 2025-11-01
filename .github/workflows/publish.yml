@@ -43,10 +43,10 @@ jobs:
           echo "Publishing version: $VERSION"
 
       - name: Restore
-        run: dotnet restore HoneyDrunk.Standards.sln
+        run: dotnet restore HoneyDrunk.Standards/HoneyDrunk.Standards.sln
 
       - name: Build
-        run: dotnet build HoneyDrunk.Standards.sln -c Release --no-restore /p:ContinuousIntegrationBuild=true
+        run: dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.sln -c Release --no-restore /p:ContinuousIntegrationBuild=true
 
       - name: Pack
         run: >

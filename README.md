@@ -1,4 +1,4 @@
-# HoneyDrunk.Standards
+﻿# HoneyDrunk.Standards
 
 [![Validate](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,22 +6,22 @@
 
 > **Build-transitive standards package** enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk Studios repositories.
 
-## ?? What Is This?
+## 📦 What Is This?
 
 HoneyDrunk.Standards is a **zero-configuration** NuGet package that automatically applies:
 
-- ? **StyleCop Analyzers** - Consistent naming and ordering conventions
-- ? **Roslyn Analyzers** - Performance, reliability, and security checks
-- ? **EditorConfig** - IDE-agnostic formatting rules
-- ? **Deterministic Builds** - Reproducible builds across machines
-- ? **Nullable Reference Types** - Enforced null safety
-- ? **Warnings as Errors** - Quality gate in CI/CD
+- ✅ **StyleCop Analyzers** - Consistent naming and ordering conventions
+- ✅ **Roslyn Analyzers** - Performance, reliability, and security checks
+- ✅ **EditorConfig** - IDE-agnostic formatting rules
+- ✅ **Deterministic Builds** - Reproducible builds across machines
+- ✅ **Nullable Reference Types** - Enforced null safety
+- ✅ **Warnings as Errors** - Quality gate in CI/CD
 
 All of this happens **automatically** when you add the package. No manual configuration needed.
 
 ---
 
-## ?? Quick Start
+## 🚀 Quick Start
 
 ### Installation
 
@@ -42,13 +42,13 @@ dotnet build
 ```
 
 You should see:
-- ? Analyzer warnings/errors if code violates standards
-- ? StyleCop rules enforced
-- ? EditorConfig formatting applied
+- ✅ Analyzer warnings/errors if code violates standards
+- ✅ StyleCop rules enforced
+- ✅ EditorConfig formatting applied
 
 ---
 
-## ?? Documentation
+## 📚 Documentation
 
 | Document | Description |
 |----------|-------------|
@@ -58,9 +58,9 @@ You should see:
 
 ---
 
-## ?? Features
+## 🎯 Features
 
-### ?? Analyzers Included
+### 🔍 Analyzers Included
 
 | Analyzer | Purpose | Rules |
 |----------|---------|-------|
@@ -68,7 +68,7 @@ You should see:
 | **Microsoft.CodeAnalysis.NetAnalyzers** | Performance, reliability, security | 200+ CA rules |
 | **IDE Analyzers** | Code style, modernization | 50+ IDE rules |
 
-### ?? Enforced Standards
+### 📝 Enforced Standards
 
 - **File-scoped namespaces** - `namespace MyApp;` (C# 10+)
 - **Private field prefixes** - `_fieldName` convention
@@ -78,7 +78,7 @@ You should see:
 - **XML documentation** - Required for public APIs
 - **Nullable annotations** - Explicit `?` for nullability
 
-### ?? Build-Time Features
+### ⚙️ Build-Time Features
 
 - **Deterministic builds** - Same source = same binary
 - **CI mode auto-detection** - Optimized for GitHub Actions, Azure Pipelines
@@ -87,7 +87,7 @@ You should see:
 
 ---
 
-## ??? Configuration
+## 🛠️ Configuration
 
 ### Opt-Out of Features
 
@@ -129,7 +129,7 @@ All behavior can be customized via MSBuild properties:
 
 ---
 
-## ?? Included Rules
+## 📋 Included Rules
 
 ### Enabled by Default
 
@@ -156,15 +156,15 @@ See [CONVENTIONS.md](HoneyDrunk.Standards/docs/CONVENTIONS.md) for full rational
 
 ---
 
-## ?? Testing & Validation
+## 🧪 Testing & Validation
 
 ### Sample Project
 
 The [Consumer.Sample](HoneyDrunk.Standards/Consumer.Sample/) project demonstrates:
 
-- ? Compliant code examples
-- ? Commented-out violations you can uncomment to test
-- ?? README with step-by-step testing instructions
+- ✅ Compliant code examples
+- ❌ Commented-out violations you can uncomment to test
+- 📖 README with step-by-step testing instructions
 
 ### Local Testing
 
@@ -182,7 +182,7 @@ dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.1.0
 
 ---
 
-## ?? CI/CD Integration
+## 🔄 CI/CD Integration
 
 ### GitHub Actions
 
@@ -205,7 +205,7 @@ dotnet build /p:ContinuousIntegrationBuild=true /p:TreatWarningsAsErrors=true
 
 ---
 
-## ?? Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please:
 
@@ -233,23 +233,23 @@ dotnet build
 
 ---
 
-## ?? License
+## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## ?? About HoneyDrunk Studios
+## 🐝 About HoneyDrunk Studios
 
 HoneyDrunk.Standards is part of the **Hive** ecosystem - a collection of tools, libraries, and standards for building high-quality .NET applications.
 
 **Other Projects:**
-- ?? HoneyDrunk.Build *(coming soon)* - Build tooling and SourceLink automation
-- ?? HoneyDrunk.GitHooks *(coming soon)* - Git hooks for commit message validation
+- 🚧 HoneyDrunk.Build *(coming soon)* - Build tooling and SourceLink automation
+- 🚧 HoneyDrunk.GitHooks *(coming soon)* - Git hooks for commit message validation
 
 ---
 
-## ?? Support
+## 📞 Support
 
 - **Questions:** Email us at [contact@honeydrunkstudios.com](mailto:contact@honeydrunkstudios.com)
 - **Bugs:** File an [issue](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues)
@@ -259,8 +259,8 @@ HoneyDrunk.Standards is part of the **Hive** ecosystem - a collection of tools, 
 
 <div align="center">
 
-**Built with ?? by HoneyDrunk Studios**
+**Built with 🍯 by HoneyDrunk Studios**
 
-[Documentation](HoneyDrunk.Standards/docs/) � [Sample Project](HoneyDrunk.Standards/Consumer.Sample/) � [Issues](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues) � [Contact](mailto:contact@honeydrunkstudios.com)
+[Documentation](HoneyDrunk.Standards/docs/) • [Sample Project](HoneyDrunk.Standards/Consumer.Sample/) • [Issues](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues) • [Contact](mailto:contact@honeydrunkstudios.com)
 
 </div>

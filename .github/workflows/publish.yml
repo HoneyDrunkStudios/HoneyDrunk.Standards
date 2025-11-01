@@ -50,7 +50,7 @@ jobs:
 
       - name: Pack
         run: >
-          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards.csproj
+          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards/HoneyDrunk.Standards.csproj
           -c Release --no-build -o ./artifacts
           /p:Version=${{ steps.get_version.outputs.version }}
           /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg

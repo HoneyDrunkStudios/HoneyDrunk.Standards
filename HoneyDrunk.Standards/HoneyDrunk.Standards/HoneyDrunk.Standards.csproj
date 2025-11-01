@@ -11,10 +11,14 @@
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     
     <!-- Package Configuration -->
+    <!-- This is a build-only package: no runtime assemblies, only build-time files -->
+    <!-- Consumers get .props, .targets, .editorconfig, and analyzer configurations -->
+    <!-- Symbol packages (.snupkg) are not applicable as there's no compiled code to debug -->
     <IsPackable>true</IsPackable>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -30,6 +34,7 @@
     <None Include=".editorconfig" Pack="true" PackagePath="contentFiles\any\any\" />
     <None Include="stylecop.json" Pack="true" PackagePath="contentFiles\any\any\" />
     <None Include="rulesets\**\*" Pack="true" PackagePath="contentFiles\any\any\rulesets\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <!-- Analyzer Dependencies (PrivateAssets=all so consumers don't see transitive deps) -->

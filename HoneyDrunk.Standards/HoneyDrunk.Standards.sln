@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{84FD8CE8-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{7299BE9C-3C83-4DDB-9E4A-8C7BC7480773}"
 	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\publish.yml = ..\.github\workflows\publish.yml
 		..\.github\workflows\validate-pr.yml = ..\.github\workflows\validate-pr.yml
 	EndProjectSection
 EndProject

@@ -442,7 +442,7 @@ public async Task<User> GetUserAsync(int id, CancellationToken cancellationToken
 
 public async Task ProcessOrdersAsync(CancellationToken cancellationToken)
 {
-  var orders = await GetPendingOrdersAsync(cancellationToken);
+    var orders = await GetPendingOrdersAsync(cancellationToken);
     
     foreach (var order in orders)
     {

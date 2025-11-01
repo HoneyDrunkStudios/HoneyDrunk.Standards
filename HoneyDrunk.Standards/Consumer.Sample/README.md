@@ -1,4 +1,4 @@
-# Consumer.Sample
+﻿# Consumer.Sample
 
 This sample project demonstrates how HoneyDrunk.Standards applies build-transitive analyzer and style rules to consuming projects.
 
@@ -14,26 +14,26 @@ This sample project demonstrates how HoneyDrunk.Standards applies build-transiti
 
 #### `StandardsDemo` Class
 A fully compliant class demonstrating:
-- ? File-scoped namespaces (`namespace Consumer.Sample;`)
-- ? XML documentation for all public members
-- ? Private fields with underscore prefix (`_name`, `_logger`)
-- ? Proper null checks (`ArgumentNullException.ThrowIfNull`)
-- ? Async methods with `CancellationToken` parameter
-- ? Readonly fields where appropriate
-- ? Sealed classes for performance
-- ? Nullable reference types properly annotated
+- ✅ File-scoped namespaces (`namespace Consumer.Sample;`)
+- ✅ XML documentation for all public members
+- ✅ Private fields with underscore prefix (`_name`, `_logger`)
+- ✅ Proper null checks (`ArgumentNullException.ThrowIfNull`)
+- ✅ Async methods with `CancellationToken` parameter
+- ✅ Readonly fields where appropriate
+- ✅ Sealed classes for performance
+- ✅ Nullable reference types properly annotated
 
 #### `IUserRepository` Interface
 Shows proper interface naming:
-- ? Prefix with `I`
-- ? Async method signatures with cancellation tokens
-- ? Nullable return types where appropriate
+- ✅ Prefix with `I`
+- ✅ Async method signatures with cancellation tokens
+- ✅ Nullable return types where appropriate
 
 #### `User` Class
 Demonstrates immutable entity:
-- ? Init-only properties
-- ? Constructor validation
-- ? Proper exception handling
+- ✅ Init-only properties
+- ✅ Constructor validation
+- ✅ Proper exception handling
 
 ### Commented-Out `ViolationDemo` Class
 
@@ -83,7 +83,7 @@ Loading analyzer from StyleCop.Analyzers...
 
 ### 3. Test Analyzer Detection
 
-1. Open `Class1.cs`
+1. Open `StandardsDemo.cs`
 2. Uncomment the `ViolationDemo` class
 3. Rebuild:
 
@@ -190,7 +190,7 @@ Try violating these rules in your editor and observe the squiggles!
 
 StyleCop enforces:
 
-- **Ordering:** Elements ordered by access (public ? private), then by type (fields, properties, methods)
+- **Ordering:** Elements ordered by access (public → private), then by type (fields, properties, methods)
 - **Naming:** Interfaces start with `I`, private fields with `_`
 - **Documentation:** XML docs required for public members
 - **Spacing:** Consistent spacing around operators, braces, keywords

@@ -350,9 +350,9 @@ public class Order
     public void AddLine(Product product, int quantity)
     {
         if (quantity <= 0)
-    throw new ArgumentException("Quantity must be positive", nameof(quantity));
+        throw new ArgumentException("Quantity must be positive", nameof(quantity));
 
-    _lines.Add(new OrderLine(product, quantity));
+        _lines.Add(new OrderLine(product, quantity));
     }
 }
 
@@ -480,5 +480,3 @@ These conventions are enforced by:
 - **HoneyDrunk.Standards** package (analyzers, .editorconfig, ruleset)
 - **Code review** (architectural patterns, DDD principles)
 - **CI builds** (warnings as errors, deterministic builds)
-
-For questions or proposed changes, see [CONTRIBUTING.md](../CONTRIBUTING.md) or open a [GitHub Discussion](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/discussions).

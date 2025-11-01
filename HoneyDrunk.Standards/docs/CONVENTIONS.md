@@ -19,7 +19,7 @@ This document defines coding, organizational, and process conventions for all Ho
 ### General Rules
 - **PascalCase** for types, methods, properties, events, constants
 - **camelCase** for parameters, local variables, private fields
-- **SCREAMING_CASE** — *Never use* (use PascalCase for constants)
+- **SCREAMING_CASE** â€” *Never use* (use PascalCase for constants)
 
 ### Specific Patterns
 
@@ -163,7 +163,7 @@ global using ProjectName.Domain.Aggregates;
 
 ### Policy
 - **Enabled by default** (`Nullable=enable` in Directory.Build.props)
-- **No exceptions** — All projects must be nullable-aware
+- **No exceptions** â€” All projects must be nullable-aware
 
 ### Handling Nullability
 
@@ -212,7 +212,7 @@ var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 ### Core Principles
 1. **Warnings are errors** in CI builds (`TreatWarningsAsErrors=true`)
 2. **Suppressions require justification** (enforced by `SA1404`)
-3. **No blanket suppressions** — Suppress specific rules with rationale
+3. **No blanket suppressions** â€” Suppress specific rules with rationale
 
 ### Acceptable Suppressions
 
@@ -415,7 +415,7 @@ public class UserService
 // ? Depend on abstraction
 public class OrderService
 {
-  private readonly IOrderRepository _repository;
+    private readonly IOrderRepository _repository;
     
     public OrderService(IOrderRepository repository)
     {

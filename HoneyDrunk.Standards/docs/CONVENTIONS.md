@@ -426,7 +426,7 @@ public class OrderService
 // ? Depend on concretion
 public class OrderService
 {
- private readonly SqlOrderRepository _repository = new(); // Tightly coupled
+    private readonly SqlOrderRepository _repository = new(); // Tightly coupled
 }
 ```
 

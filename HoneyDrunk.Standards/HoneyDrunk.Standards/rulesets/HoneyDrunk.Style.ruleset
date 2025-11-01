@@ -244,7 +244,7 @@
     <Rule Id="CA1846" Action="Warning" /> <!-- Prefer AsSpan over Substring -->
     <Rule Id="CA1847" Action="Warning" /> <!-- Use string.Contains(char) instead of string.Contains(string) with single characters -->
     <!-- Rationale: CA1848 disabled - LoggerMessage delegates are opt-in for perf-critical paths -->
-    <Rule Id="CA1848" Action="None" />  <!-- Use LoggerMessage delegates -->
+    <Rule Id="CA1848" Action="None" /> <!-- Use LoggerMessage delegates -->
     <Rule Id="CA1849" Action="Warning" /> <!-- Call async methods when in an async method -->
     <Rule Id="CA1850" Action="Warning" /> <!-- Prefer static HashData method over ComputeHash -->
     <Rule Id="CA1851" Action="Warning" /> <!-- Possible multiple enumerations of IEnumerable collection -->

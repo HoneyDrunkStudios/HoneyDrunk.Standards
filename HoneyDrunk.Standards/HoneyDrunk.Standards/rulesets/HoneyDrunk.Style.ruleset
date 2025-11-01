@@ -11,7 +11,7 @@
     <Rule Id="IDE0001" Action="Warning" /> <!-- Simplify name -->
     <Rule Id="IDE0002" Action="Warning" /> <!-- Simplify member access -->
     <Rule Id="IDE0003" Action="None" />    <!-- Remove this or Me qualification (handled by .editorconfig) -->
- <Rule Id="IDE0004" Action="Warning" /> <!-- Remove unnecessary cast -->
+    <Rule Id="IDE0004" Action="Warning" /> <!-- Remove unnecessary cast -->
     <Rule Id="IDE0005" Action="Warning" /> <!-- Remove unnecessary using directives -->
     <Rule Id="IDE0007" Action="None" />    <!-- Use var instead of explicit type (preference in .editorconfig) -->
     <Rule Id="IDE0008" Action="None" /><!-- Use explicit type instead of var (preference in .editorconfig) -->
@@ -21,7 +21,7 @@
     <Rule Id="IDE0018" Action="Suggestion" /> <!-- Inline variable declaration -->
     <Rule Id="IDE0019" Action="Suggestion" /> <!-- Use pattern matching to avoid 'as' followed by null check -->
     <Rule Id="IDE0020" Action="Suggestion" /> <!-- Use pattern matching to avoid 'is' check followed by cast -->
-  <Rule Id="IDE0021" Action="Suggestion" /> <!-- Use expression body for constructors -->
+    <Rule Id="IDE0021" Action="Suggestion" /> <!-- Use expression body for constructors -->
     <Rule Id="IDE0022" Action="Suggestion" /> <!-- Use expression body for methods -->
     <Rule Id="IDE0023" Action="Suggestion" /> <!-- Use expression body for conversion operators -->
     <Rule Id="IDE0024" Action="Suggestion" /> <!-- Use expression body for operators -->
@@ -29,7 +29,7 @@
     <Rule Id="IDE0026" Action="Suggestion" /> <!-- Use expression body for indexers -->
     <Rule Id="IDE0027" Action="Suggestion" /> <!-- Use expression body for accessors -->
     <Rule Id="IDE0028" Action="Suggestion" /> <!-- Use collection initializers -->
- <Rule Id="IDE0029" Action="Suggestion" /> <!-- Use coalesce expression (non-nullable) -->
+    <Rule Id="IDE0029" Action="Suggestion" /> <!-- Use coalesce expression (non-nullable) -->
     <Rule Id="IDE0030" Action="Suggestion" /> <!-- Use coalesce expression (nullable) -->
     <Rule Id="IDE0031" Action="Suggestion" /> <!-- Use null propagation -->
     <Rule Id="IDE0032" Action="Suggestion" /> <!-- Use auto property -->
@@ -55,19 +55,19 @@
     <Rule Id="IDE0054" Action="Suggestion" /> <!-- Use compound assignment -->
     <Rule Id="IDE0055" Action="Warning" />  <!-- Fix formatting -->
     <Rule Id="IDE0056" Action="Suggestion" /> <!-- Use index operator -->
-  <Rule Id="IDE0057" Action="Suggestion" /> <!-- Use range operator -->
- <Rule Id="IDE0058" Action="None" />       <!-- Remove unnecessary expression value (allow intentional discards) -->
+    <Rule Id="IDE0057" Action="Suggestion" /> <!-- Use range operator -->
+    <Rule Id="IDE0058" Action="None" />       <!-- Remove unnecessary expression value (allow intentional discards) -->
     <Rule Id="IDE0059" Action="Warning" />    <!-- Remove unnecessary value assignment -->
     <Rule Id="IDE0060" Action="Warning" /> <!-- Remove unused parameter -->
     <Rule Id="IDE0061" Action="Suggestion" /> <!-- Use expression body for local functions -->
     <Rule Id="IDE0062" Action="Suggestion" /> <!-- Make local function static -->
-  <Rule Id="IDE0063" Action="Suggestion" /> <!-- Use simple using statement -->
+    <Rule Id="IDE0063" Action="Suggestion" /> <!-- Use simple using statement -->
     <Rule Id="IDE0064" Action="Warning" />    <!-- Make struct fields writable -->
     <Rule Id="IDE0065" Action="Warning" />    <!-- Using directive placement -->
     <Rule Id="IDE0066" Action="Suggestion" /> <!-- Use switch expression -->
     <Rule Id="IDE0070" Action="Warning" />    <!-- Use System.HashCode.Combine -->
     <Rule Id="IDE0071" Action="Suggestion" /> <!-- Simplify interpolation -->
-  <Rule Id="IDE0072" Action="Warning" />    <!-- Add missing cases to switch expression -->
+    <Rule Id="IDE0072" Action="Warning" />    <!-- Add missing cases to switch expression -->
     <Rule Id="IDE0073" Action="None" />       <!-- Require file header (handled by conventions) -->
     <Rule Id="IDE0074" Action="Suggestion" /> <!-- Use coalesce compound assignment -->
     <Rule Id="IDE0075" Action="Warning" />    <!-- Simplify conditional expression -->
@@ -76,7 +76,7 @@
     <Rule Id="IDE0078" Action="Suggestion" /> <!-- Use pattern matching -->
     <Rule Id="IDE0079" Action="Warning" />    <!-- Remove unnecessary suppression -->
     <Rule Id="IDE0080" Action="Suggestion" /> <!-- Remove unnecessary suppression operator -->
-<Rule Id="IDE0081" Action="Warning" /> <!-- Remove ByVal -->
+    <Rule Id="IDE0081" Action="Warning" /> <!-- Remove ByVal -->
     <Rule Id="IDE0082" Action="Suggestion" /> <!-- Convert typeof to nameof -->
     <Rule Id="IDE0083" Action="Suggestion" /> <!-- Use pattern matching (not pattern) -->
     <Rule Id="IDE0090" Action="Suggestion" /> <!-- Simplify new expression -->
@@ -90,9 +90,9 @@
     <Rule Id="IDE0170" Action="Suggestion" /> <!-- Simplify property pattern -->
     <Rule Id="IDE0180" Action="Suggestion" /> <!-- Use tuple to swap values -->
     <Rule Id="IDE0200" Action="Suggestion" /> <!-- Remove unnecessary lambda expression -->
-<Rule Id="IDE0210" Action="Suggestion" /> <!-- Convert to top-level statements -->
+    <Rule Id="IDE0210" Action="Suggestion" /> <!-- Convert to top-level statements -->
     <Rule Id="IDE0211" Action="Suggestion" /> <!-- Convert to 'Program.Main' style program -->
-<Rule Id="IDE0220" Action="Suggestion" /> <!-- Add explicit cast in foreach loop -->
+    <Rule Id="IDE0220" Action="Suggestion" /> <!-- Add explicit cast in foreach loop -->
     <Rule Id="IDE0230" Action="Suggestion" /> <!-- Use UTF-8 string literal -->
     <Rule Id="IDE0240" Action="Warning" />    <!-- Nullable directive is redundant -->
     <Rule Id="IDE0241" Action="Warning" />    <!-- Nullable directive is unnecessary -->
@@ -142,15 +142,15 @@
     <Rule Id="CA1044" Action="Warning" /> <!-- Properties should not be write only -->
     <Rule Id="CA1045" Action="Warning" /> <!-- Do not pass types by reference -->
     <Rule Id="CA1046" Action="Warning" /> <!-- Do not overload operator equals on reference types -->
-  <Rule Id="CA1047" Action="Warning" /> <!-- Do not declare protected members in sealed types -->
+    <Rule Id="CA1047" Action="Warning" /> <!-- Do not declare protected members in sealed types -->
     <Rule Id="CA1050" Action="Warning" /> <!-- Declare types in namespaces -->
     <Rule Id="CA1051" Action="Warning" /> <!-- Do not declare visible instance fields -->
     <Rule Id="CA1052" Action="Warning" /> <!-- Static holder types should be sealed -->
     <Rule Id="CA1054" Action="Warning" /> <!-- URI parameters should not be strings -->
-<Rule Id="CA1055" Action="Warning" /> <!-- URI return values should not be strings -->
+    <Rule Id="CA1055" Action="Warning" /> <!-- URI return values should not be strings -->
     <Rule Id="CA1056" Action="Warning" /> <!-- URI properties should not be strings -->
-  <Rule Id="CA1058" Action="Warning" /> <!-- Types should not extend certain base types -->
-  <Rule Id="CA1060" Action="Suggestion" /> <!-- Move P/Invokes to NativeMethods class -->
+    <Rule Id="CA1058" Action="Warning" /> <!-- Types should not extend certain base types -->
+    <Rule Id="CA1060" Action="Suggestion" /> <!-- Move P/Invokes to NativeMethods class -->
     <Rule Id="CA1061" Action="Warning" /> <!-- Do not hide base class methods -->
     <Rule Id="CA1062" Action="Suggestion" /> <!-- Validate arguments of public methods (can be noisy) -->
     <Rule Id="CA1063" Action="Warning" /> <!-- Implement IDisposable correctly -->
@@ -186,7 +186,7 @@
 
     <!-- CA1700-CA1799: Naming rules -->
     <!-- Rationale: CA1707 disabled - underscores allowed in test method names (e.g., MethodName_Condition_ExpectedResult) -->
-  <Rule Id="CA1700" Action="Warning" /> <!-- Do not name enum values 'Reserved' -->
+    <Rule Id="CA1700" Action="Warning" /> <!-- Do not name enum values 'Reserved' -->
     <Rule Id="CA1707" Action="None" />    <!-- Identifiers should not contain underscores -->
     <Rule Id="CA1708" Action="Warning" /> <!-- Identifiers should differ by more than case -->
     <Rule Id="CA1710" Action="Warning" /> <!-- Identifiers should have correct suffix -->
@@ -200,14 +200,14 @@
     <Rule Id="CA1720" Action="Warning" /> <!-- Identifiers should not contain type names -->
     <Rule Id="CA1721" Action="Warning" /> <!-- Property names should not match get methods -->
     <Rule Id="CA1724" Action="Warning" /> <!-- Type names should not match namespaces -->
- <Rule Id="CA1725" Action="Warning" /> <!-- Parameter names should match base declaration -->
- <Rule Id="CA1727" Action="Warning" /> <!-- Use PascalCase for named placeholders -->
+    <Rule Id="CA1725" Action="Warning" /> <!-- Parameter names should match base declaration -->
+    <Rule Id="CA1727" Action="Warning" /> <!-- Use PascalCase for named placeholders -->
 
     <!-- CA1800-CA1899: Performance rules -->
-  <Rule Id="CA1802" Action="Warning" /> <!-- Use literals where appropriate -->
+    <Rule Id="CA1802" Action="Warning" /> <!-- Use literals where appropriate -->
     <Rule Id="CA1805" Action="Warning" /> <!-- Do not initialize unnecessarily -->
     <Rule Id="CA1806" Action="Warning" /> <!-- Do not ignore method results -->
-  <Rule Id="CA1810" Action="Warning" /> <!-- Initialize reference type static fields inline -->
+    <Rule Id="CA1810" Action="Warning" /> <!-- Initialize reference type static fields inline -->
     <Rule Id="CA1812" Action="Warning" /> <!-- Avoid uninstantiated internal classes -->
     <Rule Id="CA1813" Action="Suggestion" /> <!-- Avoid unsealed attributes -->
     <Rule Id="CA1814" Action="Suggestion" /> <!-- Prefer jagged arrays over multidimensional -->
@@ -233,7 +233,7 @@
     <Rule Id="CA1835" Action="Warning" /> <!-- Prefer the memory-based overloads of ReadAsync/WriteAsync -->
     <Rule Id="CA1836" Action="Warning" /> <!-- Prefer IsEmpty over Count when available -->
     <Rule Id="CA1837" Action="Warning" /> <!-- Use Environment.ProcessId instead of Process.GetCurrentProcess().Id -->
-  <Rule Id="CA1838" Action="Warning" /> <!-- Avoid StringBuilder parameters for P/Invokes -->
+    <Rule Id="CA1838" Action="Warning" /> <!-- Avoid StringBuilder parameters for P/Invokes -->
     <Rule Id="CA1839" Action="Warning" /> <!-- Use Environment.ProcessPath -->
     <Rule Id="CA1840" Action="Warning" /> <!-- Use Environment.CurrentManagedThreadId -->
     <Rule Id="CA1841" Action="Warning" /> <!-- Prefer Dictionary Contains methods -->
@@ -244,10 +244,10 @@
     <Rule Id="CA1846" Action="Warning" /> <!-- Prefer AsSpan over Substring -->
     <Rule Id="CA1847" Action="Warning" /> <!-- Use string.Contains(char) instead of string.Contains(string) with single characters -->
     <!-- Rationale: CA1848 disabled - LoggerMessage delegates are opt-in for perf-critical paths -->
-<Rule Id="CA1848" Action="None" />  <!-- Use LoggerMessage delegates -->
+    <Rule Id="CA1848" Action="None" />  <!-- Use LoggerMessage delegates -->
     <Rule Id="CA1849" Action="Warning" /> <!-- Call async methods when in an async method -->
     <Rule Id="CA1850" Action="Warning" /> <!-- Prefer static HashData method over ComputeHash -->
-<Rule Id="CA1851" Action="Warning" /> <!-- Possible multiple enumerations of IEnumerable collection -->
+    <Rule Id="CA1851" Action="Warning" /> <!-- Possible multiple enumerations of IEnumerable collection -->
     <Rule Id="CA1852" Action="Suggestion" /> <!-- Seal internal types -->
     <Rule Id="CA1853" Action="Warning" /> <!-- Unnecessary call to Dictionary.ContainsKey -->
     <Rule Id="CA1854" Action="Warning" /> <!-- Prefer the IDictionary.TryGetValue(TKey, out TValue) method -->
@@ -263,7 +263,7 @@
     <Rule Id="CA2007" Action="None" />    <!-- Do not directly await a Task -->
     <Rule Id="CA2008" Action="Warning" /> <!-- Do not create tasks without passing a TaskScheduler -->
     <Rule Id="CA2009" Action="Warning" /> <!-- Do not call ToImmutableCollection on an ImmutableCollection value -->
- <Rule Id="CA2011" Action="Warning" /> <!-- Do not assign property within its setter -->
+    <Rule Id="CA2011" Action="Warning" /> <!-- Do not assign property within its setter -->
     <Rule Id="CA2012" Action="Warning" /> <!-- Use ValueTasks correctly -->
     <Rule Id="CA2013" Action="Warning" /> <!-- Do not use ReferenceEquals with value types -->
     <Rule Id="CA2014" Action="Warning" /> <!-- Do not use stackalloc in loops -->
@@ -278,7 +278,7 @@
     <Rule Id="CA2100" Action="Warning" /> <!-- Review SQL queries for security vulnerabilities -->
     <Rule Id="CA2101" Action="Warning" /> <!-- Specify marshaling for P/Invoke string arguments -->
     <Rule Id="CA2109" Action="Warning" /> <!-- Review visible event handlers -->
- <Rule Id="CA2119" Action="Warning" /> <!-- Seal methods that satisfy private interfaces -->
+    <Rule Id="CA2119" Action="Warning" /> <!-- Seal methods that satisfy private interfaces -->
     <Rule Id="CA2153" Action="Warning" /> <!-- Avoid handling Corrupted State Exceptions -->
 
     <!-- CA2200-CA2299: Usage rules -->
@@ -287,7 +287,7 @@
     <Rule Id="CA2207" Action="Warning" /> <!-- Initialize value type static fields inline -->
     <Rule Id="CA2208" Action="Warning" /> <!-- Instantiate argument exceptions correctly -->
     <Rule Id="CA2211" Action="Warning" /> <!-- Non-constant fields should not be visible -->
- <Rule Id="CA2213" Action="Warning" /> <!-- Disposable fields should be disposed -->
+    <Rule Id="CA2213" Action="Warning" /> <!-- Disposable fields should be disposed -->
     <Rule Id="CA2214" Action="Warning" /> <!-- Do not call overridable methods in constructors -->
     <Rule Id="CA2215" Action="Warning" /> <!-- Dispose methods should call base class dispose -->
     <Rule Id="CA2216" Action="Warning" /> <!-- Disposable types should declare finalizer -->
@@ -340,7 +340,7 @@
 
     <!-- CA5000-CA5999: Security (cryptography) -->
     <Rule Id="CA5350" Action="Warning" /> <!-- Do not use weak cryptographic algorithms -->
-<Rule Id="CA5351" Action="Warning" /> <!-- Do not use broken cryptographic algorithms -->
+    <Rule Id="CA5351" Action="Warning" /> <!-- Do not use broken cryptographic algorithms -->
     <Rule Id="CA5358" Action="Warning" /> <!-- Do not use unsafe cipher modes -->
     <Rule Id="CA5359" Action="Warning" /> <!-- Do not disable certificate validation -->
     <Rule Id="CA5360" Action="Warning" /> <!-- Do not call dangerous methods in deserialization -->
@@ -349,7 +349,7 @@
     <Rule Id="CA5363" Action="Warning" /> <!-- Do not disable request validation -->
     <Rule Id="CA5364" Action="Warning" /> <!-- Do not use deprecated security protocols -->
     <Rule Id="CA5365" Action="Warning" /> <!-- Do not disable HTTP header checking -->
- <Rule Id="CA5366" Action="Warning" /> <!-- Use XmlReader for DataSet read XML -->
+    <Rule Id="CA5366" Action="Warning" /> <!-- Use XmlReader for DataSet read XML -->
     <Rule Id="CA5367" Action="Warning" /> <!-- Do not serialize types with pointer fields -->
     <Rule Id="CA5368" Action="Warning" /> <!-- Set ViewStateUserKey for classes derived from Page -->
     <Rule Id="CA5369" Action="Warning" /> <!-- Use XmlReader for deserialize -->
@@ -380,7 +380,7 @@
     <Rule Id="CA5394" Action="Warning" /> <!-- Do not use insecure randomness -->
     <Rule Id="CA5395" Action="Warning" /> <!-- Miss HttpVerb attribute for action methods -->
     <Rule Id="CA5396" Action="Warning" /> <!-- Set HttpOnly to true for HttpCookie -->
- <Rule Id="CA5397" Action="Warning" /> <!-- Do not use deprecated SslProtocols values -->
+    <Rule Id="CA5397" Action="Warning" /> <!-- Do not use deprecated SslProtocols values -->
     <Rule Id="CA5398" Action="Warning" /> <!-- Avoid hardcoded SslProtocols values -->
     <Rule Id="CA5399" Action="Warning" /> <!-- Definitely disable HttpClient certificate revocation list check -->
     <Rule Id="CA5400" Action="Warning" /> <!-- Ensure HttpClient certificate revocation list check is not disabled -->
@@ -413,12 +413,12 @@
     <Rule Id="SA1017" Action="Warning" /> <!-- Closing attribute brackets should be spaced correctly -->
     <Rule Id="SA1018" Action="Warning" /> <!-- Nullable type symbols should be spaced correctly -->
     <Rule Id="SA1019" Action="Warning" /> <!-- Member access symbols should be spaced correctly -->
-<Rule Id="SA1020" Action="Warning" /> <!-- Increment decrement symbols should be spaced correctly -->
+    <Rule Id="SA1020" Action="Warning" /> <!-- Increment decrement symbols should be spaced correctly -->
     <Rule Id="SA1021" Action="Warning" /> <!-- Negative signs should be spaced correctly -->
     <Rule Id="SA1022" Action="Warning" /> <!-- Positive signs should be spaced correctly -->
     <Rule Id="SA1023" Action="Warning" /> <!-- Dereference and access of symbols should be spaced correctly -->
-<Rule Id="SA1024" Action="Warning" /> <!-- Colons should be spaced correctly -->
-<Rule Id="SA1025" Action="Warning" /> <!-- Code should not contain multiple whitespace in a row -->
+    <Rule Id="SA1024" Action="Warning" /> <!-- Colons should be spaced correctly -->
+    <Rule Id="SA1025" Action="Warning" /> <!-- Code should not contain multiple whitespace in a row -->
     <Rule Id="SA1026" Action="Warning" /> <!-- Code should not contain space after new keyword in implicitly typed array allocation -->
     <Rule Id="SA1027" Action="Warning" /> <!-- Tabs should not be used -->
     <Rule Id="SA1028" Action="Warning" /> <!-- Code should not contain trailing whitespace -->
@@ -446,7 +446,7 @@
     <Rule Id="SA1119" Action="Warning" /> <!-- Statement should not use unnecessary parenthesis -->
     <Rule Id="SA1120" Action="Warning" /> <!-- Comments should contain text -->
     <Rule Id="SA1121" Action="Warning" /> <!-- Use built-in type alias -->
-<Rule Id="SA1122" Action="Warning" /> <!-- Use string.Empty for empty strings -->
+    <Rule Id="SA1122" Action="Warning" /> <!-- Use string.Empty for empty strings -->
     <Rule Id="SA1123" Action="Warning" /> <!-- Do not place regions within elements -->
     <Rule Id="SA1124" Action="Warning" /> <!-- Do not use regions -->
     <Rule Id="SA1125" Action="Warning" /> <!-- Use shorthand for nullable types -->
@@ -457,10 +457,10 @@
     <Rule Id="SA1130" Action="Warning" /> <!-- Use lambda syntax -->
     <Rule Id="SA1131" Action="Warning" /> <!-- Use readable conditions -->
     <Rule Id="SA1132" Action="Warning" /> <!-- Do not combine fields -->
-  <Rule Id="SA1133" Action="Warning" /> <!-- Do not combine attributes -->
+    <Rule Id="SA1133" Action="Warning" /> <!-- Do not combine attributes -->
     <Rule Id="SA1134" Action="Warning" /> <!-- Attributes should not share line -->
     <Rule Id="SA1135" Action="Warning" /> <!-- Using directives should be qualified -->
-  <Rule Id="SA1136" Action="Warning" /> <!-- Enum values should be on separate lines -->
+    <Rule Id="SA1136" Action="Warning" /> <!-- Enum values should be on separate lines -->
     <Rule Id="SA1137" Action="Warning" /> <!-- Elements should have the same indentation -->
     <Rule Id="SA1139" Action="Warning" /> <!-- Use literal suffix notation instead of casting -->
 
@@ -477,7 +477,7 @@
     <Rule Id="SA1209" Action="Warning" /> <!-- Using alias directives should be placed after other using directives -->
     <Rule Id="SA1210" Action="Warning" /> <!-- Using directives should be ordered alphabetically by namespace -->
     <Rule Id="SA1211" Action="Warning" /> <!-- Using alias directives should be ordered alphabetically by alias name -->
-  <Rule Id="SA1212" Action="Warning" /> <!-- Property accessors should follow order -->
+    <Rule Id="SA1212" Action="Warning" /> <!-- Property accessors should follow order -->
     <Rule Id="SA1213" Action="Warning" /> <!-- Event accessors should follow order -->
     <Rule Id="SA1214" Action="Warning" /> <!-- Readonly fields should appear before non-readonly fields -->
     <Rule Id="SA1216" Action="Warning" /> <!-- Using static directives should be placed at the correct location -->
@@ -498,7 +498,7 @@
     <Rule Id="SA1311" Action="Warning" /> <!-- Static readonly fields should begin with upper-case letter -->
     <Rule Id="SA1312" Action="Warning" /> <!-- Variable names should begin with lower-case letter -->
     <Rule Id="SA1313" Action="Warning" /> <!-- Parameter names should begin with lower-case letter -->
-  <Rule Id="SA1314" Action="Warning" /> <!-- Type parameter names should begin with T -->
+    <Rule Id="SA1314" Action="Warning" /> <!-- Type parameter names should begin with T -->
     <Rule Id="SA1316" Action="Warning" /> <!-- Tuple element names should use correct casing -->
 
     <!-- SA1400-SA1499: Maintainability rules -->
@@ -506,7 +506,7 @@
     <Rule Id="SA1401" Action="Warning" /> <!-- Fields should be private -->
     <Rule Id="SA1402" Action="Warning" /> <!-- File may only contain a single type -->
     <Rule Id="SA1403" Action="Warning" /> <!-- File may only contain a single namespace -->
-  <Rule Id="SA1404" Action="Warning" /> <!-- Code analysis suppression should have justification -->
+    <Rule Id="SA1404" Action="Warning" /> <!-- Code analysis suppression should have justification -->
     <Rule Id="SA1405" Action="Warning" /> <!-- Debug.Assert should provide message text -->
     <Rule Id="SA1406" Action="Warning" /> <!-- Debug.Fail should provide message text -->
     <Rule Id="SA1407" Action="Warning" /> <!-- Arithmetic expressions should declare precedence -->
@@ -515,14 +515,14 @@
     <Rule Id="SA1410" Action="Warning" /> <!-- Remove delegate parenthesis when possible -->
     <Rule Id="SA1411" Action="Warning" /> <!-- Attribute constructor should not use unnecessary parenthesis -->
     <Rule Id="SA1412" Action="None" />    <!-- Store files as UTF-8 with byte order mark (handled by .editorconfig) -->
-  <Rule Id="SA1413" Action="Warning" /> <!-- Use trailing comma in multi-line initializers -->
+    <Rule Id="SA1413" Action="Warning" /> <!-- Use trailing comma in multi-line initializers -->
 
     <!-- SA1500-SA1599: Layout rules -->
     <Rule Id="SA1500" Action="Warning" /> <!-- Braces for multi-line statements should not share line -->
     <Rule Id="SA1501" Action="Warning" /> <!-- Statement should not be on a single line -->
-  <Rule Id="SA1502" Action="Warning" /> <!-- Element should not be on a single line -->
+    <Rule Id="SA1502" Action="Warning" /> <!-- Element should not be on a single line -->
     <Rule Id="SA1503" Action="Warning" /> <!-- Braces should not be omitted -->
- <Rule Id="SA1504" Action="Warning" /> <!-- All accessors should be single-line or multi-line -->
+    <Rule Id="SA1504" Action="Warning" /> <!-- All accessors should be single-line or multi-line -->
     <Rule Id="SA1505" Action="Warning" /> <!-- Opening braces should not be followed by blank line -->
     <Rule Id="SA1506" Action="Warning" /> <!-- Element documentation headers should not be followed by blank line -->
     <Rule Id="SA1507" Action="Warning" /> <!-- Code should not contain multiple blank lines in a row -->
@@ -530,7 +530,7 @@
     <Rule Id="SA1509" Action="Warning" /> <!-- Opening braces should not be preceded by blank line -->
     <Rule Id="SA1510" Action="Warning" /> <!-- Chained statement blocks should not be preceded by blank line -->
     <Rule Id="SA1511" Action="Warning" /> <!-- While-do footer should not be preceded by blank line -->
- <Rule Id="SA1512" Action="Warning" /> <!-- Single-line comments should not be followed by blank line -->
+    <Rule Id="SA1512" Action="Warning" /> <!-- Single-line comments should not be followed by blank line -->
     <Rule Id="SA1513" Action="Warning" /> <!-- Closing brace should be followed by blank line -->
     <Rule Id="SA1514" Action="Warning" /> <!-- Element documentation header should be preceded by blank line -->
     <Rule Id="SA1515" Action="Warning" /> <!-- Single-line comment should be preceded by blank line -->
@@ -572,8 +572,8 @@
     <Rule Id="SA1627" Action="Warning" /> <!-- Documentation text should not be empty -->
     <Rule Id="SA1628" Action="None" /><!-- Documentation text should begin with a capital letter (deprecated) -->
     <Rule Id="SA1629" Action="Warning" /> <!-- Documentation text should end with a period -->
- <Rule Id="SA1630" Action="None" />    <!-- Documentation text should contain whitespace (deprecated) -->
-  <Rule Id="SA1631" Action="None" />    <!-- Documentation should meet character percentage (deprecated) -->
+    <Rule Id="SA1630" Action="None" />    <!-- Documentation text should contain whitespace (deprecated) -->
+    <Rule Id="SA1631" Action="None" />    <!-- Documentation should meet character percentage (deprecated) -->
     <Rule Id="SA1632" Action="None" />    <!-- Documentation text should meet minimum character length (deprecated) -->
     <Rule Id="SA1633" Action="None" /> <!-- File should have header (handled by conventions) -->
     <Rule Id="SA1634" Action="None" />    <!-- File header should show copyright (handled by conventions) -->
@@ -586,11 +586,11 @@
     <Rule Id="SA1641" Action="Warning" /> <!-- File header company name text should match -->
     <Rule Id="SA1642" Action="None" />    <!-- Constructor summary documentation should begin with standard text (too restrictive) -->
     <Rule Id="SA1643" Action="None" />    <!-- Destructor summary documentation should begin with standard text (too restrictive) -->
-  <Rule Id="SA1644" Action="Warning" /> <!-- Documentation headers should not contain blank lines -->
+    <Rule Id="SA1644" Action="Warning" /> <!-- Documentation headers should not contain blank lines -->
     <Rule Id="SA1645" Action="Warning" /> <!-- Included documentation file does not exist -->
     <Rule Id="SA1646" Action="Warning" /> <!-- Included documentation XPath does not exist -->
-<Rule Id="SA1647" Action="Warning" /> <!-- Include node does not contain valid file and path -->
- <Rule Id="SA1648" Action="Warning" /> <!-- Inheritdoc should be used with inheriting class -->
+    <Rule Id="SA1647" Action="Warning" /> <!-- Include node does not contain valid file and path -->
+    <Rule Id="SA1648" Action="Warning" /> <!-- Inheritdoc should be used with inheriting class -->
     <Rule Id="SA1649" Action="Warning" /> <!-- File name should match first type name -->
     <Rule Id="SA1650" Action="None" />    <!-- Element documentation should be spelled correctly (deprecated) -->
     <Rule Id="SA1651" Action="Warning" /> <!-- Do not use placeholder elements -->

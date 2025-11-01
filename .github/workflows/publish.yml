@@ -1,0 +1,94 @@
+name: Publish to NuGet
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (without v prefix, e.g., 0.1.0)'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    name: Build, Pack & Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Determine version
+        id: get_version
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "version=$VERSION" >>"$GITHUB_OUTPUT"
+          echo "Publishing version: $VERSION"
+
+      - name: Restore
+        run: dotnet restore HoneyDrunk.Standards/HoneyDrunk.Standards.sln
+
+      - name: Build
+        run: dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.sln -c Release --no-restore /p:ContinuousIntegrationBuild=true
+
+      - name: Pack
+        run: >
+          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards.csproj
+          -c Release --no-build -o ./artifacts
+          /p:Version=${{ steps.get_version.outputs.version }}
+          /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg
+          /p:ContinuousIntegrationBuild=true
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages-${{ steps.get_version.outputs.version }}
+          path: |
+            ./artifacts/*.nupkg
+            ./artifacts/*.snupkg
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push ./artifacts/*.snupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: HoneyDrunk.Standards v${{ steps.get_version.outputs.version }}
+          body: |
+            ## HoneyDrunk.Standards v${{ steps.get_version.outputs.version }}
+
+            ### Installation
+            ```xml
+            <PackageReference Include="HoneyDrunk.Standards" Version="${{ steps.get_version.outputs.version }}" PrivateAssets="all" />
+            ```
+
+            ### Links
+            - NuGet: https://www.nuget.org/packages/HoneyDrunk.Standards/${{ steps.get_version.outputs.version }}
+            - CONVENTIONS: ./docs/CONVENTIONS.md
+            - ADOPTION: ./docs/ADOPTION.md

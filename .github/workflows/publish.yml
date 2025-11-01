@@ -49,6 +49,9 @@ jobs:
         run: dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.sln -c Release --no-restore /p:ContinuousIntegrationBuild=true
 
       - name: Pack
+        # Note: No symbol packages (/p:IncludeSymbols) because this is a build-only package
+        # with IncludeBuildOutput=false - there are no compiled assemblies to debug.
+        # Package contains only build-time files (.props, .targets, .editorconfig, rulesets).
         run: >
           dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards/HoneyDrunk.Standards.csproj
           -c Release --no-build -o ./artifacts

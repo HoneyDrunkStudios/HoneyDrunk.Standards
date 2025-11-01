@@ -20,14 +20,14 @@ jobs:
         with:
           dotnet-version: 9.0.x
       - name: Restore dependencies
-        run: dotnet restore HoneyDrunk.Standards.sln
+        run: dotnet restore HoneyDrunk.Standards/HoneyDrunk.Standards.sln
       - name: Build solution
         run: >-
-          dotnet build HoneyDrunk.Standards.sln -c Release --no-restore
-          /p:ContinuousIntegrationBuild=true /p:TreatWarningsAsErrors=true
+          dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.sln -c Release
+          --no-restore /p:ContinuousIntegrationBuild=true /p:TreatWarningsAsErrors=true
       - name: Pack HoneyDrunk.Standards
         run: >-
-          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c
+          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c
           Release --no-build -o ./artifacts /p:ContinuousIntegrationBuild=true
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4

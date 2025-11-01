@@ -1,0 +1,82 @@
+<!--
+  HoneyDrunk.Standards - Build Transitive Properties
+  Enforces deterministic defaults and analyzer configuration across all consuming projects.
+  
+  Opt-out via:
+    <HD_EnableAnalyzers>false</HD_EnableAnalyzers>
+    <HD_UseStyleCop>false</HD_UseStyleCop>
+    <HD_TreatWarningsAsErrors>false</HD_TreatWarningsAsErrors>
+-->
+<Project>
+
+  <!-- ============================================
+       Core Compilation Settings
+       ============================================ -->
+  <PropertyGroup>
+    <!-- Enforce nullable reference types -->
+    <Nullable>enable</Nullable>
+    
+    <!-- Use latest C# language version -->
+    <LangVersion>latest</LangVersion>
+    
+    <!-- Deterministic builds for reproducibility -->
+    <Deterministic>true</Deterministic>
+    
+    <!-- Enable continuous integration build mode by default -->
+    <ContinuousIntegrationBuild Condition="'$(ContinuousIntegrationBuild)' == ''">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- ============================================
+       HoneyDrunk Standards Toggles
+       ============================================ -->
+  <PropertyGroup>
+    <!-- Master switch for all analyzers -->
+    <HD_EnableAnalyzers Condition="'$(HD_EnableAnalyzers)' == ''">true</HD_EnableAnalyzers>
+    
+    <!-- StyleCop-specific toggle -->
+    <HD_UseStyleCop Condition="'$(HD_UseStyleCop)' == ''">true</HD_UseStyleCop>
+    
+    <!-- Treat warnings as errors (opt-out for legacy projects) -->
+    <HD_TreatWarningsAsErrors Condition="'$(HD_TreatWarningsAsErrors)' == ''">true</HD_TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="'$(HD_TreatWarningsAsErrors)' == 'true'">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- ============================================
+       Analyzer Configuration Paths
+       ============================================ -->
+  <PropertyGroup Condition="'$(HD_UseStyleCop)' == 'true'">
+    <!-- Point to StyleCop configuration file -->
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\contentFiles\any\any\rulesets\HoneyDrunk.Style.ruleset</CodeAnalysisRuleSet>
+    
+    <!-- StyleCop JSON configuration -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\stylecop.json" Link="stylecop.json" />
+  </PropertyGroup>
+
+  <!-- ============================================
+       Minimal NoWarn List
+       ============================================ -->
+  <PropertyGroup>
+    <!-- TODO: Review each suppression; document rationale or remove -->
+    <!-- NU5128: No runtime assemblies in package (expected for build-only) -->
+    <!-- CS1591: Missing XML doc comments (handled by StyleCop rules instead) -->
+    <NoWarn>$(NoWarn);NU5128;CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- ============================================
+       Analyzer Package References
+       ============================================ -->
+  <ItemGroup Condition="'$(HD_EnableAnalyzers)' == 'true'">
+    <!-- StyleCop for naming and ordering conventions -->
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" Condition="'$(HD_UseStyleCop)' == 'true'">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    
+    <!-- Microsoft Code Quality Analyzers -->
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

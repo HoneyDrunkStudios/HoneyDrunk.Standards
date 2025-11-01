@@ -349,7 +349,7 @@ public class Order
 
     public void AddLine(Product product, int quantity)
     {
- if (quantity <= 0)
+        if (quantity <= 0)
     throw new ArgumentException("Quantity must be positive", nameof(quantity));
 
     _lines.Add(new OrderLine(product, quantity));

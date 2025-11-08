@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
+    <Version>0.1.1</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
@@ -16,24 +17,22 @@
     <RepositoryType>git</RepositoryType>
     
     <!-- Package Configuration -->
-    <!-- This is a build-only package: no runtime assemblies, only build-time files -->
-    <!-- Consumers get .props, .targets, .editorconfig, and analyzer configurations -->
-    <!-- Symbol packages (.snupkg) are not applicable as there's no compiled code to debug -->
     <IsPackable>true</IsPackable>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoDefaultExcludes>true</NoDefaultExcludes>
     
     <!-- No runtime assets, build-time only -->
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <!-- NU5128: No runtime assemblies in package (expected for build-only) -->
+    <!-- CA1016: Assembly version attributes not applicable for build-only packages -->
+    <NoWarn>$(NoWarn);NU5128;CA1016</NoWarn>
   </PropertyGroup>
 
   <!-- Include buildTransitive content in package -->
   <ItemGroup>
     <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
-    <None Include=".editorconfig" Pack="true" PackagePath="contentFiles\any\any\" />
+    <None Include=".editorconfig" Pack="true" PackagePath="buildTransitive\.editorconfig" />
     <None Include="stylecop.json" Pack="true" PackagePath="contentFiles\any\any\" />
-    <None Include="rulesets\**\*" Pack="true" PackagePath="contentFiles\any\any\rulesets\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 

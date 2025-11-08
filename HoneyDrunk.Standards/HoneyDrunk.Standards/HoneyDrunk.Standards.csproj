@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.1: Fixed buildTransitive metadata and removed legacy .ruleset wiring for clean .NET 8/9/10 integration.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.2: Fixed stylecop.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
     <None Include=".editorconfig" Pack="true" PackagePath="buildTransitive\.editorconfig" />
-    <None Include="stylecop.json" Pack="true" PackagePath="contentFiles\any\any\" />
+    <None Include="stylecop.json" Pack="true" PackagePath="buildTransitive\stylecop.json" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 

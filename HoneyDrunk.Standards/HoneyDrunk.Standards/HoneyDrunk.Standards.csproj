@@ -9,7 +9,7 @@
     <PackageId>HoneyDrunk.Standards</PackageId>
     <Version>0.1.1</Version>
     <Authors>HoneyDrunk Studios</Authors>
-    <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
+    <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories. v0.1.1: Fixed buildTransitive metadata and removed legacy .ruleset wiring for clean .NET 8/9/10 integration.</Description>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

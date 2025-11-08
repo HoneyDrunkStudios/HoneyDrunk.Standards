@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.2: Fixed stylecop.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.3: Relaxed some rules, updated ReadMe to depict .NET 10.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

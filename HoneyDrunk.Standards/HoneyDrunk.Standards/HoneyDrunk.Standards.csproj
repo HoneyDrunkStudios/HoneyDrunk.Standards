@@ -33,7 +33,7 @@
   <ItemGroup>
     <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
     <None Include=".editorconfig" Pack="true" PackagePath="buildTransitive\.editorconfig" />
-    <None Include="stylecop.json" Pack="true" PackagePath="contentFiles\any\any\" />
+    <None Include="stylecop.json" Pack="true" PackagePath="buildTransitive\stylecop.json" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 

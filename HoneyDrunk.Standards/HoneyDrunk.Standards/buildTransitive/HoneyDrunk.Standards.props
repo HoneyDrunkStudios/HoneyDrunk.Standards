@@ -57,7 +57,7 @@
        ============================================ -->
   <ItemGroup Condition="'$(HD_UseStyleCop)' == 'true'">
     <!-- StyleCop JSON configuration -->
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\stylecop.json" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
   </ItemGroup>
 
   <!-- ============================================

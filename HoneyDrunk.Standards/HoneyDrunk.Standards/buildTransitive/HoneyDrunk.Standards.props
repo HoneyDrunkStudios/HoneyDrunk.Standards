@@ -58,6 +58,9 @@
   <ItemGroup Condition="'$(HD_UseStyleCop)' == 'true'">
     <!-- StyleCop JSON configuration -->
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
+    
+    <!-- Include shared .editorconfig -->
+    <EditorConfigFiles Include="$(MSBuildThisFileDirectory).editorconfig" />
   </ItemGroup>
 
   <!-- ============================================

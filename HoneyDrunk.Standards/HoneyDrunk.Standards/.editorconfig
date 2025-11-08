@@ -181,6 +181,12 @@ dotnet_diagnostic.SA1101.severity = none
 # SA1309: Field names should not begin with underscore - DISABLED (C# community standard uses _fieldName)
 dotnet_diagnostic.SA1309.severity = none
 
+# SA1413: Use trailing comma in multi-line initializers - DISABLED (optional style preference)
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1633: File must have header - DISABLED (file headers not required)
+dotnet_diagnostic.SA1633.severity = none
+
 # ============================================
 # Code Quality Analyzers (CA rules)
 # ============================================

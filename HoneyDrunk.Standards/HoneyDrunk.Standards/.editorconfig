@@ -172,6 +172,16 @@ dotnet_style_null_propagation = true:warning
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
 
 # ============================================
+# StyleCop Analyzer Rules
+# ============================================
+
+# SA1101: Prefix local calls with this - DISABLED (conflicts with modern C# style)
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1309: Field names should not begin with underscore - DISABLED (C# community standard uses _fieldName)
+dotnet_diagnostic.SA1309.severity = none
+
+# ============================================
 # Code Quality Analyzers (CA rules)
 # ============================================
 

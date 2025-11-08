@@ -2,7 +2,7 @@
 
 [![Validate](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/9.0)
+[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 > **Build-transitive standards package** enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk Studios repositories.
 

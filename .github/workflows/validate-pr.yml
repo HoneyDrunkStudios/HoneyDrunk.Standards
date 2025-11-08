@@ -12,6 +12,11 @@ on:
       - '**/.editorconfig'
       - '**/stylecop.json'
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write  # This allows posting PR comments
+
 jobs:
   pr-validation:
     uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/pr-validation.yml@main

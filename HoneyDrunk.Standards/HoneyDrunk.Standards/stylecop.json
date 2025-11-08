@@ -8,13 +8,8 @@
       "documentPrivateFields": false,
       "documentInterfaces": true,
       "companyName": "HoneyDrunk Studios",
-      "copyrightText": "Copyright (c) {companyName}. All rights reserved.\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",
-      "variables": {
-        "licenseName": "MIT",
-            "licenseFile": "LICENSE"
-          },
-        "xmlHeader": false,
-        "fileNamingConvention": "stylecop"
+      "xmlHeader": false,
+      "fileNamingConvention": "stylecop"
     },
     "namingRules": {
       "allowCommonHungarianPrefixes": false,
@@ -25,12 +20,12 @@
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace",
       "elementOrder": [
-          "kind",
-          "accessibility",
-          "constant",
-          "static",
-          "readonly"
-        ],
+        "kind",
+        "accessibility",
+        "constant",
+        "static",
+        "readonly"
+      ],
       "systemUsingDirectivesFirst": true,
       "blankLinesBetweenUsingGroups": "allow"
     },
@@ -49,7 +44,7 @@
       "allowDoWhileOnClosingBrace": false
     },
     "readabilityRules": {
-    "allowBuiltInTypeAliases": true
+      "allowBuiltInTypeAliases": true
     }
   }
 }

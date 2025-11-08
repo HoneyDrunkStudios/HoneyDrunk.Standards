@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="docs\ADOPTION.md" />
+    <File Path="docs\CONVENTIONS.md" />
+    <File Path="..\LICENSE" />
+    <File Path="..\README.md" />
+  </Folder>
+  <Folder Name="/pipelines/">
+    <File Path="..\.github\workflows\publish.yml" />
+    <File Path="..\.github\workflows\validate-pr.yml" />
+  </Folder>
+  <Project Path="HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" />
+  <Project Path="Consumer.Sample\Consumer.Sample.csproj" />
+</Solution>

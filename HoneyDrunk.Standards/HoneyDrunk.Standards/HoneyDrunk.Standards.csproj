@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.5: Fixed .editorconfig not being applied - now properly referenced via EditorConfigFiles.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.6: Added .globalconfig for proper analyzer rule distribution (SA1633, SA1413 now actually disabled).</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
     <None Include=".editorconfig" Pack="true" PackagePath="buildTransitive\.editorconfig" />
+    <None Include="HoneyDrunk.Standards.globalconfig" Pack="true" PackagePath="buildTransitive\HoneyDrunk.Standards.globalconfig" />
     <None Include="stylecop.json" Pack="true" PackagePath="buildTransitive\stylecop.json" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>

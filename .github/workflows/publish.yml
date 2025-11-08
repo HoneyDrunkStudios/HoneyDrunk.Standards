@@ -39,7 +39,7 @@ jobs:
   release:
     name: Build, Pack & Publish
     needs: prepare
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/templates/stages/dotnet-library-release.yml@v1.0.0
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/dotnet-library-release.yml@v1.0.0
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'

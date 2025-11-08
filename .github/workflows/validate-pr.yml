@@ -1,38 +1,32 @@
-name: Validate
+name: PR Validation
+
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+    branches: [ main, develop ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+      - '**.sln'
+      - '**.props'
+      - '**.targets'
+      - '**/.editorconfig'
+      - '**/stylecop.json'
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write  # This allows posting PR comments
+
 jobs:
-  validate:
-    name: Build, Analyze & Pack
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-      - name: Restore dependencies
-        run: dotnet restore HoneyDrunk.Standards/HoneyDrunk.Standards.sln
-      - name: Build solution
-        run: >-
-          dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.sln -c Release
-          --no-restore /p:ContinuousIntegrationBuild=true /p:TreatWarningsAsErrors=true
-      - name: Pack HoneyDrunk.Standards
-        run: >-
-          dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c
-          Release --no-build -o ./artifacts /p:ContinuousIntegrationBuild=true
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: standards-artifacts
-          path: ./artifacts/*.nupkg
-          retention-days: 30
-          if-no-files-found: error
+  pr-validation:
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/pr-validation.yml@main
+    with:
+      dotnet-version: '10.0.x'
+      configuration: 'Release'
+      runs-on: 'ubuntu-latest'
+      working-directory: 'HoneyDrunk.Standards'
+      enable-code-quality: true
+      post-pr-comment: true
+      actions-ref: 'main'
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}

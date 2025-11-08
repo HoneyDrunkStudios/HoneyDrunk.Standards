@@ -43,17 +43,6 @@
   </PropertyGroup>
 
   <!-- ============================================
-       Analyzer Configuration Paths
-       ============================================ -->
-  <PropertyGroup Condition="'$(HD_UseStyleCop)' == 'true'">
-    <!-- Point to StyleCop configuration file -->
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\contentFiles\any\any\rulesets\HoneyDrunk.Style.ruleset</CodeAnalysisRuleSet>
-    
-    <!-- StyleCop JSON configuration -->
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\stylecop.json" Link="stylecop.json" />
-  </PropertyGroup>
-
-  <!-- ============================================
        Minimal NoWarn List
        ============================================ -->
   <PropertyGroup>
@@ -62,6 +51,14 @@
     <!-- CS1591: Missing XML doc comments (handled by StyleCop rules instead) -->
     <NoWarn>$(NoWarn);NU5128;CS1591</NoWarn>
   </PropertyGroup>
+
+  <!-- ============================================
+       StyleCop Configuration
+       ============================================ -->
+  <ItemGroup Condition="'$(HD_UseStyleCop)' == 'true'">
+    <!-- StyleCop JSON configuration -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\stylecop.json" />
+  </ItemGroup>
 
   <!-- ============================================
        Analyzer Package References

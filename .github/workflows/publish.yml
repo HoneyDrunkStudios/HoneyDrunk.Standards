@@ -11,6 +11,11 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write        # For creating GitHub releases
+  packages: write        # For publishing to NuGet/GitHub Packages
+  id-token: write        # For OIDC authentication (if needed)
+
 jobs:
   # Determine version from tag or manual input
   prepare:

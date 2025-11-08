@@ -48,6 +48,7 @@ jobs:
       project-path: 'HoneyDrunk.Standards/HoneyDrunk.Standards.csproj'
       nuget-source: 'https://api.nuget.org/v3/index.json'
       skip-duplicate: true
+      actions-ref: 'main'
     secrets:
       nuget-api-key: ${{ secrets.NUGET_API_KEY }}
 

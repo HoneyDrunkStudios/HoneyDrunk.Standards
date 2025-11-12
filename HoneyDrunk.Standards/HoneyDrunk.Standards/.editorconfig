@@ -81,9 +81,6 @@ csharp_style_prefer_null_check_over_type_check = true:suggestion
 csharp_prefer_braces = false:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 
-# Unused using statements should be an error
-dotnet_diagnostic.IDE0005.severity = error
-
 # Expression preferences
 csharp_prefer_simple_default_expression = true:suggestion
 csharp_style_prefer_local_over_anonymous_function = true:suggestion

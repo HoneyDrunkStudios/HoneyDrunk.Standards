@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.7: Changed braces preference to 'suggestion' to actively encourage omitting braces for single-line statements (csharp_prefer_braces=false:suggestion, IDE0011=suggestion) while still enforcing unused using statements as errors.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.8: Updated `.editorconfig` to clarify `IDE0011` and `csharp_prefer_braces` behavior, setting `csharp_prefer_braces=false:suggestion` to encourage omitting braces for single-line statements.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

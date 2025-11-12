@@ -78,6 +78,8 @@ csharp_style_prefer_null_check_over_type_check = true:suggestion
 
 # Code block preferences - Omit braces for single-line statements
 # SA1503 is disabled in globalconfig to allow this style.
+# IDE0011 controls "add braces" suggestions (disabled)
+# The csharp_prefer_braces setting controls when to suggest removing braces
 csharp_prefer_braces = false:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 

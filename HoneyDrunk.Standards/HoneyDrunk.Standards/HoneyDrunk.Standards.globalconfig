@@ -22,6 +22,19 @@ dotnet_diagnostic.SA1413.severity = none
 # SA1633: File must have header - DISABLED (file headers not required)
 dotnet_diagnostic.SA1633.severity = none
 
+# SA1503: Braces should not be omitted - DISABLED (we prefer omitting braces for single-line statements)
+dotnet_diagnostic.SA1503.severity = none
+
+# ============================================
+# IDE Analyzers (Code Style)
+# ============================================
+
+# IDE0005: Unused using directive - ERROR (keep using statements clean)
+dotnet_diagnostic.IDE0005.severity = error
+
+# IDE0011: Add braces - SUGGESTION (encourage omitting braces for single-line statements)
+dotnet_diagnostic.IDE0011.severity = suggestion
+
 # ============================================
 # Code Quality Analyzers (CA rules)
 # ============================================

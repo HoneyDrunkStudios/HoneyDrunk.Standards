@@ -76,10 +76,13 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_conditional_delegate_call = true:warning
 csharp_style_prefer_null_check_over_type_check = true:suggestion
 
-# Code block preferences - Minimize braces (single-line statements allowed without braces)
-# Aligns with SA1503=None in ruleset. Use braces only for multi-line blocks.
-csharp_prefer_braces = when_multiline:suggestion
+# Code block preferences - Omit braces for single-line statements
+# SA1503 is disabled in globalconfig to allow this style.
+csharp_prefer_braces = false:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
+
+# Unused using statements should be an error
+dotnet_diagnostic.IDE0005.severity = error
 
 # Expression preferences
 csharp_prefer_simple_default_expression = true:suggestion

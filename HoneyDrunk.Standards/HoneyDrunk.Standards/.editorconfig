@@ -72,42 +72,27 @@ csharp_style_prefer_pattern_matching = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
 
-# C# 14 - Enhanced pattern matching
-csharp_style_pattern_local_over_anonymous_function = true:suggestion
+# C# 14 - Enhanced pattern matching (readonly struct optimizations)
 csharp_style_prefer_readonly_struct = true:suggestion
 csharp_style_prefer_readonly_struct_member = true:suggestion
-
-# Lambda preferences
-csharp_style_expression_bodied_lambdas = true:suggestion
-csharp_style_expression_bodied_local_functions = when_on_single_line:suggestion
-
-# C# 14 - Lambda parameter modifiers (in, scoped, ref readonly)
-# Prefer explicit parameter types when using modifiers
-csharp_style_prefer_local_over_anonymous_function = true:suggestion
-
-# Discard preferences  
-csharp_style_unused_value_expression_statement_preference = discard_variable:none
-csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 
 # Null-checking preferences
 csharp_style_conditional_delegate_call = true:warning
 csharp_style_prefer_null_check_over_type_check = true:suggestion
 
-# C# 14 - Null-conditional assignment (?.= operator)
-# Prefer: customer?.Order = value over if (customer != null) customer.Order = value
+# C# 14 - Null-conditional operator (?.) for safe member access
+# Prefer: customer?.PlaceOrder(value) over if (customer != null) customer.PlaceOrder(value)
 csharp_style_prefer_null_propagation = true:warning
 dotnet_style_null_propagation = true:warning
 
-# Coalescing preferences
+# Null-coalescing preferences
 dotnet_style_coalesce_expression = true:warning
 csharp_style_throw_expression = true:suggestion
-csharp_style_prefer_null_check_over_type_check = true:suggestion
 
 # Code block preferences - ERROR on unnecessary braces for single-line statements
 # SA1503 is disabled in globalconfig to allow this style.
 # IDE0011 with csharp_prefer_braces=false triggers "Remove unnecessary braces" as errors
 csharp_prefer_braces = false:error
-dotnet_style_prefer_braces = false:error
 csharp_prefer_simple_using_statement = true:suggestion
 
 # Expression preferences
@@ -119,17 +104,8 @@ csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
 csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_prefer_utf8_string_literals = true:suggestion
 
-# C# 14 - Field-backed properties
-csharp_style_prefer_field_backing = true:suggestion
-
-# C# 14 - Primary constructors (C# 12+)
-csharp_style_prefer_primary_constructors = true:suggestion
-
 # C# 14 - Collection expressions (C# 12+)
 dotnet_style_prefer_collection_expression = true:suggestion
-
-# C# 14 - Null-conditional assignment
-csharp_style_prefer_null_check_over_type_check = true:suggestion
 
 # Span<T> preferences for performance-critical code
 # (These are suggestions; upgrade to warning in perf namespaces via local .editorconfig)
@@ -145,6 +121,10 @@ csharp_prefer_static_local_function = true:warning
 # Modifier preferences
 csharp_prefer_static_anonymous_function = true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async:warning
+
+# Discard preferences  
+csharp_style_unused_value_expression_statement_preference = discard_variable:none
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 
 # ============================================
 # .NET Code Quality Rules

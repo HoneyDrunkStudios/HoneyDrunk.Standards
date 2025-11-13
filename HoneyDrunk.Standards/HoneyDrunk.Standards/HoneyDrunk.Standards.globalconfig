@@ -32,12 +32,118 @@ dotnet_diagnostic.SA1503.severity = none
 # IDE0005: Unused using directive - ERROR (keep using statements clean)
 dotnet_diagnostic.IDE0005.severity = error
 
-# IDE0011: Add braces - SILENT (don't suggest adding braces)
-# The removal suggestion comes from csharp_prefer_braces setting below
-dotnet_diagnostic.IDE0011.severity = silent
+# IDE0011: Add braces - ERROR (enforce brace removal for single-line statements)
+# When csharp_prefer_braces=false:error, IDE0011 triggers errors for unnecessary braces
+dotnet_diagnostic.IDE0011.severity = error
 
-# Braces preference - suggest removing braces from single-line statements
-csharp_prefer_braces = false:suggestion
+# ============================================
+# C# 14 Modern Features
+# ============================================
+
+# IDE0032: Use auto-implemented property (field-backed properties)
+dotnet_diagnostic.IDE0032.severity = suggestion
+
+# IDE0045: Use conditional expression for assignment
+dotnet_diagnostic.IDE0045.severity = suggestion
+
+# IDE0046: Use conditional expression for return
+dotnet_diagnostic.IDE0046.severity = none
+
+# IDE0050: Convert anonymous type to tuple
+dotnet_diagnostic.IDE0050.severity = suggestion
+
+# IDE0056: Use index operator (^)
+dotnet_diagnostic.IDE0056.severity = suggestion
+
+# IDE0057: Use range operator (..)
+dotnet_diagnostic.IDE0057.severity = suggestion
+
+# IDE0070: Use 'System.HashCode.Combine'
+dotnet_diagnostic.IDE0070.severity = suggestion
+
+# IDE0071: Simplify interpolation
+dotnet_diagnostic.IDE0071.severity = warning
+
+# IDE0072: Add missing cases to switch expression
+dotnet_diagnostic.IDE0072.severity = warning
+
+# IDE0075: Simplify conditional expression
+dotnet_diagnostic.IDE0075.severity = suggestion
+
+# IDE0090: Simplify 'new' expression (target-typed new)
+dotnet_diagnostic.IDE0090.severity = suggestion
+
+# IDE0100: Remove unnecessary equality operator
+dotnet_diagnostic.IDE0100.severity = warning
+
+# IDE0110: Remove unnecessary discard
+dotnet_diagnostic.IDE0110.severity = suggestion
+
+# IDE0120: Simplify LINQ expression
+dotnet_diagnostic.IDE0120.severity = suggestion
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = warning
+
+# IDE0160: Use block-scoped namespace - ENFORCE file-scoped
+dotnet_diagnostic.IDE0160.severity = none
+
+# IDE0161: Use file-scoped namespace - ENFORCE this style
+dotnet_diagnostic.IDE0161.severity = warning
+
+# IDE0170: Simplify property pattern
+dotnet_diagnostic.IDE0170.severity = suggestion
+
+# IDE0180: Use tuple to swap values
+dotnet_diagnostic.IDE0180.severity = suggestion
+
+# IDE0200: Remove unnecessary lambda expression
+dotnet_diagnostic.IDE0200.severity = suggestion
+
+# IDE0210: Convert to top-level statements
+dotnet_diagnostic.IDE0210.severity = none
+
+# IDE0220: Add explicit cast in foreach loop
+dotnet_diagnostic.IDE0220.severity = none
+
+# IDE0230: Use UTF-8 string literal
+dotnet_diagnostic.IDE0230.severity = suggestion
+
+# IDE0250: Struct can be made 'readonly'
+dotnet_diagnostic.IDE0250.severity = suggestion
+
+# IDE0251: Member can be made 'readonly'
+dotnet_diagnostic.IDE0251.severity = suggestion
+
+# IDE0260: Use pattern matching (is not pattern)
+dotnet_diagnostic.IDE0260.severity = suggestion
+
+# IDE0270: Null check can be simplified (use ?? or ??=)
+dotnet_diagnostic.IDE0270.severity = suggestion
+
+# IDE0280: Use 'nameof'
+dotnet_diagnostic.IDE0280.severity = warning
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = suggestion
+
+# IDE0300: Use collection expression for array
+dotnet_diagnostic.IDE0300.severity = suggestion
+
+# IDE0301: Use collection expression for empty array
+dotnet_diagnostic.IDE0301.severity = suggestion
+
+# IDE0302: Use collection expression for stackalloc
+dotnet_diagnostic.IDE0302.severity = suggestion
+
+# IDE0303: Use collection expression for Create()
+dotnet_diagnostic.IDE0303.severity = suggestion
+
+# IDE0304: Use collection expression for builder
+dotnet_diagnostic.IDE0304.severity = suggestion
+
+# IDE0305: Use collection expression for fluent
+dotnet_diagnostic.IDE0305.severity = suggestion
 
 # ============================================
 # Code Quality Analyzers (CA rules)
@@ -67,8 +173,15 @@ dotnet_diagnostic.CA1802.severity = warning
 dotnet_diagnostic.CA1805.severity = warning
 dotnet_diagnostic.CA1810.severity = warning
 dotnet_diagnostic.CA1812.severity = warning
+dotnet_diagnostic.CA1813.severity = warning
+dotnet_diagnostic.CA1814.severity = suggestion
+dotnet_diagnostic.CA1815.severity = warning
 dotnet_diagnostic.CA1819.severity = warning
+dotnet_diagnostic.CA1820.severity = warning
+dotnet_diagnostic.CA1821.severity = warning
 dotnet_diagnostic.CA1822.severity = suggestion
+dotnet_diagnostic.CA1823.severity = warning
+dotnet_diagnostic.CA1824.severity = none
 dotnet_diagnostic.CA1825.severity = warning
 dotnet_diagnostic.CA1826.severity = warning
 dotnet_diagnostic.CA1827.severity = warning
@@ -92,8 +205,15 @@ dotnet_diagnostic.CA1844.severity = warning
 dotnet_diagnostic.CA1845.severity = warning
 dotnet_diagnostic.CA1846.severity = warning
 dotnet_diagnostic.CA1847.severity = warning
-dotnet_diagnostic.CA1848.severity = none
-dotnet_diagnostic.CA1849.severity = warning
+dotnet_diagnostic.CA1850.severity = warning
+dotnet_diagnostic.CA1851.severity = warning
+dotnet_diagnostic.CA1852.severity = suggestion
+dotnet_diagnostic.CA1853.severity = warning
+dotnet_diagnostic.CA1854.severity = warning
+dotnet_diagnostic.CA1855.severity = warning
+dotnet_diagnostic.CA1856.severity = error
+dotnet_diagnostic.CA1857.severity = suggestion
+dotnet_diagnostic.CA1858.severity = warning
 
 # Reliability rules
 dotnet_diagnostic.CA2000.severity = warning

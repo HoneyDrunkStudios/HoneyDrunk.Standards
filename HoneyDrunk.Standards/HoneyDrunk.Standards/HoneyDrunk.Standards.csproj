@@ -7,11 +7,11 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.10</Version>
+    <Version>0.2.0</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.10: Configured to suggest removing braces from single-line statements - csharp_prefer_braces=false:suggestion with IDE0011=silent to prevent add-braces suggestions. SA1503 disabled.</PackageReleaseNotes>
-    <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
+    <PackageReleaseNotes>v0.2.0: Major update - Added comprehensive C# 14 support including field-backed properties, null-conditional assignment, collection expressions, enhanced pattern matching, Span optimizations, lambda parameter modifiers, and 50+ modern IDE analyzers.</PackageReleaseNotes>
+    <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards</RepositoryUrl>
@@ -43,7 +43,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="all" GeneratePathProperty="true">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" PrivateAssets="all">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.100" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>

@@ -72,14 +72,27 @@ csharp_style_prefer_pattern_matching = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
 
+# C# 14 - Enhanced pattern matching (readonly struct optimizations)
+csharp_style_prefer_readonly_struct = true:suggestion
+csharp_style_prefer_readonly_struct_member = true:suggestion
+
 # Null-checking preferences
 csharp_style_conditional_delegate_call = true:warning
 csharp_style_prefer_null_check_over_type_check = true:suggestion
 
-# Code block preferences - Suggest removing braces from single-line statements
+# C# 14 - Null-conditional operator (?.) for safe member access
+# Prefer: customer?.PlaceOrder(value) over if (customer != null) customer.PlaceOrder(value)
+csharp_style_prefer_null_propagation = true:warning
+dotnet_style_null_propagation = true:warning
+
+# Null-coalescing preferences
+dotnet_style_coalesce_expression = true:warning
+csharp_style_throw_expression = true:suggestion
+
+# Code block preferences - ERROR on unnecessary braces for single-line statements
 # SA1503 is disabled in globalconfig to allow this style.
-# IDE0011 is set to silent to prevent "add braces" suggestions
-csharp_prefer_braces = false:suggestion
+# IDE0011 with csharp_prefer_braces=false triggers "Remove unnecessary braces" as errors
+csharp_prefer_braces = false:error
 csharp_prefer_simple_using_statement = true:suggestion
 
 # Expression preferences
@@ -91,12 +104,27 @@ csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
 csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_prefer_utf8_string_literals = true:suggestion
 
+# C# 14 - Collection expressions (C# 12+)
+dotnet_style_prefer_collection_expression = true:suggestion
+
+# Span<T> preferences for performance-critical code
+# (These are suggestions; upgrade to warning in perf namespaces via local .editorconfig)
+csharp_style_prefer_method_group_conversion = true:suggestion
+csharp_style_prefer_top_level_statements = false:none
+
+# Modern null-checking
+csharp_style_prefer_is_null_check_over_reference_equality_method = true:warning
+
 # 'using' directive preferences
 csharp_prefer_static_local_function = true:warning
 
 # Modifier preferences
 csharp_prefer_static_anonymous_function = true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async:warning
+
+# Discard preferences  
+csharp_style_unused_value_expression_statement_preference = discard_variable:none
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 
 # ============================================
 # .NET Code Quality Rules

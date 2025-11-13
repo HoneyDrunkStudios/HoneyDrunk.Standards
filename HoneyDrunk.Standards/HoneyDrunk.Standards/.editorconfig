@@ -89,12 +89,8 @@ dotnet_style_null_propagation = true:warning
 dotnet_style_coalesce_expression = true:warning
 csharp_style_throw_expression = true:suggestion
 
-# Code block preferences - prefer braces only when the embedded statement spans multiple lines
-# This yields:
-# - Single-line without braces => no suggestion to add braces
-# - Single-line with braces => suggestion to remove braces
-# - Multi-line embedded statements => suggestion to add braces
-csharp_prefer_braces = when_multiline:suggestion
+# Code block preferences - no suggestions; allow both braced and braceless single-line styles
+csharp_prefer_braces = when_multiline:none
 csharp_prefer_simple_using_statement = true:suggestion
 
 # Expression preferences

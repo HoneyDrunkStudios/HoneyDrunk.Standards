@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.1.9: Explicitly set IDE0011=suggestion in globalconfig to ensure brace removal suggestions work properly in consuming projects. Combined with csharp_prefer_braces=false:suggestion in editorconfig to encourage omitting braces for single-line statements.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.10: Configured to suggest removing braces from single-line statements - csharp_prefer_braces=false:suggestion with IDE0011=silent to prevent add-braces suggestions. SA1503 disabled.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

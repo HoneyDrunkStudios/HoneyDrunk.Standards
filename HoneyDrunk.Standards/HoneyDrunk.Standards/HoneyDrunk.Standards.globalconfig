@@ -32,6 +32,9 @@ dotnet_diagnostic.SA1503.severity = none
 # IDE0005: Unused using directive - ERROR (keep using statements clean)
 dotnet_diagnostic.IDE0005.severity = error
 
+# IDE0011: Add braces - Inherit from csharp_prefer_braces preference (allows removal suggestions)
+dotnet_diagnostic.IDE0011.severity = suggestion
+
 # ============================================
 # Code Quality Analyzers (CA rules)
 # ============================================

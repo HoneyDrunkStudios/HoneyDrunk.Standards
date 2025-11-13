@@ -89,10 +89,10 @@ dotnet_style_null_propagation = true:warning
 dotnet_style_coalesce_expression = true:warning
 csharp_style_throw_expression = true:suggestion
 
-# Code block preferences - ERROR on unnecessary braces for single-line statements
+# Code block preferences - prefer omitting braces for single-line statements (suggestion only)
 # SA1503 is disabled in globalconfig to allow this style.
-# IDE0011 with csharp_prefer_braces=false triggers "Remove unnecessary braces" as errors
-csharp_prefer_braces = false:error
+# IDE0011 with csharp_prefer_braces=false triggers "Remove unnecessary braces" as suggestions
+csharp_prefer_braces = false:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 
 # Expression preferences

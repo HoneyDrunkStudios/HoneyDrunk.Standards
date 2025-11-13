@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.0: Major update - Added comprehensive C# 14 support including field-backed properties, null-conditional assignment, collection expressions, enhanced pattern matching, Span optimizations, lambda parameter modifiers, and 50+ modern IDE analyzers.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.1: Relax IDE0011 to suggestion and prefer omitting braces for single-line statements via .editorconfig/globalconfig updates.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -32,9 +32,10 @@ dotnet_diagnostic.SA1503.severity = none
 # IDE0005: Unused using directive - ERROR (keep using statements clean)
 dotnet_diagnostic.IDE0005.severity = error
 
-# IDE0011: Add braces - ERROR (enforce brace removal for single-line statements)
-# When csharp_prefer_braces=false:error, IDE0011 triggers errors for unnecessary braces
-dotnet_diagnostic.IDE0011.severity = error
+# IDE0011: Add braces - SUGGESTION (prefer omitting braces for single-line statements)
+# With csharp_prefer_braces=false in .editorconfig, this will suggest removing unnecessary braces
+# and will NOT error on single-line statements without braces.
+dotnet_diagnostic.IDE0011.severity = suggestion
 
 # ============================================
 # C# 14 Modern Features

@@ -22,7 +22,7 @@ dotnet_diagnostic.SA1413.severity = none
 # SA1633: File must have header - DISABLED (file headers not required)
 dotnet_diagnostic.SA1633.severity = none
 
-# SA1503: Braces should not be omitted - DISABLED (we prefer omitting braces for single-line statements)
+# SA1503: Braces should not be omitted - DISABLED (we allow both braced and unbraced single-line statements)
 dotnet_diagnostic.SA1503.severity = none
 
 # ============================================
@@ -32,10 +32,8 @@ dotnet_diagnostic.SA1503.severity = none
 # IDE0005: Unused using directive - ERROR (keep using statements clean)
 dotnet_diagnostic.IDE0005.severity = error
 
-# IDE0011: Add braces - SUGGESTION (prefer omitting braces for single-line statements)
-# With csharp_prefer_braces=false in .editorconfig, this will suggest removing unnecessary braces
-# and will NOT error on single-line statements without braces.
-dotnet_diagnostic.IDE0011.severity = suggestion
+# IDE0011: Add braces - DISABLED (allow both styles without suggestions)
+dotnet_diagnostic.IDE0011.severity = none
 
 # ============================================
 # C# 14 Modern Features

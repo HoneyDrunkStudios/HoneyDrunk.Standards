@@ -24,7 +24,7 @@ jobs:
       dotnet-version: '10.0.x'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
-      working-directory: 'HoneyDrunk.Transport'
+      working-directory: 'HoneyDrunk.Standards'
       enable-secret-scan: false
       enable-accessibility-check: false
       post-pr-summary: true

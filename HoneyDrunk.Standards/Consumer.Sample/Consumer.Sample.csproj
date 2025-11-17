@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     
+    <!-- This is a sample project for testing standards locally - do not pack or publish -->
+    <IsPackable>false</IsPackable>
+    
     <!-- CA1016: Assembly version attributes not required for sample/test projects -->
     <NoWarn>$(NoWarn);CA1016</NoWarn>
   </PropertyGroup>

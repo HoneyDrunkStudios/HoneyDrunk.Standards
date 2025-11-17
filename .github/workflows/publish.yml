@@ -1,4 +1,4 @@
-name: Publish to NuGet
+﻿name: Publish to NuGet
 
 on:
   push:
@@ -12,12 +12,11 @@ on:
         type: string
 
 permissions:
-  contents: write        # For creating GitHub releases
-  packages: write        # For publishing to NuGet/GitHub Packages
-  id-token: write        # For OIDC authentication (if needed)
+  contents: write
+  packages: write
+  id-token: write
 
 jobs:
-  # Determine version from tag or manual input
   prepare:
     name: Prepare Release
     runs-on: ubuntu-latest
@@ -34,30 +33,28 @@ jobs:
             VERSION_TAG="v${VERSION}"
           else
             VERSION="${GITHUB_REF#refs/tags/v}"
-            VERSION_TAG="v${VERSION}"
+            VERSION_TAG="${GITHUB_REF#refs/tags/}"
           fi
           echo "version=$VERSION" >>"$GITHUB_OUTPUT"
           echo "version-tag=$VERSION_TAG" >>"$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
+          echo "Publishing tag: $VERSION_TAG"
 
-  # Use reusable workflow from external repo
   release:
     name: Build, Pack & Publish
     needs: prepare
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/dotnet-library-release.yml@main
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@main
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
-      working-directory: 'HoneyDrunk.Standards'
-      project-path: 'HoneyDrunk.Standards/HoneyDrunk.Standards.csproj'
+      project-path: 'HoneyDrunk.Standards/HoneyDrunk.Standards.slnx'
+      enable-nuget-publish: true
       nuget-source: 'https://api.nuget.org/v3/index.json'
-      skip-duplicate: true
       actions-ref: 'main'
     secrets:
       nuget-api-key: ${{ secrets.NUGET_API_KEY }}
 
-  # Create GitHub Release
   github-release:
     name: Create GitHub Release
     needs: [prepare, release]
@@ -70,22 +67,30 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ needs.prepare.outputs.version-tag }}
           name: HoneyDrunk.Standards ${{ needs.prepare.outputs.version-tag }}
           body: |
             ## HoneyDrunk.Standards ${{ needs.prepare.outputs.version-tag }}
 
-            ### Installation
+            Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.
+
+            ### 📦 Installation
+
             ```xml
             <PackageReference Include="HoneyDrunk.Standards" Version="${{ needs.prepare.outputs.version }}" PrivateAssets="all" />
             ```
 
-            ### Links
+            ### 🔗 Links
             - [NuGet Package](https://www.nuget.org/packages/HoneyDrunk.Standards/${{ needs.prepare.outputs.version }})
-            - [Conventions Documentation](./docs/CONVENTIONS.md)
-            - [Adoption Guide](./docs/ADOPTION.md)
+            - [Documentation](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme)
+
+            ### ✨ Features
+            - ✅ C# 14 support with modern language features
+            - ✅ StyleCop analyzers (SA rules)
+            - ✅ .NET Code Analyzers (CA rules)
+            - ✅ IDE analyzers (IDE rules)
+            - ✅ EditorConfig standards
+            - ✅ Build-transitive package distribution
           draft: false
           prerelease: false

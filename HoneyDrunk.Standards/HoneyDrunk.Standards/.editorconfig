@@ -49,10 +49,10 @@ csharp_using_directive_placement = outside_namespace:warning
 # Prefer primary constructors (C# 12+)
 csharp_style_prefer_primary_constructors = true:suggestion
 
-# var preferences - ALWAYS prefer var
-csharp_style_var_for_built_in_types = true:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = true:suggestion
+# var preferences - ALWAYS prefer var (enforced as error)
+csharp_style_var_for_built_in_types = true:error
+csharp_style_var_when_type_is_apparent = true:error
+csharp_style_var_elsewhere = true:error
 
 # Expression-bodied members
 csharp_style_expression_bodied_methods = when_on_single_line:suggestion

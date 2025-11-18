@@ -32,6 +32,12 @@ dotnet_diagnostic.SA1503.severity = none
 # IDE0005: Unused using directive - ERROR (keep using statements clean)
 dotnet_diagnostic.IDE0005.severity = error
 
+# IDE0007: Use 'var' instead of explicit type (when type is apparent)
+dotnet_diagnostic.IDE0007.severity = error
+
+# IDE0008: Use explicit type instead of 'var' (inverse of IDE0007, disabled to enforce var)
+dotnet_diagnostic.IDE0008.severity = none
+
 # IDE0011: Add braces - DISABLED (allow both styles without suggestions)
 dotnet_diagnostic.IDE0011.severity = none
 

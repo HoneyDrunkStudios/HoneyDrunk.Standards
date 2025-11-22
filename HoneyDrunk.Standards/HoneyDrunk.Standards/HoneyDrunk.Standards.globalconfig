@@ -13,6 +13,9 @@ is_global = true
 # SA1101: Prefix local calls with this - DISABLED (conflicts with modern C# style)
 dotnet_diagnostic.SA1101.severity = none
 
+# SA1208: System using directives should be placed before others - DISABLED (prefer purely alphabetical ordering)
+dotnet_diagnostic.SA1208.severity = none
+
 # SA1309: Field names should not begin with underscore - DISABLED (C# community standard uses _fieldName)
 dotnet_diagnostic.SA1309.severity = none
 

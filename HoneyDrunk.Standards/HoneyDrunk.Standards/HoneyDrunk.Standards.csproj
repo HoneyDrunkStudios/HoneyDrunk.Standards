@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.5: Enforce using var over built in types.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.6: Enforce purely alphabetical using directive ordering (disabled SA1208).</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

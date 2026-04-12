@@ -5,6 +5,26 @@
 <Project>
 
   <!-- ============================================
+       Embedded Analyzer References
+       ============================================ -->
+  <ItemGroup>
+    <!-- Remove package-embedded analyzers first so toggles can re-add them deterministically -->
+    <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\Microsoft.CodeAnalysis.NetAnalyzers.dll" />
+    <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
+    <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(HD_EnableAnalyzers)' == 'true'">
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\Microsoft.CodeAnalysis.NetAnalyzers.dll" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.dll"
+              Condition="'$(HD_UseStyleCop)' == 'true'" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll"
+              Condition="'$(HD_UseStyleCop)' == 'true'" />
+  </ItemGroup>
+
+  <!-- ============================================
        SDK Version Validation
        ============================================ -->
   <Target Name="HD_ValidateSdkVersion" BeforeTargets="BeforeBuild">

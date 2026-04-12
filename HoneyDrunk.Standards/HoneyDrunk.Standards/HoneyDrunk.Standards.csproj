@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.6</Version>
+    <Version>0.2.7</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.6: Enforce purely alphabetical using directive ordering (disabled SA1208).</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.7: Embed StyleCop and NetAnalyzers DLLs so CLI and CI builds load the same analyzers as Visual Studio.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -29,6 +29,14 @@
     <NoWarn>$(NoWarn);NU5128;CA1016</NoWarn>
   </PropertyGroup>
 
+  <!-- Version constants used by PackageReferences and analyzer embedding -->
+  <PropertyGroup>
+    <_StyleCopPackageVersion>1.2.0-beta.556</_StyleCopPackageVersion>
+    <_StyleCopAnalyzerPackageVersion>1.2.0.556</_StyleCopAnalyzerPackageVersion>
+    <_NetAnalyzersVersion>10.0.100</_NetAnalyzersVersion>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);HD_EmbedAnalyzerDlls</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
   <!-- Include buildTransitive content in package -->
   <ItemGroup>
     <None Include="buildTransitive\**\*" Pack="true" PackagePath="buildTransitive\" />
@@ -38,12 +46,33 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <Target Name="HD_EmbedAnalyzerDlls">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)stylecop.analyzers.unstable\$(_StyleCopAnalyzerPackageVersion)\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+        <PackagePath>analyzers/dotnet/cs/</PackagePath>
+        <BuildAction>None</BuildAction>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)stylecop.analyzers.unstable\$(_StyleCopAnalyzerPackageVersion)\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
+        <PackagePath>analyzers/dotnet/cs/</PackagePath>
+        <BuildAction>None</BuildAction>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)microsoft.codeanalysis.netanalyzers\$(_NetAnalyzersVersion)\analyzers\dotnet\Microsoft.CodeAnalysis.NetAnalyzers.dll">
+        <PackagePath>analyzers/dotnet/</PackagePath>
+        <BuildAction>None</BuildAction>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)microsoft.codeanalysis.netanalyzers\$(_NetAnalyzersVersion)\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll">
+        <PackagePath>analyzers/dotnet/cs/</PackagePath>
+        <BuildAction>None</BuildAction>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
   <!-- Analyzer Dependencies (PrivateAssets=all so consumers don't see transitive deps) -->
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="all" GeneratePathProperty="true">
+    <PackageReference Include="StyleCop.Analyzers" Version="$(_StyleCopPackageVersion)" PrivateAssets="all" GeneratePathProperty="true">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.100" PrivateAssets="all">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(_NetAnalyzersVersion)" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>

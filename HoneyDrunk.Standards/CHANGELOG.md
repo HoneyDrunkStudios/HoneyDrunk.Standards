@@ -5,6 +5,17 @@ All notable changes to HoneyDrunk.Standards will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2026-04-11
+
+### Fixed
+- StyleCop SA* analyzer DLLs now load in `dotnet build` and CI pipelines by embedding the analyzer assemblies in the package and wiring them through `HoneyDrunk.Standards.targets`
+
+### Breaking
+- Consumer repositories will see newly surfaced SA* and CA* diagnostics on CLI builds after upgrading because the analyzers now run outside Visual Studio too
+
+### Removed
+- Broken analyzer `PackageReference` injection from `buildTransitive/HoneyDrunk.Standards.props`
+
 ## [0.2.6] - 2025-11-22
 
 ### Changed
@@ -35,5 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Primary constructors support
 - Deterministic builds enabled
 
+[0.2.7]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/releases/tag/v0.2.5

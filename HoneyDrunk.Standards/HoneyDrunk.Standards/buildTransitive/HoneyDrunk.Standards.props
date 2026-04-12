@@ -69,21 +69,4 @@
     <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)HoneyDrunk.Standards.globalconfig" />
   </ItemGroup>
 
-  <!-- ============================================
-       Analyzer Package References
-       ============================================ -->
-  <ItemGroup Condition="'$(HD_EnableAnalyzers)' == 'true'">
-    <!-- StyleCop for naming and ordering conventions -->
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" Condition="'$(HD_UseStyleCop)' == 'true'">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    
-    <!-- Microsoft Code Quality Analyzers -->
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,4 @@
-﻿# HoneyDrunk.Standards
+# HoneyDrunk.Standards
 
 [![Validate](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,6 +16,9 @@ HoneyDrunk.Standards is a **zero-configuration** NuGet package that automaticall
 - ✅ **Deterministic Builds** - Reproducible builds across machines
 - ✅ **Nullable Reference Types** - Enforced null safety
 - ✅ **Warnings as Errors** - Quality gate in CI/CD
+- ✅ **ADR-0047 Test Stack** - xUnit v2, NSubstitute, AwesomeAssertions, and coverlet for `*.Tests.*` projects
+- ✅ **Coverage Templates** - Tiered coverlet runsettings for ADR-0047 / ADR-0036 coverage targets
+- ✅ **Test Flake Guardrail** - `Thread.Sleep` is banned in test projects via `RS0030` / `HD0051`
 
 All of this happens **automatically** when you add the package. No manual configuration needed.
 
@@ -84,6 +87,59 @@ You should see:
 - **CI mode auto-detection** - Optimized for GitHub Actions, Azure Pipelines
 - **Warnings as errors** - Fail builds on analyzer warnings
 - **Nullable reference types** - Catch null bugs at compile time
+
+### 🧪 ADR-0047 Test Defaults
+
+Test projects should reference both packages:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.2.8" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.2.8" PrivateAssets="all" />
+</ItemGroup>
+```
+
+`HoneyDrunk.Standards.Tests` carries the NuGet dependencies because package `buildTransitive` props cannot reliably add `PackageReference` items during restore. Projects whose names match the Grid test convention (`*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.Integration.Containers`, `*.Tests.E2E`, `*.Tests.Benchmarks`) receive:
+
+- `IsPackable=false`
+- `IsTestProject=true`
+- xUnit `2.9.3`
+- `xunit.runner.visualstudio` `2.8.2`
+- `Microsoft.NET.Test.Sdk` `18.5.1`
+- `NSubstitute` `5.3.0`
+- `AwesomeAssertions` `9.4.0`
+- `coverlet.collector` `10.0.1`
+
+Runtime projects must reference only `HoneyDrunk.Standards`, so they do not receive these test packages. Moq and FluentAssertions are intentionally absent per ADR-0047 D2.
+
+### 📊 Coverage Runsettings Templates
+
+Copy the matching template from the package's `buildTransitive` assets to the Node repo root as `coverlet.runsettings`, then run:
+
+```bash
+dotnet test --settings coverlet.runsettings
+```
+
+| Node tier | Template | Line | Branch | Behavior |
+|-----------|----------|------|--------|----------|
+| Tier 0 | `coverlet.tier0.runsettings` | 85% | 80% | Hard gate |
+| Tier 1 | `coverlet.tier1.runsettings` | 75% | 70% | Hard gate |
+| Tier 2 | `coverlet.tier2.runsettings` | 60% | 55% | Warn-only; CI emits the warning |
+| Untiered | none | none | none | No coverage gate |
+
+Tier 2 omits coverlet thresholds because coverlet thresholds fail the test run; the CI job owns the warning posture. All first adoptions have ADR-0047's 30-day advisory grace period before hard gates become blocking. Forward-declared Nodes such as Notify Cloud, Memory, Knowledge, Flow, and Evals use the template for their tier when scaffolded.
+
+### 🚫 Test `Thread.Sleep` Ban
+
+`Thread.Sleep` is forbidden in `*.Tests.*` projects by the HoneyDrunk analyzer rule `HD0051`. The rule is build-breaking for test projects only and covers both `Thread.Sleep(int)` and `Thread.Sleep(TimeSpan)`.
+
+Use one of these instead:
+
+- `await` the async operation
+- polling primitives with explicit timeouts
+- synchronously-completing fakes
+
+Runtime projects are not flagged by this rule.
 
 ---
 

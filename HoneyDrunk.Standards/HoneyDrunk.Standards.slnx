@@ -10,5 +10,7 @@
     <File Path="..\.github\workflows\validate-pr.yml" />
   </Folder>
   <Project Path="HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" />
+  <Project Path="HoneyDrunk.Standards.Analyzers\HoneyDrunk.Standards.Analyzers.csproj" />
+  <Project Path="HoneyDrunk.Standards.Tests\HoneyDrunk.Standards.Tests.csproj" />
   <Project Path="Consumer.Sample\Consumer.Sample.csproj" />
 </Solution>

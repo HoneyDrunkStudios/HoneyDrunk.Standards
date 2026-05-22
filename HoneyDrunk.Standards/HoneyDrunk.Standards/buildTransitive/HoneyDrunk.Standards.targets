@@ -13,6 +13,7 @@
     <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
     <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Remove="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\HoneyDrunk.Standards.Analyzers.dll" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(HD_EnableAnalyzers)' == 'true'">
@@ -22,6 +23,8 @@
               Condition="'$(HD_UseStyleCop)' == 'true'" />
     <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll"
               Condition="'$(HD_UseStyleCop)' == 'true'" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\HoneyDrunk.Standards.Analyzers.dll"
+              Condition="'$(HD_IsGridTestProject)' == 'true'" />
   </ItemGroup>
 
   <!-- ============================================

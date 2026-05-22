@@ -46,6 +46,11 @@
   </PropertyGroup>
 
   <!-- ============================================
+       ADR-0047 Test Project Defaults
+       ============================================ -->
+  <Import Project="$(MSBuildThisFileDirectory)HoneyDrunk.Tests.props" />
+
+  <!-- ============================================
        Minimal NoWarn List
        ============================================ -->
   <PropertyGroup>

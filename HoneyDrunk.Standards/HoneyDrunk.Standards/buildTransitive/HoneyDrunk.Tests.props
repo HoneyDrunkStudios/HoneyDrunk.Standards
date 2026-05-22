@@ -1,0 +1,33 @@
+<!--
+  HoneyDrunk.Tests.props - ADR-0047 test-stack defaults
+  Applies only to test projects matching HoneyDrunk *.Tests.* naming conventions.
+-->
+<Project>
+
+  <PropertyGroup>
+    <HD_IsGridTestProject Condition="'$(HD_IsGridTestProject)' == '' AND '$(IsTestProject)' == 'true'">true</HD_IsGridTestProject>
+    <HD_IsGridTestProject Condition="'$(HD_IsGridTestProject)' == '' AND $([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests(\.|$)'))">true</HD_IsGridTestProject>
+    <HD_IsGridTestProject Condition="'$(HD_IsGridTestProject)' == ''">false</HD_IsGridTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(HD_IsGridTestProject)' == 'true'">
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <HD_ExcludeFromSolutionVersion>true</HD_ExcludeFromSolutionVersion>
+    <HD_ThreadSleepDiagnosticId>RS0030</HD_ThreadSleepDiagnosticId>
+  </PropertyGroup>
+
+  <!--
+    Test package dependencies are shipped by HoneyDrunk.Standards.Tests.
+    NuGet buildTransitive props cannot reliably add PackageReference items during
+    restore, so this fragment owns only test-project properties and diagnostics.
+  -->
+  <PropertyGroup Condition="'$(HD_IsGridTestProject)' == 'true'">
+    <WarningsAsErrors>$(WarningsAsErrors);$(HD_ThreadSleepDiagnosticId)</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="HD_IsGridTestProject" />
+  </ItemGroup>
+
+</Project>

@@ -5,7 +5,7 @@
 # documentation placeholder secrets on top of the default ruleset.
 #
 # Shared source of truth: HoneyDrunk.Actions/.github/config/gitleaks.toml
-# Keep in sync across all grid repos.
+# Keep in sync across all Hive/Grid repos.
 # ==============================================================================
 
 title = "HoneyDrunk gitleaks config"

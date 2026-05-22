@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.7</Version>
+    <Version>0.2.8</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.7: Embed StyleCop and NetAnalyzers DLLs so CLI and CI builds load the same analyzers as Visual Studio.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.8: Add ADR-0047 test-stack defaults, coverage runsettings templates, and test-only Thread.Sleep enforcement.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -64,11 +64,16 @@
         <PackagePath>analyzers/dotnet/cs/</PackagePath>
         <BuildAction>None</BuildAction>
       </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="..\HoneyDrunk.Standards.Analyzers\bin\$(Configuration)\netstandard2.0\HoneyDrunk.Standards.Analyzers.dll">
+        <PackagePath>analyzers/dotnet/cs/</PackagePath>
+        <BuildAction>None</BuildAction>
+      </TfmSpecificPackageFile>
     </ItemGroup>
   </Target>
 
   <!-- Analyzer Dependencies (PrivateAssets=all so consumers don't see transitive deps) -->
   <ItemGroup>
+    <ProjectReference Include="..\HoneyDrunk.Standards.Analyzers\HoneyDrunk.Standards.Analyzers.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <PackageReference Include="StyleCop.Analyzers" Version="$(_StyleCopPackageVersion)" PrivateAssets="all" GeneratePathProperty="true">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

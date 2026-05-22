@@ -1,0 +1,12 @@
+<!--
+  HoneyDrunk.Standards.Tests - ADR-0047 test-stack marker.
+  Package dependencies provide xUnit v2, NSubstitute, AwesomeAssertions, and coverlet.
+-->
+<Project>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <HD_IsGridTestProject>true</HD_IsGridTestProject>
+    <HD_ExcludeFromSolutionVersion>true</HD_ExcludeFromSolutionVersion>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ADR-0047 Tier 1 coverage template: 75% line / 70% branch, hard gate.
+  First adoption of a Node has a 30-day advisory grace period; the CI coverage
+  gate owns the grace-to-blocking flip, not this template.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Threshold>75,70</Threshold>
+          <ThresholdType>line,branch</ThresholdType>
+          <ThresholdStat>total</ThresholdStat>
+          <Exclude>[*.Tests.*]*,[*.Generated]*,[*]*.Migrations.*</Exclude>
+          <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+          <ExcludeByFile>**/Migrations/**/*.cs,**/*.g.cs,**/*.g.i.cs,**/*.Designer.cs</ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

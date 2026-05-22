@@ -55,6 +55,48 @@ While developing or testing standards changes:
    dotnet restore
    ```
 
+## ADR-0047 Test Project Defaults
+
+HoneyDrunk test projects named `*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.Integration.Containers`, `*.Tests.E2E`, or `*.Tests.Benchmarks` should reference both standards packages:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.2.8" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.2.8" PrivateAssets="all" />
+</ItemGroup>
+```
+
+`HoneyDrunk.Standards.Tests` carries the ADR-0047 D2 package dependencies because NuGet package `buildTransitive` props cannot reliably add `PackageReference` items during restore. The stack is:
+
+- xUnit v2 (`xunit` `2.9.3` + `xunit.runner.visualstudio` `2.8.2`)
+- `Microsoft.NET.Test.Sdk` `18.5.1`
+- `NSubstitute` `5.3.0`
+- `AwesomeAssertions` `9.4.0`
+- `coverlet.collector` `10.0.1`
+
+The packages also set `IsPackable=false` and `IsTestProject=true` for those projects. Runtime projects should reference only `HoneyDrunk.Standards`, so they are not given test package references.
+
+## Coverage Templates
+
+Copy the matching template from the package's `buildTransitive` assets to the Node repo root as `coverlet.runsettings` and run:
+
+```bash
+dotnet test --settings coverlet.runsettings
+```
+
+| Node tier | Template | Line | Branch | Behavior |
+|-----------|----------|------|--------|----------|
+| Tier 0 | `coverlet.tier0.runsettings` | 85% | 80% | Hard gate |
+| Tier 1 | `coverlet.tier1.runsettings` | 75% | 70% | Hard gate |
+| Tier 2 | `coverlet.tier2.runsettings` | 60% | 55% | Warn-only; CI emits the warning |
+| Untiered | none | none | none | No coverage gate |
+
+Each first Node adoption has ADR-0047's 30-day advisory grace period. The grace-to-blocking flip is owned by the CI coverage gate, not the runsettings file.
+
+## Test `Thread.Sleep` Ban
+
+In test projects, `Thread.Sleep` is banned by HoneyDrunk analyzer rule `HD0051`; builds fail when tests call `Thread.Sleep(int)` or `Thread.Sleep(TimeSpan)`. Use `await`, polling primitives with explicit timeouts, or synchronously-completing fakes instead. Runtime projects are intentionally outside this rule's scope.
+
 ## Verifying Application
 
 After adding the package, verify it's working:

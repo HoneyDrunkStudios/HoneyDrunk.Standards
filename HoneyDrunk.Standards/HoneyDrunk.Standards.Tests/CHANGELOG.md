@@ -2,6 +2,15 @@
 
 All notable changes to HoneyDrunk.Standards.Tests will be documented in this file.
 
+## [0.2.9] - 2026-05-22
+
+### Fixed
+
+- Removed package DevelopmentDependency metadata so xUnit, AwesomeAssertions, NSubstitute, and test SDK assets flow correctly to test-stack consumers.
+- Added a consumer smoke test proving the package compiles and runs with only HoneyDrunk.Standards.Tests referenced.
+
+---
+
 ## [0.2.8] - 2026-05-22
 
 ### Added

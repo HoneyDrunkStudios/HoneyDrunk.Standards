@@ -5,6 +5,15 @@ All notable changes to HoneyDrunk.Standards will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.9] - 2026-05-22
+
+### Fixed
+
+- Fixed HoneyDrunk.Standards.Tests packaging so test-stack dependencies flow to consumer compile and test runtime output.
+- Added a package-consumer smoke project for HoneyDrunk.Standards.Tests.
+
+---
+
 ## [0.2.8] - 2026-05-22
 
 ### Added
@@ -57,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Primary constructors support
 - Deterministic builds enabled
 
+[0.2.9]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/compare/v0.2.5...v0.2.6

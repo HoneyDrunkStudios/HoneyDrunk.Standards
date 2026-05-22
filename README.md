@@ -94,12 +94,12 @@ Test projects should reference both packages:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.2.8" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.2.8" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.2.9" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.2.9" PrivateAssets="all" />
 </ItemGroup>
 ```
 
-`HoneyDrunk.Standards.Tests` carries the NuGet dependencies because package `buildTransitive` props cannot reliably add `PackageReference` items during restore. Projects whose names match the Grid test convention (`*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.Integration.Containers`, `*.Tests.E2E`, `*.Tests.Benchmarks`) receive:
+`HoneyDrunk.Standards.Tests` carries the NuGet dependencies because package `buildTransitive` props cannot reliably add `PackageReference` items during restore. Keep the reference simple: use `PrivateAssets="all"`, but do not copy the analyzer-package `IncludeAssets` pattern onto this metapackage because consumers need compile/runtime assets from the test-stack dependencies. Projects whose names match the Grid test convention (`*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.Integration.Containers`, `*.Tests.E2E`, `*.Tests.Benchmarks`) receive:
 
 - `IsPackable=false`
 - `IsTestProject=true`

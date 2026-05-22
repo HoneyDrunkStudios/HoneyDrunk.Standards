@@ -1,0 +1,50 @@
+# ==============================================================================
+# Gitleaks configuration
+# ==============================================================================
+# Auto-discovered by gitleaks when scanning this repo. Adds allowlists for
+# documentation placeholder secrets on top of the default ruleset.
+#
+# Shared source of truth: HoneyDrunk.Actions/.github/config/gitleaks.toml
+# Keep in sync across all grid repos.
+# ==============================================================================
+
+title = "HoneyDrunk gitleaks config"
+
+[extend]
+useDefault = true
+
+# ------------------------------------------------------------------------------
+# Documentation placeholders
+# ------------------------------------------------------------------------------
+# Code samples in README/docs use obvious fake values like "test-api-key-12345"
+# or "my-api-key-12345". Gitleaks' generic-api-key rule flags them. Scope the
+# allowlist to markdown/docs paths so a real secret leaking into source is still
+# caught.
+[[allowlists]]
+description = "Documentation placeholder API keys and secrets"
+condition = "AND"
+paths = [
+  '''(?i).*\.md$''',
+  '''(?i)^docs/.*''',
+]
+regexes = [
+  '''(?i)(test|my|your|example|sample|demo|fake|placeholder|dummy|changeme|xxxx+)[-_]?api[-_]?key[-_]?[\w-]*''',
+  '''(?i)(test|my|your|example|sample|demo|fake|placeholder|dummy)[-_]?secret[-_]?[\w-]*''',
+  '''(?i)(test|my|your|example|sample|demo|fake|placeholder|dummy)[-_]?token[-_]?[\w-]*''',
+]
+
+# ------------------------------------------------------------------------------
+# Hex identifiers in documentation
+# ------------------------------------------------------------------------------
+# Azure Key Vault secret versions are 32-char hex strings and are legitimately
+# shown in docs as example identifiers (not secrets). Allow only inside docs.
+[[allowlists]]
+description = "Hex identifiers in docs (e.g. AKV secret version IDs)"
+condition = "AND"
+paths = [
+  '''(?i).*\.md$''',
+  '''(?i)^docs/.*''',
+]
+regexes = [
+  '''^[a-f0-9]{32}$''',
+]

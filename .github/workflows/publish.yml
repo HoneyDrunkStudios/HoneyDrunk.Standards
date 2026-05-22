@@ -70,32 +70,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout Actions
+        uses: actions/checkout@v4
+        with:
+          repository: HoneyDrunkStudios/HoneyDrunk.Actions
+          ref: main
+          path: .actions
+
+      - name: Generate Release Notes
+        id: notes
+        uses: ./.actions/.github/actions/release/generate-notes
+        with:
+          version: ${{ needs.prepare.outputs.version }}
+          product-name: HoneyDrunk.Standards
+          product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
+          nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
+          docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.version-tag }}
           name: HoneyDrunk.Standards ${{ needs.prepare.outputs.version-tag }}
-          body: |
-            ## HoneyDrunk.Standards ${{ needs.prepare.outputs.version-tag }}
-
-            Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.
-
-            ### 📦 Installation
-
-            ```xml
-            <PackageReference Include="HoneyDrunk.Standards" Version="${{ needs.prepare.outputs.version }}" PrivateAssets="all" />
-            ```
-
-            ### 🔗 Links
-            - [NuGet Package](https://www.nuget.org/packages/HoneyDrunk.Standards/${{ needs.prepare.outputs.version }})
-            - [Documentation](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme)
-
-            ### ✨ Features
-            - ✅ C# 14 support with modern language features
-            - ✅ StyleCop analyzers (SA rules)
-            - ✅ .NET Code Analyzers (CA rules)
-            - ✅ IDE analyzers (IDE rules)
-            - ✅ EditorConfig standards
-            - ✅ Build-transitive package distribution
+          body: ${{ steps.notes.outputs.body }}
+          generate_release_notes: ${{ steps.notes.outputs.has-changelog == 'false' }}
           draft: false
           prerelease: false

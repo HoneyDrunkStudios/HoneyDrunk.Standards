@@ -16,6 +16,7 @@ permissions:
   contents: read
   checks: write
   pull-requests: write  # This allows posting PR comments
+  security-events: write # Required by the reusable PR Core CodeQL job
 
 jobs:
   pr-validation:

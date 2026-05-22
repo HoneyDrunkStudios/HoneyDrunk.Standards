@@ -18,7 +18,7 @@ HoneyDrunk.Standards is a **zero-configuration** NuGet package that automaticall
 - ✅ **Warnings as Errors** - Quality gate in CI/CD
 - ✅ **ADR-0047 Test Stack** - xUnit v2, NSubstitute, AwesomeAssertions, and coverlet for `*.Tests.*` projects
 - ✅ **Coverage Templates** - Tiered coverlet runsettings for ADR-0047 / ADR-0036 coverage targets
-- ✅ **Test Flake Guardrail** - `Thread.Sleep` is banned in test projects via `RS0030` / `HD0051`
+- ✅ **Test Flake Guardrail** - `Thread.Sleep` is banned in test projects via `HD0051`
 
 All of this happens **automatically** when you add the package. No manual configuration needed.
 

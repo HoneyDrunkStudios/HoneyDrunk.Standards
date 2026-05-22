@@ -14,7 +14,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <HD_ExcludeFromSolutionVersion>true</HD_ExcludeFromSolutionVersion>
-    <HD_ThreadSleepDiagnosticId>RS0030</HD_ThreadSleepDiagnosticId>
+    <HD_ThreadSleepDiagnosticId>HD0051</HD_ThreadSleepDiagnosticId>
   </PropertyGroup>
 
   <!--

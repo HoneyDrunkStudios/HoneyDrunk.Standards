@@ -49,8 +49,16 @@ public sealed class ThreadSleepInTestsAnalyzer : DiagnosticAnalyzer
     {
         var invocation = (IInvocationOperation)context.Operation;
         var method = invocation.TargetMethod;
+        var compilation = context.Compilation;
+        var threadType = compilation.GetTypeByMetadataName("System.Threading.Thread");
+        var timeSpanType = compilation.GetTypeByMetadataName("System.TimeSpan");
 
-        if (method.Name != "Sleep" || method.ContainingType?.ToDisplayString() != "System.Threading.Thread")
+        if (threadType is null || timeSpanType is null)
+        {
+            return;
+        }
+
+        if (method.Name != "Sleep" || !SymbolEqualityComparer.Default.Equals(method.ContainingType, threadType))
         {
             return;
         }
@@ -60,8 +68,11 @@ public sealed class ThreadSleepInTestsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var parameterType = method.Parameters[0].Type.ToDisplayString();
-        if (parameterType is not ("int" or "System.Int32" or "System.TimeSpan"))
+        var parameterType = method.Parameters[0].Type;
+        var isSupportedOverload = parameterType.SpecialType == SpecialType.System_Int32
+            || SymbolEqualityComparer.Default.Equals(parameterType, timeSpanType);
+
+        if (!isSupportedOverload)
         {
             return;
         }

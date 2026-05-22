@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.8</Version>
+    <Version>0.2.9</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.8: Add ADR-0047 test-stack defaults, coverage runsettings templates, and test-only Thread.Sleep enforcement.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.9: Keep Standards aligned with the fixed ADR-0047 test-stack package.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -11,11 +11,14 @@ on:
       - '**.targets'
       - '**/.editorconfig'
       - '**/stylecop.json'
+      - '**/*.runsettings'
+      - '.github/**'
 
 permissions:
   contents: read
   checks: write
   pull-requests: write  # This allows posting PR comments
+  issues: write
   security-events: write # Required by the reusable PR Core CodeQL job
 
 jobs:

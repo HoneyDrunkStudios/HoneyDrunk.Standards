@@ -44,7 +44,7 @@ jobs:
     name: Build, Pack & Publish
     needs: prepare
     permissions:
-      contents: read
+      contents: write
       packages: write
       id-token: write
       security-events: write
@@ -56,43 +56,13 @@ jobs:
       project-path: 'HoneyDrunk.Standards/HoneyDrunk.Standards.slnx'
       enable-nuget-publish: true
       nuget-source: 'https://api.nuget.org/v3/index.json'
+      package-version: ${{ needs.prepare.outputs.version }}
+      create-github-release: true
+      github-release-tag: ${{ needs.prepare.outputs.version-tag }}
+      release-product-name: HoneyDrunk.Standards
+      release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
+      release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
+      release-docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
       actions-ref: 'main'
     secrets:
       nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-
-  github-release:
-    name: Create GitHub Release
-    needs: [prepare, release]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Checkout Actions
-        uses: actions/checkout@v5
-        with:
-          repository: HoneyDrunkStudios/HoneyDrunk.Actions
-          ref: main
-          path: .actions
-
-      - name: Generate Release Notes
-        id: notes
-        uses: ./.actions/.github/actions/release/generate-notes
-        with:
-          version: ${{ needs.prepare.outputs.version }}
-          product-name: HoneyDrunk.Standards
-          product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
-          nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
-          docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: ${{ needs.prepare.outputs.version-tag }}
-          name: HoneyDrunk.Standards ${{ needs.prepare.outputs.version-tag }}
-          body: ${{ steps.notes.outputs.body }}
-          generate_release_notes: ${{ steps.notes.outputs.has-changelog == 'false' }}
-          draft: false
-          prerelease: false

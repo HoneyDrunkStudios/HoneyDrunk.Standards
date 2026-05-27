@@ -33,7 +33,7 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/v}"
             VERSION_TAG="${GITHUB_REF#refs/tags/}"
           fi
-          if [[ ! "$VERSION" =~ ^[0-9]+[.][0-9]+[.][0-9]+(-[0-9A-Za-z-]+([.][0-9A-Za-z-]+)*)?([+][0-9A-Za-z-]+([.][0-9A-Za-z-]+)*)?$ ]]; then
+          if [[ ! "$VERSION" =~ ^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-((0|[1-9][0-9]*)|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)([.]((0|[1-9][0-9]*)|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?([+][0-9A-Za-z-]+([.][0-9A-Za-z-]+)*)?$ ]]; then
             echo "::error::Version must be SemVer-compatible (for example 1.2.3, 1.2.3-preview.1, or 1.2.3-preview.1+build.5): $VERSION"
             exit 1
           fi

@@ -11,15 +11,13 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-  packages: write
-  id-token: write
+permissions: {}
 
 jobs:
   prepare:
     name: Prepare Release
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       version: ${{ steps.get_version.outputs.version }}
       version_tag: ${{ steps.get_version.outputs.version_tag }}

@@ -25,9 +25,11 @@ jobs:
       - name: Determine version
         id: get_version
         shell: bash
+        env:
+          WORKFLOW_DISPATCH_VERSION: ${{ github.event.inputs.version }}
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VERSION="${{ github.event.inputs.version }}"
+            VERSION="$WORKFLOW_DISPATCH_VERSION"
             VERSION_TAG="v${VERSION}"
           else
             VERSION="${GITHUB_REF#refs/tags/v}"

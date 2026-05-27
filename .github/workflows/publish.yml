@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
-      version-tag: ${{ steps.get_version.outputs.version-tag }}
+      version_tag: ${{ steps.get_version.outputs.version_tag }}
     steps:
       - name: Determine version
         id: get_version
@@ -36,7 +36,7 @@ jobs:
             VERSION_TAG="${GITHUB_REF#refs/tags/}"
           fi
           echo "version=$VERSION" >>"$GITHUB_OUTPUT"
-          echo "version-tag=$VERSION_TAG" >>"$GITHUB_OUTPUT"
+          echo "version_tag=$VERSION_TAG" >>"$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
           echo "Publishing tag: $VERSION_TAG"
 
@@ -58,7 +58,7 @@ jobs:
       nuget-source: 'https://api.nuget.org/v3/index.json'
       package-version: ${{ needs.prepare.outputs.version }}
       create-github-release: true
-      github-release-tag: ${{ needs.prepare.outputs.version-tag }}
+      github-release-tag: ${{ needs.prepare.outputs.version_tag }}
       release-product-name: HoneyDrunk.Standards
       release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
       release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'

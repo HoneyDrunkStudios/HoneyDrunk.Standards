@@ -2,11 +2,11 @@ name: Grid Review Request
 
 on:
   pull_request_target:
-    types: [opened, synchronize, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
   issues: write
 
 concurrency:
@@ -16,16 +16,8 @@ concurrency:
 jobs:
   request-grid-review:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-    # Secret-bearing workflow. This intentionally runs in pull_request_target
-    # context and delegates to HoneyDrunk.Actions without checking out or
-    # executing PR-head code before signing the OpenClaw webhook request.
     uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/job-review-request.yml@main
     with:
-      openclaw-webhook-url: ${{ vars.OPENCLAW_GRID_REVIEW_WEBHOOK_URL || '' }}
       review-config-path: .honeydrunk-review.yaml
-      upload-fallback-artifact: true
-      post-fallback-comment: false
-      artifact-name: grid-review-request
     secrets:
-      openclaw-webhook-secret: ${{ secrets.OPENCLAW_GRID_REVIEW_WEBHOOK_SECRET }}
       github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,5 @@
 enabled: true
-runner: openclaw-codex
+runner: local-worker
 severity_floor: Suggest
 skip_paths:
   - "**/*.Designer.cs"

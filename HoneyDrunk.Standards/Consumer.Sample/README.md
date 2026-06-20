@@ -223,8 +223,8 @@ Microsoft.CodeAnalysis.NetAnalyzers catch:
 
 ## Next Steps
 
-1. **Review** [docs/ADOPTION.md](../../docs/ADOPTION.md) for adopting HoneyDrunk.Standards in your projects
-2. **Learn** [docs/CONVENTIONS.md](../../docs/CONVENTIONS.md) for HoneyDrunk coding standards
+1. **Review** [docs/ADOPTION.md](../docs/ADOPTION.md) for adopting HoneyDrunk.Standards in your projects
+2. **Learn** [docs/CONVENTIONS.md](../docs/CONVENTIONS.md) for HoneyDrunk coding standards
 3. **Experiment** with the violation examples to understand each analyzer rule
 4. **Apply** these patterns in your own projects
 
@@ -261,4 +261,4 @@ Then fix warnings incrementally before re-enabling errors.
 
 ---
 
-**Questions?** See the main [README](../../docs/README.md) or open an issue.
+**Questions?** See the main [README](../../README.md) or open an issue.

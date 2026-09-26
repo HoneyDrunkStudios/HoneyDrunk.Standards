@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.2.9</Version>
+    <Version>0.3.0</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.2.9: Keep Standards aligned with the fixed ADR-0047 test-stack package.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.3.0: Refresh embedded .NET analyzers and the companion test stack while preserving existing target frameworks.</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -33,7 +33,7 @@
   <PropertyGroup>
     <_StyleCopPackageVersion>1.2.0-beta.556</_StyleCopPackageVersion>
     <_StyleCopAnalyzerPackageVersion>1.2.0.556</_StyleCopAnalyzerPackageVersion>
-    <_NetAnalyzersVersion>10.0.100</_NetAnalyzersVersion>
+    <_NetAnalyzersVersion>10.0.401</_NetAnalyzersVersion>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);HD_EmbedAnalyzerDlls</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
@@ -56,7 +56,7 @@
         <PackagePath>analyzers/dotnet/cs/</PackagePath>
         <BuildAction>None</BuildAction>
       </TfmSpecificPackageFile>
-      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)microsoft.codeanalysis.netanalyzers\$(_NetAnalyzersVersion)\analyzers\dotnet\Microsoft.CodeAnalysis.NetAnalyzers.dll">
+      <TfmSpecificPackageFile Include="$(NuGetPackageRoot)microsoft.codeanalysis.netanalyzers\$(_NetAnalyzersVersion)\analyzers\dotnet\cs\Microsoft.CodeAnalysis.NetAnalyzers.dll">
         <PackagePath>analyzers/dotnet/</PackagePath>
         <BuildAction>None</BuildAction>
       </TfmSpecificPackageFile>

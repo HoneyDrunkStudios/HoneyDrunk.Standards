@@ -5,7 +5,7 @@ ADR-0047 test-stack package for HoneyDrunk test projects: xUnit v2, NSubstitute,
 ## Install
 
 ```bash
-dotnet add package HoneyDrunk.Standards.Tests --version 0.2.9
+dotnet add package HoneyDrunk.Standards.Tests --version 0.3.0
 ```
 
 ## Public API

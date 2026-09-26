@@ -61,17 +61,17 @@ HoneyDrunk test projects named `*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.I
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.2.9" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.2.9" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.3.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.3.0" PrivateAssets="all" />
 </ItemGroup>
 ```
 
 `HoneyDrunk.Standards.Tests` carries the ADR-0047 D2 package dependencies because NuGet package `buildTransitive` props cannot reliably add `PackageReference` items during restore. Keep the reference simple: use `PrivateAssets="all"`, but do not copy the analyzer-package `IncludeAssets` pattern onto this metapackage because consumers need compile/runtime assets from the test-stack dependencies. The stack is:
 
-- xUnit v2 (`xunit` `2.9.3` + `xunit.runner.visualstudio` `2.8.2`)
-- `Microsoft.NET.Test.Sdk` `18.5.1`
-- `NSubstitute` `5.3.0`
-- `AwesomeAssertions` `9.4.0`
+- xUnit v2 (`xunit` `2.9.3` + `xunit.runner.visualstudio` `4.0.0`)
+- `Microsoft.NET.Test.Sdk` `18.10.1`
+- `NSubstitute` `6.2.0`
+- `AwesomeAssertions` `9.6.0
 - `coverlet.collector` `10.0.1`
 
 The packages also set `IsPackable=false` and `IsTestProject=true` for those projects. Runtime projects should reference only `HoneyDrunk.Standards`, so they are not given test package references.

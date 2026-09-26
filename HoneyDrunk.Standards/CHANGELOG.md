@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.3.0] - 2026-09-26
+
+### Changed
+
+- Refresh embedded Microsoft.CodeAnalysis.NetAnalyzers to 10.0.401 and build-time Microsoft.CodeAnalysis.Analyzers to 5.9.0.
+- Release the refreshed companion test stack as 0.3.0, including major runner and mocking-library updates.
+- Preserve the Roslyn compiler API reference at 4.14.0 so the custom analyzer remains loadable in earlier .NET 10 SDK hosts. Compiling it against 5.9.0 would require those consumers to upgrade their compiler host.
+- Retain the existing StyleCop 1.2.0-beta.556 baseline: the latest stable 1.1.118 would be a downgrade. No new preview dependencies or target-framework changes.
+
 ### Internal
 
 - Enabled ADR-0044 Grid Review request workflow and repo-local OpenClaw/Codex review configuration.

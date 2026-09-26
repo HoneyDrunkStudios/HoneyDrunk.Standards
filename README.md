@@ -112,6 +112,8 @@ Test projects should reference both packages:
 
 Runtime projects must reference only `HoneyDrunk.Standards`, so they do not receive these test packages. Moq and FluentAssertions are intentionally absent per ADR-0047 D2.
 
+The 0.3.0 refresh retains the custom analyzer's Roslyn compiler API baseline at 4.14.0 for earlier .NET 10 compiler hosts. The existing StyleCop 1.2 beta remains in place because the stable release is older. Other analyzer and test-tool dependencies use the current stable releases recorded above and in the project files.
+
 ### 📊 Coverage Runsettings Templates
 
 Copy the matching template from the package's `buildTransitive` assets to the Node repo root as `coverlet.runsettings`, then run:

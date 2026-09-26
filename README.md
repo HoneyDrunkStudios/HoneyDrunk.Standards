@@ -107,7 +107,7 @@ Test projects should reference both packages:
 - `xunit.runner.visualstudio` `4.0.0`
 - `Microsoft.NET.Test.Sdk` `18.10.1`
 - `NSubstitute` `6.2.0`
-- `AwesomeAssertions` `9.6.0
+- `AwesomeAssertions` `9.6.0`
 - `coverlet.collector` `10.0.1`
 
 Runtime projects must reference only `HoneyDrunk.Standards`, so they do not receive these test packages. Moq and FluentAssertions are intentionally absent per ADR-0047 D2.

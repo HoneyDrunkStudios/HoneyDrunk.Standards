@@ -71,7 +71,7 @@ HoneyDrunk test projects named `*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.I
 - xUnit v2 (`xunit` `2.9.3` + `xunit.runner.visualstudio` `4.0.0`)
 - `Microsoft.NET.Test.Sdk` `18.10.1`
 - `NSubstitute` `6.2.0`
-- `AwesomeAssertions` `9.6.0
+- `AwesomeAssertions` `9.6.0`
 - `coverlet.collector` `10.0.1`
 
 The packages also set `IsPackable=false` and `IsTestProject=true` for those projects. Runtime projects should reference only `HoneyDrunk.Standards`, so they are not given test package references.

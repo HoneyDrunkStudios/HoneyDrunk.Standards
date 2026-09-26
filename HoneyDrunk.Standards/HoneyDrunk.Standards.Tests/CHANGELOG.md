@@ -2,6 +2,17 @@
 
 All notable changes to HoneyDrunk.Standards.Tests will be documented in this file.
 
+## [0.3.0] - 2026-09-26
+
+### Changed
+
+- Update Microsoft.NET.Test.Sdk 18.5.1 to 18.10.1, xunit.runner.visualstudio 2.8.2 to 4.0.0, NSubstitute 5.3.0 to 6.2.0, and AwesomeAssertions 9.4.0 to 9.6.0.
+- Consume HoneyDrunk.Standards 0.3.0. Keep xUnit v2 2.9.3 and coverlet.collector 10.0.1, which are already current stable releases for these package IDs.
+
+### Migration
+
+- NSubstitute 6 removes obsolete APIs and adds public nullable annotations on .NET 8+. Consumers using removed APIs must update those calls; nullable annotations may introduce diagnostics in existing tests. See the [upstream breaking changes](https://github.com/nsubstitute/NSubstitute/blob/v6.0.0/BreakingChanges.md).
+
 ## [0.2.9] - 2026-05-22
 
 ### Fixed

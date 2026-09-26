@@ -10,6 +10,13 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-26
+
+### Changed
+
+- Refresh embedded .NET analyzers to 10.0.401 and preserve their packaged load paths after the upstream directory-layout change.
+- Preserve the custom analyzer compiler API baseline for compatibility with earlier .NET 10 SDK hosts.
+
 ## [0.2.9] - 2026-05-22
 
 ### Fixed

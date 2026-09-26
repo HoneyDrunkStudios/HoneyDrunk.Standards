@@ -10,8 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Keep the analyzer loadable by earlier .NET 10 compiler hosts. -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

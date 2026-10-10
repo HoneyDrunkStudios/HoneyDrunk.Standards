@@ -1,6 +1,6 @@
 # HoneyDrunk Conventions
 
-This document defines coding, organizational, and process conventions for all HoneyDrunk projects.
+This document owns shared engineering conventions. Apply language-specific rules only to that stack. A repository's verified boundaries, public contracts, existing tests and specific engineering documents refine these defaults; they do not authorize unrelated rewrites. The package enforces only its configured analyzer/build rules, not every architectural guideline in this document.
 
 ## Table of Contents
 - [Naming Conventions](#naming-conventions)
@@ -11,6 +11,7 @@ This document defines coding, organizational, and process conventions for all Ho
 - [Analyzer Rationale](#analyzer-rationale)
 - [Commit Messages](#commit-messages)
 - [Architectural Patterns](#architectural-patterns)
+- [Agent workflow and instruction files](#agent-workflow-and-instruction-files)
 
 ---
 
@@ -18,7 +19,7 @@ This document defines coding, organizational, and process conventions for all Ho
 
 ### General Rules
 - **PascalCase** for types, methods, properties, events, constants
-- **camelCase** for parameters, local variables, private fields
+- **camelCase** for parameters and local variables; **_camelCase** for private fields
 - **SCREAMING_CASE** — *Never use* (use PascalCase for constants)
 
 ### Specific Patterns
@@ -70,48 +71,13 @@ public void TestGetUser() { }      // ? Not descriptive
 
 ## Folder Structure
 
-### Standard Project Layout
+### Repository and feature layout
 
-```
-Solution.sln
-/ProjectName.Domain/
-  /Aggregates/
-  /ValueObjects/
-  /DomainEvents/
-/Specifications/
-/ProjectName.Application/
-  /Commands/
-  /Queries/
-  /DTOs/
-  /Validators/
-/ProjectName.Infrastructure/
-  /Persistence/
-  /Repositories/
-  /EventBus/
-  /ExternalServices/
-/ProjectName.Api/ or /ProjectName.Web/
-  /Controllers/ or /Endpoints/
-  /Middleware/
-  /Filters/
-/tests/
-  /ProjectName.Domain.Tests/
-  /ProjectName.Application.Tests/
-  /ProjectName.Infrastructure.Tests/
-  /ProjectName.Api.Tests/
-/docs/
-  README.md
-  ARCHITECTURE.md
-  API.md
-/samples/
-  /SampleConsumer/
-```
+Keep the repository's actual solution/project layout. Many .NET repositories keep peer projects beside a solution under a repository-named directory; others keep the solution at the root. Do not create or remove `src/`, `tests/`, Domain or Application projects merely to match a universal template.
 
-### Key Principles
-- **Solution root** contains all projects directly
-- **`/tests`** for test projects (mirrors main project structure)
-- **`/docs`** for documentation
-- **`/samples`** for example usage (optional)
-- **`/scripts`** for build/deployment scripts (optional)
+Within each layer, organize by the domain/responsibility being changed. For an application that already uses API, Contracts, Services, Data and Database projects, mirror relevant feature folders such as Accounts or Orders. Keep pure domain rules in an existing Domain project where that boundary is useful. Libraries may use Abstractions, runtime and provider packages; they do not need application layers.
+
+Keep static validation and pure mapping in named files under the feature's `Validators` and `Mapping` folders. Services and data services have focused interfaces; pure static validators and mappers do not need artificial interfaces or injected wrapper services. Put tests beside or under the existing test layout and mirror the responsibilities they verify. Use `docs/` and `scripts/` for supporting material when those directories already fit the repository.
 
 ### File Naming
 - **One type per file** (enforced by `SA1402`)
@@ -131,15 +97,15 @@ Solution.sln
 
 #### ? Correct
 ```csharp
-// File: ProjectName.Domain/Aggregates/User.cs
-namespace ProjectName.Domain.Aggregates;
+// File: ProjectName.Domain/Accounts/User.cs
+namespace ProjectName.Domain.Accounts;
 
 public class User { }
 ```
 
 #### ? Incorrect
 ```csharp
-// File: ProjectName.Domain/Aggregates/User.cs
+// File: ProjectName.Domain/Accounts/User.cs
 namespace ProjectName.Domain // ? Doesn't match folder
 {
     public class User { }// ? Block-scoped namespace
@@ -152,9 +118,7 @@ namespace ProjectName.Domain // ? Doesn't match folder
 
 ```csharp
 // GlobalUsings.cs
-global using FluentValidation;
-global using MediatR;
-global using ProjectName.Domain.Aggregates;
+global using ProjectName.Domain.Accounts;
 ```
 
 ---
@@ -201,8 +165,10 @@ Only use `!` (null-forgiving operator) when:
 2. You add a comment explaining why
 
 ```csharp
-// The framework guarantees HttpContext is non-null in middleware
-var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+// Authentication does not guarantee this claim exists. Check the boundary explicitly.
+var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+if (string.IsNullOrWhiteSpace(userId))
+    throw new UnauthorizedAccessException("The required subject claim is missing.");
 ```
 
 ---
@@ -326,158 +292,61 @@ BREAKING CHANGE: Consumers must restore packages to pick up corrected path.
 - **Lowercase** `<type>` and `<scope>`
 - **Imperative mood** in `<subject>` ("add", not "added" or "adds")
 - **Max 72 characters** for `<subject>`
-- **Reference issues** in `<footer>` (`Closes #123`, `Fixes #456`)
+- **Reference existing issues when relevant**; use closing keywords only when closure is intended. No issue or packet is required for scoped work
 - **Breaking changes** noted in `<footer>` with `BREAKING CHANGE:`
 
 ### Enforcement
-Currently **not enforced** by tooling. Future package (`HoneyDrunk.GitHooks`) may add commit-msg validation.
+Inspect the repository's current hooks, PR template and CI metadata checks. Do not infer enforcement or invent a hook package from this document.
 
 ---
 
 ## Architectural Patterns
 
-### Domain-Driven Design (DDD)
+### Simple layers and explicit ownership
 
-HoneyDrunk projects follow DDD principles where applicable.
+Use ordinary C# with clear responsibilities. Endpoints own HTTP/authentication policy, transport adaptation and typed responses; delegate business decisions to named services. Services own use-case orchestration and business rules, calling pure domain rules where an existing Domain layer is appropriate. Data services own persistence queries, locking and transaction mechanics, not product outcomes. Contracts do not expose EF entities. Keep shared mechanics in real existing nodes and product policy in applications.
 
-#### Aggregate Boundaries
-```csharp
-// ? Aggregate root enforces invariants
-public class Order
-{
-    private readonly List<OrderLine> _lines = new();
-    public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
+Use focused interfaces for services and data services. Scan current types, sibling features and existing shared nodes before adding helpers. Reuse demonstrated behavior; do not add speculative frameworks, service locators, event buses, CQRS, sagas, rich aggregates or another forwarding layer just to satisfy an architecture template. Existing domain models and provider patterns remain valid where they serve current behavior. This convention is not permission to change public contracts or migrate working code incidentally.
 
-    public void AddLine(Product product, int quantity)
-    {
-        if (quantity <= 0)
-        throw new ArgumentException("Quantity must be positive", nameof(quantity));
+### Validation and mapping
 
-        _lines.Add(new OrderLine(product, quantity));
-    }
-}
+Static validators are deterministic and free of I/O. Validate untrusted inputs and runtime null/error cases before mapping; nullable annotations do not validate external data. Name repeated limits/messages and preserve exception/status contracts. Service-level authorization, ownership and business decisions stay explicit.
 
-// ? Exposed mutable collection
-public class Order
-{
-    public List<OrderLine> Lines { get; set; } = new(); // Violates encapsulation
-}
-```
+Pure mapping lives in its own named file and translates already-selected data. It must not perform I/O, generate random IDs, read a host clock, choose business outcomes or hide retry/transaction policy. Services supply selected IDs, trusted ownership and operation times. Use the repository's established identity and history semantics rather than replacing them with a generic stamping mechanism.
 
-#### Value Objects
-```csharp
-// ? Immutable value object
-public sealed record EmailAddress(string Value)
-{
-    public EmailAddress(string value) : this(value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Email cannot be empty", nameof(value));
-        if (!value.Contains('@'))
-            throw new ArgumentException("Invalid email format", nameof(value));
-    }
-}
+### EF and SQL
 
-// ? Mutable value object
-public class EmailAddress
-{
-    public string Value { get; set; } // Should be immutable
-}
-```
+For ordinary updates, load tracked entities, change intended properties and let EF detect changes. Do not add custom mutation bags, generic change bindings or `Update` calls on already tracked entities. Respect existing transaction ownership, immutable history, idempotency, rowversion and retry boundaries. EF tracking cannot decide which business facts need a new historical version.
 
-### SOLID Principles
+Use only Fluent mappings that express a real contract or differ from conventions. Preserve keys, names, ownership relationships, delete behavior, lengths, precision, collation, indexes/filters, concurrency tokens, converters/comparers and immutability protections when required. Do not remove a mapping just because it looks redundant; verify the effective model and deployed schema.
 
-#### Single Responsibility
-```csharp
-// ? Single responsibility
-public class UserRepository
-{
-    public User GetById(int id) { /* ... */ }
-    public void Save(User user) { /* ... */ }
-}
+Every application-owned SQL table and column needs accurate metadata describing meaning and relevant ownership/time semantics. Indexes need a demonstrated query or constraint. Keep schema, EF mappings and schema tests aligned. Where a SQL project/DACPAC owns schema, do not introduce EF migrations as a second owner. Preserve separately owned shared Audit and Outbox schema.
 
-public class UserValidator
-{
-    public ValidationResult Validate(User user) { /* ... */ }
-}
+### Asynchrony and integration
 
-// ? Multiple responsibilities
-public class UserService
-{
-    public User GetById(int id) { /* ... */ }
-    public void Save(User user) { /* ... */ }
-    public ValidationResult Validate(User user) { /* ... */ } // Should be separate
-    public void SendWelcomeEmail(User user) { /* ... */ } // Should be separate
-}
-```
+Use asynchronous I/O and propagate cancellation. Avoid `.Result`, `.Wait()` and `async void` except framework event handlers. Use injected `TimeProvider` at host-facing boundaries when time affects behavior; capture operation time once and pass it into pure rules. Keep provider SDKs inside their owning adapters. Verify real shared-node contracts and implementation rather than inferring availability from a name or catalog.
 
-#### Dependency Inversion
-```csharp
-// ? Depend on abstraction
-public class OrderService
-{
-    private readonly IOrderRepository _repository;
-    
-    public OrderService(IOrderRepository repository)
-    {
-        _repository = repository;
-    }
-}
+### Tests and documentation
 
-// ? Depend on concretion
-public class OrderService
-{
-    private readonly SqlOrderRepository _repository = new(); // Tightly coupled
-}
-```
+Use the repository's current tests and lockfiles. The shared .NET test package supplies xUnit, NSubstitute and AwesomeAssertions; do not introduce Moq or FluentAssertions from old examples. Preserve repository-specific naming and supported framework constraints. Test changed behavior, failure paths and meaningful contracts, without mirroring implementation or fabricating coverage thresholds. Existing required CI, coverage and security gates remain in force.
 
-### Async/Await
+Use the pinned SDK and language settings; do not hardcode a remembered "latest" C# version into instructions. Follow `.editorconfig`, nullable annotations, public API XML documentation and the actual analyzer configuration. Comments explain non-obvious intent, constraints or trade-offs; do not add comments to every function or repeat obvious code.
 
-#### ? Correct Patterns
-```csharp
-public async Task<User> GetUserAsync(int id, CancellationToken cancellationToken)
-{
-    return await _dbContext.Users
-        .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-}
+Repository Markdown uses a descriptive H1 and hierarchical headings, fenced examples and valid links. Frontmatter is required only by a real consuming schema (for example a publishing pipeline), not for every README. Do not invent blog fields, a categories file or validator enforcement. Check paths and anchors when moving documents.
 
-public async Task ProcessOrdersAsync(CancellationToken cancellationToken)
-{
-    var orders = await GetPendingOrdersAsync(cancellationToken);
-    
-    foreach (var order in orders)
-    {
-        await ProcessOrderAsync(order, cancellationToken);
-    }
-}
-```
+## Agent workflow and instruction files
 
-#### ? Incorrect Patterns
-```csharp
-// ? Blocking async code
-public User GetUser(int id)
-{
-    return GetUserAsync(id, CancellationToken.None).Result; // Deadlock risk
-}
+Use one root `AGENTS.md` per repository as the shared entrypoint. Put scope, important boundaries, links to maintained standards and actual verification commands there. Keep deeper engineering detail in ordinary docs and current product specifications/ADRs/progress in their existing owners. Do not create a duplicate universal `SPEC.md`, `RULES.md` or roadmap. Such names are ordinary documents unless a specific tool is explicitly configured to read them.
 
-// ? Async void (except event handlers)
-public async void ProcessOrder(Order order) // Should return Task
-{
-    await _repository.SaveAsync(order);
-}
+HoneyDrunk deliberately does not keep separate `CLAUDE.md`, `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md` or nested agent entrypoints. Tool compatibility is a trade-off, not proof that all clients load the root automatically:
 
-// ? Missing CancellationToken
-public async Task<User> GetUserAsync(int id) // Should accept CancellationToken
-{
-    return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-}
-```
+- [Codex](https://developers.openai.com/codex/guides/agents-md/) discovers `AGENTS.md` with directory-based precedence; overrides and custom fallbacks require intentional configuration.
+- [Claude Code](https://code.claude.com/docs/en/memory) supports AGENTS.md in current versions, but ancestor CLAUDE files and the user's project-instruction setting affect discovery. Check the actual session's loaded files. Do not silently recreate an adapter.
+- [Copilot support varies by surface](https://docs.github.com/en/copilot/reference/custom-instructions-support). Some surfaces consume AGENTS.md; others rely on tool-specific files. In those clients, explicitly supply the root instructions. Removing the old adapters does not uninstall Copilot.
+- [Greptile](https://www.greptile.com/docs/code-review/greptile-config) can use scoped `.greptile/rules.md` and `files.json`; an arbitrary root RULES.md has no equivalent discovery guarantee. Dashboard rules are additive. Keep reviewer config only where it is needed, and verify actual review coverage separately from saved configuration.
 
----
+For authorized publication, preserve unrelated changes, review the intended diff explicitly, resolve actionable findings, and stage only intended files. Use Conventional Commits and ready-for-review PRs unless the user explicitly requests drafts. Follow the current PR template, including exactly one accurate `Authorship:` line and a `Request:` line; use the same authorship class in the commit trailer. Valid classes are `human`, `agent-codex`, `agent-claude-code`, `agent-copilot` and `mixed`.
 
-## Summary
+Report the tested/reviewed revision, meaningful checks and limitations. For documentation-only changes, validate content, links, commands and instruction consistency; do not claim runtime tests ran. For applicable Sonar analysis, inspect actual latest-head new-code findings, not just a green upload job or gate. Fix new issues without suppressing findings or weakening checks; unavailable/stale analysis stays unverified.
 
-These conventions are enforced by:
-- **HoneyDrunk.Standards** package (analyzers, .editorconfig, ruleset)
-- **Code review** (architectural patterns, DDD principles)
-- **CI builds** (warnings as errors, deterministic builds)
+Legacy Grid Review is retired. Do not restore its workers, schedules, queues, merge requirements or bypass labels. Explicit authoring/manual review, tests, security/Sonar and existing required checks remain. A saved replacement-reviewer rule is not evidence of a completed review or required merge check. Publishing instructions do not grant merge, deployment, paid review, credential or protection-change authorization.

@@ -11,6 +11,7 @@ This document owns shared engineering conventions. Apply language-specific rules
 - [Analyzer Rationale](#analyzer-rationale)
 - [Commit Messages](#commit-messages)
 - [Architectural Patterns](#architectural-patterns)
+- [Agent workflow and instruction files](#agent-workflow-and-instruction-files)
 
 ---
 

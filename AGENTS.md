@@ -20,3 +20,11 @@ dotnet test HoneyDrunk.Standards/HoneyDrunk.Standards.slnx -c Release --no-build
 ```
 
 Use the checked-in workflow and relevant test documentation for additional integration prerequisites, coverage and consumer checks. Do not use live resources or credentials merely to make a local check pass.
+
+## Code Review Rules
+
+Apply the [shared review criteria](HoneyDrunk.Standards/docs/CONVENTIONS.md#code-review) to changed behavior, using the repository boundaries above. Report actionable findings with the failing path, concrete impact and a small corrective action; disclose unavailable evidence. These rules grant no cross-repository access or merge authority.
+
+- Keep analyzer/build-transitive policy and public conventions here, with workflow orchestration in Actions. Trace a changed rule through real package consumers; preserve repository-specific supported frameworks and justified exceptions rather than forcing one stack on every repo.
+- Flag build assets or analyzer defaults that unexpectedly change consumer compilation, package dependencies, security checks or suppressions. New architecture guidance must match current simple layers and demonstrated reuse, without demanding speculative abstraction.
+- Require consumer/regression evidence for executable rule changes and precise examples/link checks for documentation. Prose is not compiler enforcement; inspect actual new-code findings without lowering gates or turning deterministic diagnostics into duplicate AI comments.

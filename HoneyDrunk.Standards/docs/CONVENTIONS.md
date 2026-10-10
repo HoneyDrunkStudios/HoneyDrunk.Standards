@@ -11,6 +11,7 @@ This document owns shared engineering conventions. Apply language-specific rules
 - [Analyzer Rationale](#analyzer-rationale)
 - [Commit Messages](#commit-messages)
 - [Architectural Patterns](#architectural-patterns)
+- [Code review](#code-review)
 - [Agent workflow and instruction files](#agent-workflow-and-instruction-files)
 
 ---
@@ -334,6 +335,34 @@ Use the pinned SDK and language settings; do not hardcode a remembered "latest" 
 
 Repository Markdown uses a descriptive H1 and hierarchical headings, fenced examples and valid links. Frontmatter is required only by a real consuming schema (for example a publishing pipeline), not for every README. Do not invent blog fields, a categories file or validator enforcement. Check paths and anchors when moving documents.
 
+## Code review
+
+Review the changed behavior against its stated purpose, current repository contracts and the relevant standards above. Follow callers and state transitions far enough to explain a concrete failure. Prioritize correctness, security/data isolation, persistence, reliability/concurrency and delivery defects before design polish. Cite the affected path/line, trigger, consequence and smallest safe correction. Distinguish demonstrated defects from hypotheses, existing debt and unverified evidence; do not inflate severity to get an architectural suggestion reported.
+
+### Ownership, contracts and reuse
+
+Check layer and package dependency direction, domain ownership, public API/event/schema compatibility and real downstream consumers. Apply [simple layers, validation/mapping and persistence rules](#architectural-patterns) to applicable .NET code; retain other repositories' documented stacks and exceptions. Keep business decisions out of transport, mapping and persistence mechanics, and provider implementations behind their actual contracts.
+
+Before proposing consolidation, name the existing helper, contract or owning node and show that its implemented behavior fits. Flag a bypass or duplication when it creates a concrete consistency, correctness or maintenance risk. Prefer a focused extension or explicit justified difference over speculative shared services, generic mutation bindings, extra forwarding layers or frameworks for hypothetical consumers. Missing access to another repository is a verification limit, not proof that reuse exists or is absent.
+
+### Failure, trust and state
+
+Trace null/empty/invalid inputs, precision/time semantics, cancellation, async work, partial failure and recovery. Check authentication/authorization and tenant predicates across queries, caches, background work and provider callbacks; protect secrets and personal data in errors, logs and artifacts. For agent features, treat prompts, retrieved content and model output as untrusted data; preserve tool/approval scope, context isolation and human override.
+
+Inspect transactions, immutable history, concurrency tokens/leases, idempotency and duplicate/out-of-order delivery. A retry must be bounded and safe for the side effect; a non-transient denial or budget stop must not be retried into success. Check migration/backfill/rollback compatibility with the actual schema owner and preserve audit attribution and correlation across boundaries.
+
+### Performance and operations
+
+Use a real changed execution path and expected workload to identify N+1 queries, missing pagination, unbounded queues/fan-out/retries, blocking I/O, hot-path allocations, resource leaks or unsafe cache invalidation. Recommend indexes or caching from demonstrated access patterns, not blanket rules. Keep useful diagnostic context without sensitive payloads or unbounded telemetry cardinality. Check actual caller permissions, workflow events/conditions, artifact provenance, rollout/rollback targets and resource ownership where delivery changes. Source validation does not establish live deployment, recovery or cost approval.
+
+### Evidence and reporting
+
+Ask for tests that would catch the changed behavior's realistic failure, authorization, compatibility or concurrency risk. Prefer observable contract/integration behavior over tests that mirror implementation, tautological assertions or mocks that bypass the affected boundary. Use repository-specific frameworks and meaningful test tiers; do not invent coverage thresholds or demand runtime tests for prose edits. State what mocks, browser checks or smoke runs cannot establish.
+
+Formatting, lint, deterministic schema checks and analyzer policy belong in CI. Review their relevant results and missing coverage without duplicating machine comments. Inspect actual applicable Sonar findings for the latest analyzed head; a successful upload or green gate is not a zero-new-issue count. Fix introduced issues without suppressing findings or weakening gates; unavailable or stale analysis remains unverified.
+
+[Native Codex GitHub review](https://learn.chatgpt.com/docs/third-party/github) follows applicable `## Code Review Rules` in `AGENTS.md`; the official page checked October 10, 2026 describes reporting P0/P1 issues. Keep lower-severity standards work in authoring/manual review and CI rather than promising every criterion will produce a native comment. A quiet review is not exhaustive compliance, test execution, a required status check, merge permission or access to linked repositories. Automatic triggers, final-head review evidence and enforcement must be verified separately. Keep one root entrypoint; do not add client adapters or restore retired review machinery.
+
 ## Agent workflow and instruction files
 
 Use one root `AGENTS.md` per repository as the shared entrypoint. Put scope, important boundaries, links to maintained standards and actual verification commands there. Keep deeper engineering detail in ordinary docs and current product specifications/ADRs/progress in their existing owners. Do not create a duplicate universal `SPEC.md`, `RULES.md` or roadmap. Such names are ordinary documents unless a specific tool is explicitly configured to read them.
@@ -343,7 +372,7 @@ HoneyDrunk deliberately does not keep separate `CLAUDE.md`, `.github/copilot-ins
 - [Codex](https://developers.openai.com/codex/guides/agents-md/) discovers `AGENTS.md` with directory-based precedence; overrides and custom fallbacks require intentional configuration.
 - [Claude Code](https://code.claude.com/docs/en/memory) supports AGENTS.md in current versions, but ancestor CLAUDE files and the user's project-instruction setting affect discovery. Check the actual session's loaded files. Do not silently recreate an adapter.
 - [Copilot support varies by surface](https://docs.github.com/en/copilot/reference/custom-instructions-support). Some surfaces consume AGENTS.md; others rely on tool-specific files. In those clients, explicitly supply the root instructions. Removing the old adapters does not uninstall Copilot.
-- [Greptile](https://www.greptile.com/docs/code-review/greptile-config) can use scoped `.greptile/rules.md` and `files.json`; an arbitrary root RULES.md has no equivalent discovery guarantee. Dashboard rules are additive. Keep reviewer config only where it is needed, and verify actual review coverage separately from saved configuration.
+- Native Codex review uses the root [Code Review Rules](#code-review). The selected workflow adds no Greptile dependency or separate reviewer rule file; review instructions and required-check enforcement are distinct.
 
 For authorized publication, preserve unrelated changes, review the intended diff explicitly, resolve actionable findings, and stage only intended files. Use Conventional Commits and ready-for-review PRs unless the user explicitly requests drafts. Follow the current PR template, including exactly one accurate `Authorship:` line and a `Request:` line; use the same authorship class in the commit trailer. Valid classes are `human`, `agent-codex`, `agent-claude-code`, `agent-copilot` and `mixed`.
 

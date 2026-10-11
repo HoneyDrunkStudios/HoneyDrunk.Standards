@@ -6,15 +6,24 @@ on:
       - 'v*'
   workflow_dispatch:
     inputs:
+      verify-trust-only:
+        description: 'Verify NuGet trust without building or publishing a release'
+        type: boolean
+        default: false
       version:
         description: 'Version to publish (without v prefix, e.g., 0.1.0)'
         required: true
         type: string
 
+concurrency:
+  group: nuget-${{ github.workflow }}-${{ inputs.verify-trust-only && 'verify' || 'publish' }}-${{ inputs.version && format('v{0}', inputs.version) || github.ref_name }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:
   prepare:
+    if: github.event_name != 'workflow_dispatch' || !inputs.verify-trust-only
     name: Prepare Release
     runs-on: ubuntu-latest
     permissions: {}
@@ -45,6 +54,7 @@ jobs:
           echo "Publishing tag: $VERSION_TAG"
 
   release:
+    if: github.event_name != 'workflow_dispatch' || !inputs.verify-trust-only
     name: Build, Pack & Publish
     needs: prepare
     # Reusable workflow permissions are the maximum allowed set; release.yml narrows permissions per internal job.
@@ -53,21 +63,119 @@ jobs:
       packages: write
       id-token: write
       security-events: write
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@main
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@98190a35efb28d4c27d8fe4515c1dd86f3daa821
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
       project-path: 'HoneyDrunk.Standards/HoneyDrunk.Standards.slnx'
-      enable-nuget-publish: true
+      enable-nuget-pack: true
+      enable-nuget-publish: false
       nuget-source: 'https://api.nuget.org/v3/index.json'
       package-version: ${{ needs.prepare.outputs.version }}
-      create-github-release: true
+      create-github-release: false
       github-release-tag: ${{ needs.prepare.outputs.version_tag }}
       release-product-name: HoneyDrunk.Standards
       release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
       release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
       release-docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
-      actions-ref: 'main'
-    secrets:
-      nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+      actions-ref: '98190a35efb28d4c27d8fe4515c1dd86f3daa821'
+
+  trusted-publish:
+    name: Trusted NuGet publication
+    needs:
+    - release
+    - prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: nuget
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Checkout reviewed publishing actions
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      with:
+        repository: HoneyDrunkStudios/HoneyDrunk.Actions
+        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
+        path: .github/actions-repo
+        persist-credentials: false
+    - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
+      with:
+        dotnet-version: 10.0.x
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        name: nuget-packages
+        path: artifacts
+    - name: Publish through NuGet trusted identity
+      uses: ./.github/actions-repo/.github/actions/nuget/trusted-publish
+      with:
+        user: tatteddev
+        expected-version: ${{ needs.prepare.outputs.version }}
+        expected-packages: |-
+          HoneyDrunk.Standards
+          HoneyDrunk.Standards.Tests
+    - name: Generate release notes
+      id: notes
+      uses: ./.github/actions-repo/.github/actions/release/generate-notes
+      with:
+        version: ${{ needs.prepare.outputs.version }}
+        product-name: HoneyDrunk.Standards
+        product-description: Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.
+        nuget-packages: HoneyDrunk.Standards:PrivateAssets="all"
+        docs-url: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme
+    - name: Create GitHub Release after successful publication
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
+      with:
+        target_commitish: ${{ github.sha }}
+        tag_name: ${{ needs.prepare.outputs.version_tag }}
+        name: HoneyDrunk.Standards ${{ needs.prepare.outputs.version_tag }}
+        body: ${{ steps.notes.outputs.body }}
+        generate_release_notes: ${{ steps.notes.outputs.has-changelog == 'false' }}
+        draft: false
+        prerelease: ${{ contains(needs.prepare.outputs.version, '-') }}
+  validate-trust-request:
+    name: Validate trust verification request
+    if: github.event_name == 'workflow_dispatch' && inputs.verify-trust-only
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+    - name: Require main for trust verification
+      shell: bash
+      run: |
+        if [[ "$GITHUB_REF" != refs/heads/main ]]; then
+          echo '::error::Trust verification must run from main.'
+          exit 1
+        fi
+  verify-nuget-trust:
+    needs: validate-trust-request
+    name: Verify NuGet trust without publishing
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.verify-trust-only
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: nuget
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Checkout reviewed publishing actions
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      with:
+        repository: HoneyDrunkStudios/HoneyDrunk.Actions
+        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
+        path: .github/actions-repo
+        persist-credentials: false
+    - name: Verify trust only
+      uses: ./.github/actions-repo/.github/actions/nuget/trusted-publish
+      with:
+        user: tatteddev
+        verify-only: 'true'

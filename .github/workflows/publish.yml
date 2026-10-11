@@ -16,7 +16,7 @@ on:
         type: string
 
 concurrency:
-  group: nuget-${{ github.workflow }}
+  group: nuget-${{ github.workflow }}-${{ inputs.verify-trust-only && 'verify' || 'publish' }}-${{ inputs.version || github.ref_name }}
   cancel-in-progress: false
 
 permissions: {}
@@ -63,7 +63,7 @@ jobs:
       packages: write
       id-token: write
       security-events: write
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@0e0a8ab09b10375945b5eb474dd3f276af2e41ed
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@4473dd7b47a9e8b2123c3ace95fe11b497e27281
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'
@@ -79,7 +79,7 @@ jobs:
       release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
       release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
       release-docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
-      actions-ref: '0e0a8ab09b10375945b5eb474dd3f276af2e41ed'
+      actions-ref: '4473dd7b47a9e8b2123c3ace95fe11b497e27281'
 
   trusted-publish:
     name: Trusted NuGet publication
@@ -93,21 +93,21 @@ jobs:
       contents: write
       id-token: write
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         fetch-depth: 0
         persist-credentials: false
     - name: Checkout reviewed publishing actions
-      uses: actions/checkout@v5
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 0e0a8ab09b10375945b5eb474dd3f276af2e41ed
+        ref: 4473dd7b47a9e8b2123c3ace95fe11b497e27281
         path: .github/actions-repo
         persist-credentials: false
-    - uses: actions/setup-dotnet@v5
+    - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
       with:
         dotnet-version: 10.0.x
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
         name: nuget-packages
         path: artifacts
@@ -129,14 +129,15 @@ jobs:
         nuget-packages: HoneyDrunk.Standards:PrivateAssets="all"
         docs-url: https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme
     - name: Create GitHub Release after successful publication
-      uses: softprops/action-gh-release@v3
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
       with:
+        target_commitish: ${{ github.sha }}
         tag_name: ${{ needs.prepare.outputs.version_tag }}
         name: HoneyDrunk.Standards ${{ needs.prepare.outputs.version_tag }}
         body: ${{ steps.notes.outputs.body }}
         generate_release_notes: ${{ steps.notes.outputs.has-changelog == 'false' }}
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(needs.prepare.outputs.version, '-') }}
   verify-nuget-trust:
     name: Verify NuGet trust without publishing
     if: github.event_name == 'workflow_dispatch' && inputs.verify-trust-only
@@ -147,15 +148,15 @@ jobs:
       contents: read
       id-token: write
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         fetch-depth: 0
         persist-credentials: false
     - name: Checkout reviewed publishing actions
-      uses: actions/checkout@v5
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 0e0a8ab09b10375945b5eb474dd3f276af2e41ed
+        ref: 4473dd7b47a9e8b2123c3ace95fe11b497e27281
         path: .github/actions-repo
         persist-credentials: false
     - name: Verify trust only

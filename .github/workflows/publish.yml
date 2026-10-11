@@ -138,7 +138,22 @@ jobs:
         generate_release_notes: ${{ steps.notes.outputs.has-changelog == 'false' }}
         draft: false
         prerelease: ${{ contains(needs.prepare.outputs.version, '-') }}
+  validate-trust-request:
+    name: Validate trust verification request
+    if: github.event_name == 'workflow_dispatch' && inputs.verify-trust-only
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+    - name: Require main for trust verification
+      shell: bash
+      run: |
+        if [[ "$GITHUB_REF" != refs/heads/main ]]; then
+          echo '::error::Trust verification must run from main.'
+          exit 1
+        fi
   verify-nuget-trust:
+    needs: validate-trust-request
     name: Verify NuGet trust without publishing
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.verify-trust-only
     runs-on: ubuntu-latest

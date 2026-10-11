@@ -63,7 +63,7 @@ jobs:
       packages: write
       id-token: write
       security-events: write
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@98190a35efb28d4c27d8fe4515c1dd86f3daa821
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@e3aa37c20dffe55155d95793465bcb6d94f280a2
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'
@@ -79,7 +79,7 @@ jobs:
       release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
       release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
       release-docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
-      actions-ref: '98190a35efb28d4c27d8fe4515c1dd86f3daa821'
+      actions-ref: 'e3aa37c20dffe55155d95793465bcb6d94f280a2'
 
   trusted-publish:
     name: Trusted NuGet publication
@@ -101,7 +101,7 @@ jobs:
       uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
+        ref: e3aa37c20dffe55155d95793465bcb6d94f280a2
         path: .github/actions-repo
         persist-credentials: false
     - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
@@ -171,7 +171,7 @@ jobs:
       uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
+        ref: e3aa37c20dffe55155d95793465bcb6d94f280a2
         path: .github/actions-repo
         persist-credentials: false
     - name: Verify trust only

@@ -16,7 +16,7 @@ on:
         type: string
 
 concurrency:
-  group: nuget-${{ github.workflow }}-${{ inputs.verify-trust-only && 'verify' || 'publish' }}-${{ inputs.version || github.ref_name }}
+  group: nuget-${{ github.workflow }}-${{ inputs.verify-trust-only && 'verify' || 'publish' }}-${{ inputs.version && format('v{0}', inputs.version) || github.ref_name }}
   cancel-in-progress: false
 
 permissions: {}
@@ -63,7 +63,7 @@ jobs:
       packages: write
       id-token: write
       security-events: write
-    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@4473dd7b47a9e8b2123c3ace95fe11b497e27281
+    uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@98190a35efb28d4c27d8fe4515c1dd86f3daa821
     with:
       dotnet-version: '10.0.x'
       configuration: 'Release'
@@ -79,7 +79,7 @@ jobs:
       release-product-description: 'Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.'
       release-nuget-packages: 'HoneyDrunk.Standards:PrivateAssets="all"'
       release-docs-url: 'https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards#readme'
-      actions-ref: '4473dd7b47a9e8b2123c3ace95fe11b497e27281'
+      actions-ref: '98190a35efb28d4c27d8fe4515c1dd86f3daa821'
 
   trusted-publish:
     name: Trusted NuGet publication
@@ -101,7 +101,7 @@ jobs:
       uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 4473dd7b47a9e8b2123c3ace95fe11b497e27281
+        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
         path: .github/actions-repo
         persist-credentials: false
     - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
@@ -140,7 +140,7 @@ jobs:
         prerelease: ${{ contains(needs.prepare.outputs.version, '-') }}
   verify-nuget-trust:
     name: Verify NuGet trust without publishing
-    if: github.event_name == 'workflow_dispatch' && inputs.verify-trust-only
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.verify-trust-only
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: nuget
@@ -156,7 +156,7 @@ jobs:
       uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       with:
         repository: HoneyDrunkStudios/HoneyDrunk.Actions
-        ref: 4473dd7b47a9e8b2123c3ace95fe11b497e27281
+        ref: 98190a35efb28d4c27d8fe4515c1dd86f3daa821
         path: .github/actions-repo
         persist-credentials: false
     - name: Verify trust only

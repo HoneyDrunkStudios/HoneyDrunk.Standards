@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="HoneyDrunk Unity" Description="Unity 6 / Roslyn 4.3 correctness baseline; other Unity diagnostics retain upstream defaults." ToolsVersion="12.0">
+  <Rules AnalyzerId="HoneyDrunk.Standards.Unity.Analyzers" RuleNamespace="HoneyDrunk.Standards.Unity.Analyzers">
+    <Rule Id="HD0051" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.Unity.Analyzers" RuleNamespace="Microsoft.Unity.Analyzers">
+    <Rule Id="UNT0006" Action="Error" />
+    <Rule Id="UNT0007" Action="Error" />
+    <Rule Id="UNT0008" Action="Error" />
+    <Rule Id="UNT0013" Action="Error" />
+  </Rules>
+</RuleSet>

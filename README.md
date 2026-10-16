@@ -24,6 +24,10 @@ All of this happens **automatically** when you add the package. No manual config
 
 ---
 
+## Unity projects
+
+Use the opt-in [Unity profile](unity/README.md) for Unity 6 / Roslyn 4.3. It builds a pinned analyzer distribution with Unity import metadata and per-assembly rulesets; the server NuGet package below is not a Unity integration.
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -322,3 +326,4 @@ HoneyDrunk.Standards is part of the **Hive** ecosystem - a collection of tools, 
 [Documentation](HoneyDrunk.Standards/docs/) • [Sample Project](HoneyDrunk.Standards/Consumer.Sample/) • [Issues](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues) • [Contact](mailto:contact@honeydrunkstudios.com)
 
 </div>
+

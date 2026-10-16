@@ -14,7 +14,28 @@ EXPECTED = {
 }
 
 
+def verify_inventory(root, complete=False):
+    """Reject unrelated entries without deleting or overwriting user-owned files."""
+    if not root.exists():
+        if complete:
+            raise ValueError("Distribution directory is missing")
+        return
+    if not root.is_dir():
+        raise ValueError("Distribution output must be a directory")
+    entries = {entry.name: entry for entry in root.iterdir()}
+    expected = EXPECTED | {"manifest.json"}
+    unexpected = set(entries) - expected
+    if unexpected:
+        raise ValueError("Unexpected distribution entries: " + ", ".join(sorted(unexpected)))
+    if complete and set(entries) != expected:
+        raise ValueError("Distribution files are missing")
+    for entry in entries.values():
+        if entry.is_symlink() or not entry.is_file():
+            raise ValueError("Distribution entry must be a regular file: " + entry.name)
+
+
 def verify(root):
+    verify_inventory(root, complete=True)
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("compilerApi") != "4.3.0" or manifest.get("microsoftUnityAnalyzers") != "1.28.0":
         raise ValueError("Unexpected compiler or Unity analyzer pin")

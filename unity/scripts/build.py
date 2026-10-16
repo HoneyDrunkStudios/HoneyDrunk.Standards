@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sys
 
-from verify_distribution import verify
+from verify_distribution import verify, verify_inventory
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DLLS = ("HoneyDrunk.Standards.Unity.Analyzers.dll", "Microsoft.Unity.Analyzers.dll")
@@ -53,11 +53,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=pathlib.Path, default=ROOT / "artifacts/unity")
     args = parser.parse_args()
+    output = args.output.resolve()
+    verify_inventory(output)
     project = ROOT / "unity/tests/HoneyDrunk.Standards.Unity.Tests.csproj"
     subprocess.run(["dotnet", "restore", str(project), "--locked-mode"], check=True, cwd=ROOT / "unity")
     subprocess.run(["dotnet", "build", str(project), "-c", "Release", "--no-restore", "-m:1"], check=True, cwd=ROOT / "unity")
     subprocess.run(["dotnet", "run", "--project", str(project), "-c", "Release", "--no-build", "--no-restore"], check=True, cwd=ROOT / "unity")
-    output = args.output.resolve()
+    verify_inventory(output)
     output.mkdir(parents=True, exist_ok=True)
     for name in DLLS:
         shutil.copy2(ROOT / "unity/src/bin/Release/netstandard2.0" / name, output / name)

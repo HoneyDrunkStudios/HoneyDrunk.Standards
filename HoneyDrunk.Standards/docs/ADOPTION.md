@@ -22,7 +22,7 @@ While developing or testing standards changes:
 
 ```xml
 <ItemGroup>
-  <ProjectReference Include="..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
+  <ProjectReference Include="..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -448,4 +448,4 @@ MSBuild properties are evaluated in this order (last wins):
 
 ---
 
-**Next Steps:** Review [CONVENTIONS.md](./CONVENTIONS.md) for HoneyDrunk coding standards and architectural guidelines.
+**Next Steps:** Review [CONVENTIONS.md](CONVENTIONS.md) for HoneyDrunk coding standards and architectural guidelines.

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `HoneyDrunk.Standards/CHANGELOG.md` — the `HoneyDrunk.Standards` standards
   package (build-transitive analyzers, EditorConfig, deterministic builds).
-- `HoneyDrunk.Standards/HoneyDrunk.Standards.Tests/CHANGELOG.md` — the
+- `src/HoneyDrunk.Standards.Tests/CHANGELOG.md` — the
   `HoneyDrunk.Standards.Tests` companion test-stack package.
 
 ## [Unreleased]

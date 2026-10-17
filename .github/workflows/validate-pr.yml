@@ -7,6 +7,7 @@ on:
       - '**.cs'
       - '**.csproj'
       - '**.sln'
+      - '**.slnx'
       - '**.props'
       - '**.targets'
       - '**/.editorconfig'
@@ -29,7 +30,8 @@ jobs:
       dotnet-version: '10.0.x'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
-      working-directory: 'HoneyDrunk.Standards'
+      working-directory: '.'
+      project-path: 'HoneyDrunk.Standards.slnx'
       enable-secret-scan: false
       enable-accessibility-check: false
       post-pr-summary: true

@@ -1,5 +1,10 @@
 # HoneyDrunk.Standards
 
+## Repository layout
+
+Open `HoneyDrunk.Standards.slnx` from the repository root. Production projects live in `src/`, test and canary projects in `tests/`, and examples in `samples/` where present. Shared build configuration stays at the root; project names, namespaces and package identities are unchanged. Existing documentation and release-history locations are retained.
+
+
 [![Validate](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
@@ -61,7 +66,7 @@ You should see:
 |----------|-------------|
 | **[CONVENTIONS.md](HoneyDrunk.Standards/docs/CONVENTIONS.md)** | Coding standards, naming rules, and architectural patterns |
 | **[ADOPTION.md](HoneyDrunk.Standards/docs/ADOPTION.md)** | How to adopt, customize, and troubleshoot |
-| **[Consumer.Sample](HoneyDrunk.Standards/Consumer.Sample/)** | Working example with compliant and violation code |
+| **[Consumer.Sample](samples/Consumer.Sample/)** | Working example with compliant and violation code |
 
 ---
 
@@ -222,7 +227,7 @@ See [CONVENTIONS.md](HoneyDrunk.Standards/docs/CONVENTIONS.md) for full rational
 
 ### Sample Project
 
-The [Consumer.Sample](HoneyDrunk.Standards/Consumer.Sample/) project demonstrates:
+The [Consumer.Sample](samples/Consumer.Sample/) project demonstrates:
 
 - ✅ Compliant code examples
 - ❌ Commented-out violations you can uncomment to test
@@ -233,7 +238,7 @@ The [Consumer.Sample](HoneyDrunk.Standards/Consumer.Sample/) project demonstrate
 ```bash
 # Clone the repository
 git clone https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards.git
-cd HoneyDrunk.Standards/HoneyDrunk.Standards
+cd HoneyDrunk.Standards
 
 # Build and pack
 dotnet pack -c Release -o ./artifacts
@@ -280,16 +285,16 @@ Contributions are welcome! Please:
 
 ```bash
 # Restore dependencies
-dotnet restore HoneyDrunk.Standards.sln
+dotnet restore HoneyDrunk.Standards.slnx
 
 # Build
-dotnet build HoneyDrunk.Standards.sln -c Release
+dotnet build HoneyDrunk.Standards.slnx -c Release
 
 # Pack
-dotnet pack HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c Release -o ./artifacts
+dotnet pack src/HoneyDrunk.Standards/HoneyDrunk.Standards.csproj -c Release -o ./artifacts
 
 # Test in Consumer.Sample
-cd Consumer.Sample
+cd samples/Consumer.Sample
 dotnet build
 ```
 
@@ -323,7 +328,7 @@ HoneyDrunk.Standards is part of the **Hive** ecosystem - a collection of tools, 
 
 **Built with 🍯 by HoneyDrunk Studios**
 
-[Documentation](HoneyDrunk.Standards/docs/) • [Sample Project](HoneyDrunk.Standards/Consumer.Sample/) • [Issues](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues) • [Contact](mailto:contact@honeydrunkstudios.com)
+[Documentation](HoneyDrunk.Standards/docs/) • [Sample Project](samples/Consumer.Sample/) • [Issues](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/issues) • [Contact](mailto:contact@honeydrunkstudios.com)
 
 </div>
 

@@ -27,6 +27,6 @@ dotnet test .\HoneyDrunk.Standards.Tests.Consumer.csproj -c Release --no-restore
 Expected setup before running the fixture:
 
 ```powershell
-dotnet pack ..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj -c Release --no-build -o ..\artifacts\standards-tests-fix
-dotnet pack ..\HoneyDrunk.Standards.Tests\HoneyDrunk.Standards.Tests.csproj -c Release --no-build -o ..\artifacts\standards-tests-fix
+dotnet pack ..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj -c Release --no-build -o ..\artifacts\standards-tests-fix
+dotnet pack ..\..\src\HoneyDrunk.Standards.Tests\HoneyDrunk.Standards.Tests.csproj -c Release --no-build -o ..\artifacts\standards-tests-fix
 ```

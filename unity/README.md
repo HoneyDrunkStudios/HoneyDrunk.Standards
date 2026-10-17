@@ -49,9 +49,9 @@ The fixture runner checks compiler-reference compatibility, actual analyzer load
 Existing server validation remains:
 
 ```sh
-dotnet restore HoneyDrunk.Standards/HoneyDrunk.Standards.slnx
-dotnet build HoneyDrunk.Standards/HoneyDrunk.Standards.slnx -c Release --no-restore
-dotnet test HoneyDrunk.Standards/HoneyDrunk.Standards.slnx -c Release --no-build
+dotnet restore HoneyDrunk.Standards.slnx
+dotnet build HoneyDrunk.Standards.slnx -c Release --no-restore
+dotnet test HoneyDrunk.Standards.slnx -c Release --no-build
 ```
 
 ## References

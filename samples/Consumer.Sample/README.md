@@ -223,8 +223,8 @@ Microsoft.CodeAnalysis.NetAnalyzers catch:
 
 ## Next Steps
 
-1. **Review** [docs/ADOPTION.md](../docs/ADOPTION.md) for adopting HoneyDrunk.Standards in your projects
-2. **Learn** [docs/CONVENTIONS.md](../docs/CONVENTIONS.md) for HoneyDrunk coding standards
+1. **Review** [docs/ADOPTION.md](../../HoneyDrunk.Standards/docs/ADOPTION.md) for adopting HoneyDrunk.Standards in your projects
+2. **Learn** [docs/CONVENTIONS.md](../../HoneyDrunk.Standards/docs/CONVENTIONS.md) for HoneyDrunk coding standards
 3. **Experiment** with the violation examples to understand each analyzer rule
 4. **Apply** these patterns in your own projects
 
@@ -243,7 +243,7 @@ dotnet build
 
 Check that the project reference is correct:
 ```xml
-<ProjectReference Include="..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
+<ProjectReference Include="..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
 ```
 
 Verify path is relative to the `.csproj` file location.

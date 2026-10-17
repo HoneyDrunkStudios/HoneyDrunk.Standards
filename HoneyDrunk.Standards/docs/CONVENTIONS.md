@@ -74,7 +74,9 @@ public void TestGetUser() { }      // ? Not descriptive
 
 ### Repository and feature layout
 
-Keep the repository's actual solution/project layout. Many .NET repositories keep peer projects beside a solution under a repository-named directory; others keep the solution at the root. Do not create or remove `src/`, `tests/`, Domain or Application projects merely to match a universal template.
+For .NET repositories, keep the solution and shared build configuration at the repository root, production projects under `src/`, test and canary projects under `tests/`, and examples under `samples/`. Published packages belong in `src/` even when their names contain `Tests` (for example, `HoneyDrunk.Standards.Tests`). Keep existing project names, namespaces, public contracts and dependency directions when relocating files. Update solution/project references, packaging assets, CI, Docker contexts and local tooling together.
+
+Use ecosystem layouts for other repository types: Unity retains `Assets/`, `Packages/` and `ProjectSettings/`; app/package workspaces may retain `apps/` and `packages/` with their own source folders. Documentation, infrastructure and scaffolding repositories do not need an empty `src/`. Do not create Domain or Application layers merely to match a folder template.
 
 Within each layer, organize by the domain/responsibility being changed. For an application that already uses API, Contracts, Services, Data and Database projects, mirror relevant feature folders such as Accounts or Orders. Keep pure domain rules in an existing Domain project where that boundary is useful. Libraries may use Abstractions, runtime and provider packages; they do not need application layers.
 

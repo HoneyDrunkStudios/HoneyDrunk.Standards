@@ -14,7 +14,7 @@
 
   <!-- Reference HoneyDrunk.Standards for local testing -->
   <ItemGroup>
-    <ProjectReference Include="..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

@@ -105,14 +105,19 @@ def _git_show(root, ref, path):
 def baseline_at(root, ref, config_path):
     """The baseline committed at ref, found through the config committed there.
 
-    None only on first adoption, when ref has no layout config at config_path. A ref whose config
-    names a baseline that is missing fails closed, so moving the baseline cannot skip the comparison.
+    None only on first adoption, when ref has no layout config. A config moved since ref is followed
+    to its old path; a config deleted since ref, or one whose baseline is missing, fails closed, so
+    moving either file cannot skip the comparison.
     """
     exists = subprocess.run(['git', 'rev-parse', '--verify', '--quiet', f'{ref}^{{commit}}'], cwd=root, capture_output=True, check=False)
     if exists.returncode != 0:
         raise LayoutError(f'base ref {ref} is not available; fetch it before comparing')
+    config_path = renamed_paths(root, ref).get(config_path, config_path)
     config_text = _git_show(root, ref, config_path)
     if config_text is None:
+        for deleted in _deleted_paths(root, ref):
+            if deleted.endswith('.json') and _is_layout_config(_git_show(root, ref, deleted)):
+                raise LayoutError(f'{ref} has a layout config at {deleted} that this change removes; keep its path or move it with git mv')
         return None
     try:
         path = json.loads(config_text).get('baseline', posixpath.join(posixpath.dirname(config_path), 'file-layout-baseline.json'))
@@ -138,6 +143,22 @@ def renamed_paths(root, ref):
         if len(parts) == 3:
             renames[parts[2]] = parts[1]
     return renames
+
+
+def _deleted_paths(root, ref):
+    result = subprocess.run(['git', '-c', 'core.quotePath=false', 'diff', '--find-renames', '--name-only', '--diff-filter=D', ref, 'HEAD'],
+                            cwd=root, capture_output=True, text=True, encoding='utf-8', check=False)
+    if result.returncode != 0:
+        raise LayoutError(f'cannot diff against {ref}: {result.stderr.strip()}')
+    return result.stdout.splitlines()
+
+
+def _is_layout_config(text):
+    try:
+        data = json.loads(text or '')
+    except ValueError:
+        return False
+    return isinstance(data, dict) and data.get('schemaVersion') == SCHEMA_VERSION and 'sources' in data
 
 
 def root_files(files, settings):

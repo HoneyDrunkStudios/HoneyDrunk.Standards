@@ -232,6 +232,36 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(1, code)
         self.assertIn('only ever loses entries', output)
 
+    def test_moving_the_config_still_compares_with_the_old_baseline(self):
+        self.source('Game/Core/Trade/Big.cs', 12)
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'tools').mkdir()
+        self.git('mv', 'layout.json', 'tools/layout.json')
+        self.write_baseline({'Game/Core/Trade/Big.cs': 12})
+        self.commit_all('move')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            code = LAYOUT.main(['--root', str(self.root), '--config', 'tools/layout.json', '--base-ref', 'HEAD~1'])
+        self.assertEqual(1, code)
+        self.assertIn('only ever loses entries', output.getvalue())
+
+    def test_deleting_the_config_at_base_fails_closed(self):
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        self.git('rm', '-q', 'layout.json')
+        # Different enough that git sees a deletion and a new file, not a rename.
+        unrelated = {**CONFIG, 'excludeDirectories': [f'Vendor{i}' for i in range(40)]}
+        (self.root / 'other.json').write_text(json.dumps(unrelated, indent=4))
+        self.commit_all('replace')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            code = LAYOUT.main(['--root', str(self.root), '--config', 'other.json', '--base-ref', 'HEAD~1'])
+        self.assertEqual(2, code, output.getvalue())
+        self.assertIn('that this change removes', output.getvalue())
+
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')
         self.git('add', 'layout.json')

@@ -82,7 +82,8 @@ def _has_tool(run):
     if not isinstance(tool, dict):
         return False
     driver = tool.get('driver')
-    return (isinstance(driver, dict) and isinstance(driver.get('name'), str)) or isinstance(tool.get('name'), str)
+    name = driver.get('name') if isinstance(driver, dict) else tool.get('name')
+    return isinstance(name, str) and bool(name.strip())
 
 
 def _results(sarif):

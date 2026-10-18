@@ -179,7 +179,8 @@ def base_state(root, ref, config_path):
         raise LayoutError(f'base ref {ref} is not available; fetch it before comparing')
     config_path = renamed_paths(root, ref).get(config_path, config_path)
     config_text = _git_show(root, ref, config_path)
-    if config_text is None:
+    if config_text is None or not _is_layout_config(config_text):
+        # Absent, or an unrelated file the change repurposes: adopted only if a layout config exists elsewhere.
         existing = _layout_configs_at(root, ref)
         if existing:
             raise LayoutError(f'{ref} already has a layout config at {", ".join(existing)}; keep using it, or move it with git mv')

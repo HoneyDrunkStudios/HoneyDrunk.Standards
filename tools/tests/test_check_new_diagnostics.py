@@ -132,6 +132,7 @@ class NewDiagnosticsTests(unittest.TestCase):
         target = self.root / 'analysis.sarif'
         tool = '"tool": {"name": "csc"}, '
         for text in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{}]}', '{"runs": [{"tool": {}}]}',
+                     '{"runs": [{"tool": {"driver": {"name": ""}}}]}', '{"runs": [{"tool": {"name": " "}}]}',
                      '{"runs": [{' + tool + '"results": null}]}', '{"runs": [{' + tool + '"results": [1]}]}',
                      '{"runs": [{' + tool + '"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
             with self.subTest(text=text):

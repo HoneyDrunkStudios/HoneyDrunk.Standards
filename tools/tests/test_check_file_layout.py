@@ -385,6 +385,15 @@ class FileLayoutTests(unittest.TestCase):
         self.write_baseline({'Game/Core/Trade/Big.cs': 12})
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
 
+    def test_repurposing_an_unrelated_file_as_the_config_is_first_adoption(self):
+        (self.root / 'layout.json').write_text('{"name": "unrelated"}')
+        self.git('init', '-q')
+        self.commit_all()
+        self.write_config(CONFIG)
+        self.source('Game/Core/Trade/Big.cs', 12)
+        self.write_baseline({'Game/Core/Trade/Big.cs': 12})
+        self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
+
     def test_moving_the_baseline_still_compares_with_the_old_one(self):
         self.source('Game/Core/Trade/Big.cs', 12)
         self.write_baseline()

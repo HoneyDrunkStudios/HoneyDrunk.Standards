@@ -126,7 +126,8 @@ def owned_files(root, settings):
                 path = Path(directory) / name
                 text = path.read_text(encoding='utf-8-sig', errors='replace')
                 if not is_generated(path, text):
-                    files[_relative(root, path)] = len(text.splitlines())
+                    # Lexical, not resolved: a symlinked source keeps its configured path.
+                    files[Path(os.path.relpath(path, root)).as_posix()] = len(text.splitlines())
     return files
 
 

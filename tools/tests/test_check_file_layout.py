@@ -169,6 +169,19 @@ class FileLayoutTests(unittest.TestCase):
         os.environ['GITHUB_ACTIONS'] = 'true'
         self.assertIn('::error file=Game/Core/Trade/Haggle.cs::11 lines', self.run_main()[1])
 
+    def test_symlinked_source_keeps_its_configured_path(self):
+        (self.root / 'Actual/Core').mkdir(parents=True)
+        try:
+            (self.root / 'Linked').symlink_to(self.root / 'Actual', target_is_directory=True)
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        self.write_config({**CONFIG, 'sources': ['Linked'], 'layerRoots': ['Linked/Core']})
+        self.write_baseline()
+        self.source('Actual/Core/Boot.cs', 2)
+        code, output = self.run_main()
+        self.assertEqual(1, code)
+        self.assertIn('Linked/Core/Boot.cs: a layer root takes no new C# files', output)
+
     def test_custom_excluded_directory_is_ignored(self):
         self.write_config({**CONFIG, 'excludeDirectories': ['Vendor']})
         self.write_baseline()

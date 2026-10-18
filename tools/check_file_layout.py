@@ -11,6 +11,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import posixpath
 import subprocess
 import sys
 
@@ -96,15 +97,31 @@ def read_baseline(text, origin):
     return {'oversizedFiles': dict(oversized), 'layerRootFiles': list(roots)}
 
 
-def baseline_at(root, ref, path):
-    """The baseline as committed at a git ref, or None when that ref has no baseline yet."""
+def _git_show(root, ref, path):
     result = subprocess.run(['git', 'show', f'{ref}:{path}'], cwd=root, capture_output=True, text=True, encoding='utf-8', check=False)
-    if result.returncode != 0:
-        exists = subprocess.run(['git', 'rev-parse', '--verify', '--quiet', f'{ref}^{{commit}}'], cwd=root, capture_output=True, check=False)
-        if exists.returncode != 0:
-            raise LayoutError(f'base ref {ref} is not available; fetch it before comparing')
+    return result.stdout if result.returncode == 0 else None
+
+
+def baseline_at(root, ref, config_path):
+    """The baseline committed at ref, found through the config committed there.
+
+    None only on first adoption, when ref has no layout config at config_path. A ref whose config
+    names a baseline that is missing fails closed, so moving the baseline cannot skip the comparison.
+    """
+    exists = subprocess.run(['git', 'rev-parse', '--verify', '--quiet', f'{ref}^{{commit}}'], cwd=root, capture_output=True, check=False)
+    if exists.returncode != 0:
+        raise LayoutError(f'base ref {ref} is not available; fetch it before comparing')
+    config_text = _git_show(root, ref, config_path)
+    if config_text is None:
         return None
-    return read_baseline(result.stdout, f'{ref}:{path}')
+    try:
+        path = json.loads(config_text).get('baseline', posixpath.join(posixpath.dirname(config_path), 'file-layout-baseline.json'))
+    except (ValueError, AttributeError) as exc:
+        raise LayoutError(f'{ref}:{config_path}: invalid layout config: {exc}') from exc
+    text = _git_show(root, ref, path)
+    if text is None:
+        raise LayoutError(f'{ref} has the layout config but not its baseline {path}')
+    return read_baseline(text, f'{ref}:{path}')
 
 
 def renamed_paths(root, ref):
@@ -244,7 +261,7 @@ def main(argv=None):
             write_json(baseline_path, updated_baseline(root, settings, baseline))
             print(f'Updated {settings["baseline"]}')
             return 0
-        base = baseline_at(root, args.base_ref, settings['baseline']) if args.base_ref else None
+        base = baseline_at(root, args.base_ref, _relative(root, root / args.config)) if args.base_ref else None
         renames = renamed_paths(root, args.base_ref) if base is not None else None
         errors, warnings = check(root, settings, baseline, base, renames)
     except (LayoutError, OSError) as exc:

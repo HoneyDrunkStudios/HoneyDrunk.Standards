@@ -118,7 +118,7 @@ A repository adopting the limits commits a baseline that lists every owned file 
 
 - A baselined file may shrink but never grow. To add behavior to the system it holds, put the new code in a new file.
 - When a baselined file shrinks, lock the smaller size by running `--update-baseline` in the same change. When it drops to the fail limit or below, the same command removes it.
-- The baseline only ever loses entries or lowers counts. On a pull request the check compares the baseline with the one on the base branch and fails if an entry was added or a count raised. Split the file instead.
+- The baseline only ever loses entries or lowers counts. On a pull request the check compares the baseline with the one the base branch's config names (so moving the baseline file does not skip the comparison) and fails if an entry was added or a count raised. Split the file instead. Only the change that first adds the config, when the base has none, is not compared.
 - To move a baselined file into its system's folder, change its path in the baseline in the same change. The comparison accepts the new path when git detects the move as a rename.
 - `--update-baseline` never adds or raises an entry. `--init-baseline` creates the first baseline once and refuses to run when one exists.
 
@@ -143,7 +143,7 @@ python3 <standards>/tools/check_file_layout.py --config Tools/file-layout.json
 python3 <standards>/tools/check_file_layout.py --config Tools/file-layout.json --update-baseline
 ```
 
-`warnLines`, `failLines` and `maxFilesPerFolder` default to the limits above; `excludeDirectories` adds directory names to skip. In CI, check out with `fetch-depth: 2` and pass `--base-ref HEAD^1`: on a pull request the checked-out commit is the merge into the base branch, so its first parent is the base, and on a push to `main` it is the previous `main`. Errors fail the run; advisory warnings print as warnings (GitHub annotations in Actions).
+`warnLines`, `failLines` and `maxFilesPerFolder` default to the limits above; `excludeDirectories` adds directory names to skip. In CI, pass the commit the change is measured against as `--base-ref`. On a pull request, check out with `fetch-depth: 2` and use `HEAD^1`: the checked-out commit is the merge into the base branch, so its first parent is the base. On a push, use the event's `before` SHA and fetch enough history to have it, since one push can add several commits. Errors fail the run; advisory warnings print as warnings (GitHub annotations in Actions).
 
 ### Analyzer rules on new code
 

@@ -207,13 +207,39 @@ class FileLayoutTests(unittest.TestCase):
         self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', 'move')
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD~1')[0])
 
-    def test_base_ref_without_baseline_is_skipped(self):
+    def commit_all(self, message='base'):
+        self.git('add', '-A')
+        self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', message)
+
+    def test_first_adoption_without_config_at_base_is_skipped(self):
         self.git('init', '-q')
-        self.git('add', 'layout.json')
+        self.git('add', 'Game')
         self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', 'base')
         self.source('Game/Core/Trade/Big.cs', 12)
         self.write_baseline({'Game/Core/Trade/Big.cs': 12})
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
+
+    def test_moving_the_baseline_still_compares_with_the_old_one(self):
+        self.source('Game/Core/Trade/Big.cs', 12)
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'layout-baseline.json').unlink()
+        self.write_config({**CONFIG, 'baseline': 'moved-baseline.json'})
+        moved = {'schemaVersion': 1, 'oversizedFiles': {'Game/Core/Trade/Big.cs': 12}, 'layerRootFiles': []}
+        (self.root / 'moved-baseline.json').write_text(json.dumps(moved))
+        code, output = self.run_main('--base-ref', 'HEAD')
+        self.assertEqual(1, code)
+        self.assertIn('only ever loses entries', output)
+
+    def test_config_at_base_without_its_baseline_fails_closed(self):
+        self.git('init', '-q')
+        self.git('add', 'layout.json')
+        self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', 'base')
+        self.write_baseline()
+        code, output = self.run_main('--base-ref', 'HEAD')
+        self.assertEqual(2, code)
+        self.assertIn('not its baseline', output)
 
     def test_unknown_base_ref_fails_closed(self):
         self.write_baseline()

@@ -15,6 +15,7 @@ LAYOUT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(LAYOUT)
 
 CONFIG = {
+    'tool': 'honeydrunk-file-layout',
     'schemaVersion': 1,
     'sources': ['Game'],
     'layerRoots': ['Game/Core', 'Game/Runtime'],
@@ -220,20 +221,25 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual('{"keep": true}', outside.read_text())
 
     def test_unrelated_json_at_base_does_not_block_first_adoption(self):
-        (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": "generated"}')
+        (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": ["Game"]}')
         self.git('init', '-q')
         self.git('add', 'Game', 'metadata.json')
         self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', 'base')
         self.write_baseline()
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
 
-    def test_escaped_sources_key_is_rejected(self):
+    def test_escaped_tool_name_is_rejected(self):
         self.write_baseline()
-        text = json.dumps(CONFIG).replace('"sources"', '"' + chr(92) + 'u0073ources"')
+        text = json.dumps(CONFIG).replace('"honeydrunk-file-layout"', '"' + chr(92) + 'u0068oneydrunk-file-layout"')
         (self.root / 'layout.json').write_text(text)
         code, output = self.run_main()
         self.assertEqual(2, code)
-        self.assertIn('spell the sources key literally', output)
+        self.assertIn('spelled literally', output)
+
+    def test_config_without_the_tool_name_is_rejected(self):
+        self.write_baseline()
+        self.write_config({k: v for k, v in CONFIG.items() if k != 'tool'})
+        self.assertEqual(2, self.run_main()[0])
 
     def test_malformed_baseline_shapes_fail_closed(self):
         for data in ([], 'baseline', None, {'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},

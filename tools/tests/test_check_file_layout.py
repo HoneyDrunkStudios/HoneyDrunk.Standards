@@ -260,7 +260,7 @@ class FileLayoutTests(unittest.TestCase):
         with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
             code = LAYOUT.main(['--root', str(self.root), '--config', 'other.json', '--base-ref', 'HEAD~1'])
         self.assertEqual(2, code, output.getvalue())
-        self.assertIn('that this change removes', output.getvalue())
+        self.assertIn('already has a layout config at layout.json', output.getvalue())
 
     def assert_config_change(self, change, expected_code, expected_text=None):
         self.write_baseline()
@@ -283,6 +283,18 @@ class FileLayoutTests(unittest.TestCase):
 
     def test_tightening_the_config_against_base_passes(self):
         self.assert_config_change({'failLines': 9, 'maxFilesPerFolder': 2}, 0)
+
+    def test_switching_to_a_copied_config_fails_closed(self):
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'copy.json').write_text((self.root / 'layout.json').read_text())
+        self.commit_all('copy')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            code = LAYOUT.main(['--root', str(self.root), '--config', 'copy.json', '--base-ref', 'HEAD~1'])
+        self.assertEqual(2, code, output.getvalue())
+        self.assertIn('already has a layout config at layout.json', output.getvalue())
 
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')

@@ -119,9 +119,9 @@ def _git_show(root, ref, path):
 def base_state(root, ref, config_path):
     """(settings, baseline) as committed at ref, found through the config committed there.
 
-    None only on first adoption, when ref has no layout config. A config moved since ref is followed
-    to its old path; a config deleted since ref, or one whose baseline is missing, fails closed, so
-    moving either file cannot skip the comparison.
+    None only on first adoption, when ref has no layout config anywhere. A config moved since ref is
+    followed to its old path; a base config at any other path (copied or deleted since), or a base
+    config whose baseline is missing, fails closed, so moving either file cannot skip the comparison.
     """
     exists = subprocess.run(['git', 'rev-parse', '--verify', '--quiet', f'{ref}^{{commit}}'], cwd=root, capture_output=True, check=False)
     if exists.returncode != 0:
@@ -129,9 +129,9 @@ def base_state(root, ref, config_path):
     config_path = renamed_paths(root, ref).get(config_path, config_path)
     config_text = _git_show(root, ref, config_path)
     if config_text is None:
-        for deleted in _deleted_paths(root, ref):
-            if deleted.endswith('.json') and _is_layout_config(_git_show(root, ref, deleted)):
-                raise LayoutError(f'{ref} has a layout config at {deleted} that this change removes; keep its path or move it with git mv')
+        existing = _layout_configs_at(root, ref)
+        if existing:
+            raise LayoutError(f'{ref} already has a layout config at {", ".join(existing)}; keep using it, or move it with git mv')
         return None
     settings = parse_config(config_text, config_path, f'{ref}:{config_path}')
     text = _git_show(root, ref, settings['baseline'])
@@ -165,12 +165,14 @@ def renamed_paths(root, ref):
     return renames
 
 
-def _deleted_paths(root, ref):
-    result = subprocess.run(['git', '-c', 'core.quotePath=false', 'diff', '--find-renames', '--name-only', '--diff-filter=D', ref, 'HEAD'],
+def _layout_configs_at(root, ref):
+    """Every layout config committed anywhere at ref, so a moved, copied or deleted config is never first adoption."""
+    result = subprocess.run(['git', '-c', 'core.quotePath=false', 'grep', '-l', '-F', '"sources"', ref, '--', '*.json'],
                             cwd=root, capture_output=True, text=True, encoding='utf-8', check=False)
-    if result.returncode != 0:
-        raise LayoutError(f'cannot diff against {ref}: {result.stderr.strip()}')
-    return result.stdout.splitlines()
+    if result.returncode not in (0, 1):
+        raise LayoutError(f'cannot search {ref} for layout configs: {result.stderr.strip()}')
+    paths = [line.split(':', 1)[1] for line in result.stdout.splitlines() if ':' in line]
+    return sorted(path for path in paths if _is_layout_config(_git_show(root, ref, path)))
 
 
 def _is_layout_config(text):

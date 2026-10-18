@@ -199,6 +199,10 @@ def base_state(root, ref, config_path):
         if existing:
             raise LayoutError(f'{ref} already has a layout config at {", ".join(existing)}; keep using it, or move it with git mv')
         return None
+    others = [path for path in _layout_configs_at(root, ref) if path != config_path]
+    if others:
+        # One repository, one layout config: with several, switching between them could drop coverage unseen.
+        raise LayoutError(f'{ref} has more than one layout config ({config_path}, {", ".join(others)}); keep exactly one')
     settings = parse_config(config_text, config_path, f'{ref}:{config_path}')
     text = _git_show(root, ref, settings['baseline'])
     if text is None:

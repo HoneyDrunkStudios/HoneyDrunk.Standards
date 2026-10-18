@@ -16,6 +16,7 @@ import sys
 from urllib.parse import unquote, urlparse
 
 DEFAULT_RULES = ('SA1402', 'SA1649', 'IDE0130')
+SARIF_VERSIONS = ('1.0.0', '2.1.0')
 HUNK = re.compile(r'^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@')
 
 
@@ -89,7 +90,9 @@ def _has_tool(run):
 def _results(sarif):
     """Every result object in a SARIF log; a malformed log fails rather than being read partly."""
     data = json.loads(Path(sarif).read_text(encoding='utf-8-sig'))
-    runs = data.get('runs') if isinstance(data, dict) else None
+    if not isinstance(data, dict) or data.get('version') not in SARIF_VERSIONS:
+        raise ValueError(f'{sarif}: not a SARIF {" or ".join(SARIF_VERSIONS)} log')
+    runs = data.get('runs')
     # A log without runs is no analyzer evidence at all, so it must not pass as a clean one.
     if not isinstance(runs, list) or not runs or not all(isinstance(run, dict) and _has_tool(run) for run in runs):
         raise ValueError(f'{sarif}: not a SARIF log')

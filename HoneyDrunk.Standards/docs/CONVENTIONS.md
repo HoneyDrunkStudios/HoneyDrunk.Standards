@@ -145,7 +145,7 @@ python3 <standards>/tools/check_file_layout.py --config Tools/file-layout.json
 python3 <standards>/tools/check_file_layout.py --config Tools/file-layout.json --update-baseline
 ```
 
-`tool` identifies the file as a layout config and is required. `warnLines`, `failLines` and `maxFilesPerFolder` default to the limits above; `excludeDirectories` adds directory names to skip. In CI, pass the commit the change is measured against as `--base-ref`. On a pull request, check out with `fetch-depth: 2` and use `HEAD^1`: the checked-out commit is the merge into the base branch, so its first parent is the base. On a push, use the event's `before` SHA and fetch enough history to have it, since one push can add several commits. Errors fail the run; advisory warnings print as warnings (GitHub annotations in Actions).
+`tool` identifies the file as a layout config and is required; a repository has exactly one. `warnLines`, `failLines` and `maxFilesPerFolder` default to the limits above; `excludeDirectories` adds directory names to skip. In CI, pass the commit the change is measured against as `--base-ref`. On a pull request, check out with `fetch-depth: 2` and use `HEAD^1`: the checked-out commit is the merge into the base branch, so its first parent is the base. On a push, use the event's `before` SHA and fetch enough history to have it, since one push can add several commits. Errors fail the run; advisory warnings print as warnings (GitHub annotations in Actions).
 
 ### Analyzer rules on new code
 

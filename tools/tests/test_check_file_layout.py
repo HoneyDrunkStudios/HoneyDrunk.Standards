@@ -522,6 +522,15 @@ class FileLayoutTests(unittest.TestCase):
         self.commit_all('move')
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD~1')[0])
 
+    def test_several_layout_configs_at_base_fail_closed(self):
+        self.write_baseline()
+        (self.root / 'other.json').write_text(json.dumps({**CONFIG, 'sources': ['Game/Core'], 'layerRoots': ['Game/Core']}))
+        self.git('init', '-q')
+        self.commit_all()
+        code, output = self.run_main('--base-ref', 'HEAD')
+        self.assertEqual(2, code)
+        self.assertIn('more than one layout config', output)
+
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')
         self.git('add', 'layout.json')

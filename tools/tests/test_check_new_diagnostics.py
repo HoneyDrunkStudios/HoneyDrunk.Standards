@@ -138,10 +138,16 @@ class NewDiagnosticsTests(unittest.TestCase):
     def test_malformed_sarif_fails_closed(self):
         target = self.root / 'analysis.sarif'
         tool = '"tool": {"name": "csc"}, '
-        for text in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{}]}', '{"runs": [{"tool": {}}]}',
+        for text in ('{"runs": [{"tool": {"name": "csc"}}]}', '{"version": "9", "runs": [{"tool": {"name": "csc"}}]}'):
+            with self.subTest(text=text):
+                target.write_text(text)
+                self.assertEqual(2, self.run_main(target)[0])
+        for body in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{}]}', '{"runs": [{"tool": {}}]}',
                      '{"runs": [{"tool": {"driver": {"name": ""}}}]}', '{"runs": [{"tool": {"name": " "}}]}',
                      '{"runs": [{' + tool + '"results": null}]}', '{"runs": [{' + tool + '"results": [1]}]}',
                      '{"runs": [{' + tool + '"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
+            # A valid version, so each case fails on its own malformed part.
+            text = body.replace('{"runs"', '{"version": "1.0.0", "runs"', 1)
             with self.subTest(text=text):
                 target.write_text(text)
                 self.assertEqual(2, self.run_main(target)[0])

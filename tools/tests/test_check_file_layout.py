@@ -132,6 +132,14 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(1, code)
         self.assertIn('layer root takes no new C# files', output)
 
+    def test_repository_root_as_layer_root_takes_no_files(self):
+        self.write_config({**CONFIG, 'sources': ['.'], 'layerRoots': ['.']})
+        self.write_baseline()
+        self.source('Root.cs', 2)
+        code, output = self.run_main()
+        self.assertEqual(1, code)
+        self.assertIn('Root.cs: a layer root takes no new C# files', output)
+
     def test_baselined_layer_root_file_passes(self):
         self.source('Game/Runtime/Boot.cs', 2)
         self.write_baseline(roots=['Game/Runtime/Boot.cs'])

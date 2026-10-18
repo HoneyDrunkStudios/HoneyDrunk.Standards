@@ -185,7 +185,12 @@ def _is_layout_config(text):
 
 def root_files(files, settings):
     roots = set(settings['layerRoots'])
-    return sorted(path for path in files if path.rpartition('/')[0] in roots)
+    return sorted(path for path in files if _folder(path) in roots)
+
+
+def _folder(path):
+    """The file's folder as a normalized config path: '.' for the repository root."""
+    return path.rpartition('/')[0] or '.'
 
 
 def check(root, settings, baseline, base=None, renames=None):
@@ -225,7 +230,7 @@ def check(root, settings, baseline, base=None, renames=None):
 
     counts = {}
     for path in files:
-        folder = path.rpartition('/')[0]
+        folder = _folder(path)
         counts[folder] = counts.get(folder, 0) + 1
     for folder, count in sorted(counts.items()):
         if count > settings['maxFilesPerFolder']:

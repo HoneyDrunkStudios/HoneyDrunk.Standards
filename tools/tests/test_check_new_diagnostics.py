@@ -129,8 +129,11 @@ class NewDiagnosticsTests(unittest.TestCase):
 
     def test_malformed_sarif_fails_closed(self):
         target = self.root / 'analysis.sarif'
-        target.write_text('[]')
-        self.assertEqual(2, self.run_main(target)[0])
+        for text in ('[]', '{"runs": [null]}', '{"runs": [{"results": null}]}', '{"runs": [{"results": [1]}]}',
+                     '{"runs": [{"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
+            with self.subTest(text=text):
+                target.write_text(text)
+                self.assertEqual(2, self.run_main(target)[0])
 
     def test_unknown_base_ref_fails_closed(self):
         output = io.StringIO()

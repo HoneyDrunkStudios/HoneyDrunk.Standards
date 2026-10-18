@@ -76,27 +76,38 @@ def _repository_path(root, uri):
         return None
 
 
+def _results(sarif):
+    """Every result object in a SARIF log; a malformed log fails rather than being read partly."""
+    data = json.loads(Path(sarif).read_text(encoding='utf-8-sig'))
+    runs = data.get('runs', []) if isinstance(data, dict) else None
+    if not isinstance(runs, list) or not all(isinstance(run, dict) for run in runs):
+        raise ValueError(f'{sarif}: not a SARIF log')
+    results = []
+    for run in runs:
+        entries = run.get('results', [])
+        if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+            raise ValueError(f'{sarif}: malformed results')
+        results.extend(entries)
+    return results
+
+
 def diagnostics(root, sarif_paths, rules):
     """Unique (path, line, rule, message) for the chosen rules, from one or more SARIF logs."""
     found = set()
     for sarif in sarif_paths:
-        data = json.loads(Path(sarif).read_text(encoding='utf-8-sig'))
-        if not isinstance(data, dict) or not isinstance(data.get('runs', []), list):
-            raise ValueError(f'{sarif}: not a SARIF log')
-        for run in data.get('runs', []):
-            for result in run.get('results', []):
-                if result.get('ruleId') not in rules:
-                    continue
-                location = _location(result)
-                if location is None:
-                    continue
-                path = _repository_path(root, location[0])
-                if path is None:
-                    continue
-                message = result.get('message')
-                if isinstance(message, dict):
-                    message = message.get('text', '')
-                found.add((path, location[1], result['ruleId'], message or ''))
+        for result in _results(sarif):
+            if result.get('ruleId') not in rules:
+                continue
+            location = _location(result)
+            if location is None:
+                continue
+            path = _repository_path(root, location[0])
+            if path is None:
+                continue
+            message = result.get('message')
+            if isinstance(message, dict):
+                message = message.get('text', '')
+            found.add((path, location[1], result['ruleId'], message or ''))
     return sorted(found)
 
 
@@ -119,7 +130,7 @@ def main(argv=None):
     try:
         changes = changed_lines(root, args.base_ref)
         violations = new_violations(diagnostics(root, args.sarif, rules), changes)
-    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+    except (OSError, ValueError, TypeError, AttributeError, subprocess.CalledProcessError) as exc:
         print(f'New-diagnostics check failed: {exc}', file=sys.stderr)
         return 2
     annotate = os.environ.get('GITHUB_ACTIONS') == 'true'

@@ -203,6 +203,14 @@ class FileLayoutTests(unittest.TestCase):
         self.write_baseline()
         self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
 
+    def test_escaped_sources_key_is_rejected(self):
+        self.write_baseline()
+        text = json.dumps(CONFIG).replace('"sources"', '"' + chr(92) + 'u0073ources"')
+        (self.root / 'layout.json').write_text(text)
+        code, output = self.run_main()
+        self.assertEqual(2, code)
+        self.assertIn('spell the sources key literally', output)
+
     def test_malformed_baseline_shapes_fail_closed(self):
         for data in ([], 'baseline', None, {'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},
                      {'schemaVersion': 1, 'oversizedFiles': {}, 'layerRootFiles': 'Game/Runtime/Boot.cs'}):

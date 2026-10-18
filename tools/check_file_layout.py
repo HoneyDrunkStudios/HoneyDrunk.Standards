@@ -14,6 +14,7 @@ from pathlib import Path, PureWindowsPath
 import posixpath
 import subprocess
 import sys
+import tempfile
 
 SCHEMA_VERSION = 1
 DEFAULTS = {'warnLines': 400, 'failLines': 800, 'maxFilesPerFolder': 12}
@@ -351,9 +352,15 @@ def initial_baseline(root, settings):
 
 
 def write_json(path, data):
-    temporary = path.with_name(path.name + '.tmp')
-    temporary.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
-    temporary.replace(path)
+    # An exclusive, unpredictable temporary file: a planted '<name>.tmp' link cannot redirect the write.
+    handle, temporary = tempfile.mkstemp(prefix=path.name + '.', suffix='.tmp', dir=path.parent)
+    try:
+        with os.fdopen(handle, 'w', encoding='utf-8', newline='\n') as stream:
+            stream.write(json.dumps(data, indent=2) + '\n')
+        os.replace(temporary, path)
+    except BaseException:
+        Path(temporary).unlink(missing_ok=True)
+        raise
 
 
 def report(kind, path, message):

@@ -233,6 +233,19 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(2, self.run_main('--init-baseline')[0])
         self.assertFalse((outside / 'baseline.json').exists())
 
+    def test_planted_temporary_link_is_not_followed(self):
+        outside = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, outside, True)
+        target = outside / 'victim.json'
+        target.write_text('keep')
+        try:
+            (self.root / 'layout-baseline.json.tmp').symlink_to(target)
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        self.assertEqual(0, self.run_main('--init-baseline')[0])
+        self.assertEqual('keep', target.read_text())
+        self.assertFalse((self.root / 'layout-baseline.json').is_symlink())
+
     def test_unrelated_json_at_base_does_not_block_first_adoption(self):
         (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": ["Game"]}')
         self.git('init', '-q')

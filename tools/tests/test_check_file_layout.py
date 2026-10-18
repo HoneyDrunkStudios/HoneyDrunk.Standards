@@ -204,7 +204,8 @@ class FileLayoutTests(unittest.TestCase):
         self.write_baseline()
         for change in ({'layerRoots': 'Game/Core'}, {'sources': 'Game'}, {'excludeDirectories': 'Vendor'},
                        {'failLines': '800'}, {'maxFilesPerFolder': 0},
-                       {'sources': ['Game/Core/Trade'], 'layerRoots': ['Game/Core']}, {'baseline': ['x.json']}, {'layerRoot': ['Game/Core']}):
+                       {'sources': ['Game/Core/Trade'], 'layerRoots': ['Game/Core']},
+                       {'layerRoots': ['Game/Plugins/Core']}, {'baseline': ['x.json']}, {'layerRoot': ['Game/Core']}):
             with self.subTest(change=change):
                 self.write_config({**CONFIG, **change})
                 self.assertEqual(2, self.run_main()[0])
@@ -428,6 +429,11 @@ class FileLayoutTests(unittest.TestCase):
     def test_widening_sources_to_a_parent_passes(self):
         self.write_config({**CONFIG, 'sources': ['Game/Core', 'Game/Runtime']})
         self.assert_config_change({'sources': ['Game']}, 0)
+
+    def test_widening_past_an_excluded_folder_counts_as_removal(self):
+        (self.root / 'Game/Plugins/Owned').mkdir(parents=True)
+        self.write_config({**CONFIG, 'sources': ['Game', 'Game/Plugins/Owned']})
+        self.assert_config_change({'sources': ['Game']}, 1, 'source Game/Plugins/Owned removed')
 
     def test_tightening_the_config_against_base_passes(self):
         self.assert_config_change({'failLines': 9, 'maxFilesPerFolder': 2}, 0)

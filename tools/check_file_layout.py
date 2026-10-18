@@ -77,10 +77,19 @@ def parse_config(text, config_path, origin):
     outside = [path for path in (*settings['sources'], *settings['layerRoots'], settings['baseline']) if not _inside(path)]
     if outside:
         raise LayoutError(f'{origin}: paths must stay inside the repository: {", ".join(outside)}')
-    uncovered = [r for r in settings['layerRoots'] if not any(_within(r, s) for s in settings['sources'])]
+    uncovered = [r for r in settings['layerRoots']
+                 if not any(_scanned(r, s, settings['excludeDirectories']) for s in settings['sources'])]
     if uncovered:
         raise LayoutError(f'{origin}: layer roots must be inside a source, or the check never sees them: {", ".join(uncovered)}')
     return settings
+
+
+def _scanned(path, source, excluded):
+    """Whether scanning source reaches path: it lies inside source and no folder between them is excluded."""
+    if not _within(path, source):
+        return False
+    rest = path if source == '.' else path[len(source):]
+    return not any(part in excluded for part in rest.split('/') if part and part != '.')
 
 
 def _within(path, folder):
@@ -184,7 +193,8 @@ def base_state(root, ref, config_path):
 def weakened(settings, base):
     """How the config loosens the rules compared with the base config; loosening is an owner decision."""
     changes = [f'{key} raised from {base[key]} to {settings[key]}' for key in DEFAULTS if settings[key] > base[key]]
-    changes += [f'source {s} removed' for s in base['sources'] if not any(_within(s, c) for c in settings['sources'])]
+    excluded = settings['excludeDirectories']
+    changes += [f'source {s} removed' for s in base['sources'] if not any(_scanned(s, c, excluded) for c in settings['sources'])]
     changes += [f'layer root {s} removed' for s in base['layerRoots'] if s not in settings['layerRoots']]
     changes += [f'directory {d} excluded' for d in sorted(settings['excludeDirectories'] - base['excludeDirectories'])]
     return changes

@@ -10,7 +10,7 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
-## [0.4.0] - Unreleased
+## [0.4.0] - 2026-10-18
 
 ### Added
 

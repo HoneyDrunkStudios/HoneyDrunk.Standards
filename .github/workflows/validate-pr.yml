@@ -15,6 +15,7 @@ on:
       - '**/*.runsettings'
       - '.github/**'
       - 'unity/**'
+      - 'tools/**'
 
 permissions:
   contents: read
@@ -39,6 +40,20 @@ jobs:
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 
+
+  repository-tools:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test file layout and new-code diagnostics checks
+        run: python3 -m unittest discover -s tools/tests -v
 
   unity-profile:
     runs-on: ubuntu-latest

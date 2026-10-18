@@ -35,6 +35,10 @@ All of this happens **automatically** when you add the package. No manual config
 
 Use the opt-in [Unity profile](unity/README.md) for Unity 6 / Roslyn 4.3. It builds a pinned analyzer distribution with Unity import metadata and per-assembly rulesets; the server NuGet package below is not a Unity integration.
 
+## Repository tools
+
+[`tools/`](tools/) holds standard-library Python checks that a repository runs from a pinned Standards commit: `check_file_layout.py` (file size and folder layout against a ratcheting baseline) and `check_new_diagnostics.py` (analyzer rules that fail only on new and changed code). See [File Size and Folder Layout](HoneyDrunk.Standards/docs/CONVENTIONS.md#file-size-and-folder-layout).
+
 ## 🚀 Quick Start
 
 ### Installation

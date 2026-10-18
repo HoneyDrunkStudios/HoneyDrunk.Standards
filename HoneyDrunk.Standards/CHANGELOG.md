@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Repository tools (not part of the NuGet package): `tools/check_file_layout.py` checks owned C# file sizes (warn over 400 lines, fail over 800) against a ratcheting baseline, and the folder layout (no code in a layer root, advisory warning over 12 C# files in one folder). `tools/check_new_diagnostics.py` fails chosen analyzer diagnostics (`SA1402`, `SA1649`, `IDE0130` by default) only in new files and on changed lines.
+- CONVENTIONS.md: file size and folder layout limits, a game and Unity layout section, and a short "where new code goes" rule for agents.
+
 ## [0.3.0] - 2026-09-26
 
 ### Changed

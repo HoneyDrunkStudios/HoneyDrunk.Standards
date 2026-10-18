@@ -19,6 +19,12 @@ dotnet build HoneyDrunk.Standards.slnx -c Release --no-restore
 dotnet test HoneyDrunk.Standards.slnx -c Release --no-build
 ```
 
+For `tools/` changes:
+
+```sh
+python3 -m unittest discover -s tools/tests -v
+```
+
 Use the checked-in workflow and relevant test documentation for additional integration prerequisites, coverage and consumer checks. Do not use live resources or credentials merely to make a local check pass.
 
 ## Code Review Rules

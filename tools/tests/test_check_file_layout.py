@@ -245,6 +245,18 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual('keep', target.read_text())
         self.assertFalse((self.root / 'layout-baseline.json').is_symlink())
 
+    def test_config_outside_the_root_fails_closed(self):
+        outside = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, outside, True)
+        (outside / 'layout.json').write_text(json.dumps(CONFIG))
+        for config in ('../outside.json', str(outside / 'layout.json')):
+            with self.subTest(config=config):
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+                    code = LAYOUT.main(['--root', str(self.root), '--config', config])
+                self.assertEqual(2, code)
+                self.assertIn('outside the repository root', output.getvalue())
+
     def test_unrelated_json_at_base_does_not_block_first_adoption(self):
         (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": ["Game"]}')
         self.git('init', '-q')

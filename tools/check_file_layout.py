@@ -401,7 +401,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     root = args.root.resolve()
     try:
-        config_path = _relative(root, root / args.config)
+        try:
+            config_path = _relative(root, root / args.config)
+        except ValueError:
+            raise LayoutError(f'config {args.config} is outside the repository root') from None
         settings = load_config(root, config_path)
         settings['config'] = config_path
         baseline_path = root / settings['baseline']

@@ -81,6 +81,8 @@ def diagnostics(root, sarif_paths, rules):
     found = set()
     for sarif in sarif_paths:
         data = json.loads(Path(sarif).read_text(encoding='utf-8-sig'))
+        if not isinstance(data, dict) or not isinstance(data.get('runs', []), list):
+            raise ValueError(f'{sarif}: not a SARIF log')
         for run in data.get('runs', []):
             for result in run.get('results', []):
                 if result.get('ruleId') not in rules:

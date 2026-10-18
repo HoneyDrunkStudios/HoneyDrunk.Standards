@@ -184,7 +184,7 @@ class FileLayoutTests(unittest.TestCase):
                 self.assertEqual(2, self.run_main()[0])
 
     def test_malformed_baseline_shapes_fail_closed(self):
-        for data in ({'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},
+        for data in ([], 'baseline', None, {'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},
                      {'schemaVersion': 1, 'oversizedFiles': {}, 'layerRootFiles': 'Game/Runtime/Boot.cs'}):
             with self.subTest(data=data):
                 (self.root / 'layout-baseline.json').write_text(json.dumps(data))

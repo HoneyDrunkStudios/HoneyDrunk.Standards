@@ -117,7 +117,7 @@ def read_baseline(text, origin):
         data = json.loads(text)
     except ValueError as exc:
         raise LayoutError(f'{origin}: invalid JSON: {exc}') from exc
-    if data.get('schemaVersion') != SCHEMA_VERSION:
+    if not isinstance(data, dict) or data.get('schemaVersion') != SCHEMA_VERSION:
         raise LayoutError(f'{origin}: schemaVersion must be {SCHEMA_VERSION}')
     oversized = data.get('oversizedFiles', {})
     roots = data.get('layerRootFiles', [])

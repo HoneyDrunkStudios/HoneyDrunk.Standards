@@ -127,6 +127,11 @@ class NewDiagnosticsTests(unittest.TestCase):
         output = self.run_main(self.sarif([('SA1402', 'Core/New.cs', 4)]))[1]
         self.assertIn('::error file=Core/New.cs,line=4::SA1402: m', output)
 
+    def test_malformed_sarif_fails_closed(self):
+        target = self.root / 'analysis.sarif'
+        target.write_text('[]')
+        self.assertEqual(2, self.run_main(target)[0])
+
     def test_unknown_base_ref_fails_closed(self):
         output = io.StringIO()
         with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):

@@ -355,6 +355,19 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(1, code)
         self.assertIn('left the layer-root baseline but is still in a layer root', output)
 
+    def test_layer_root_file_moved_into_an_excluded_folder_cannot_leave_the_baseline(self):
+        self.source('Game/Runtime/Boot.cs', 2)
+        self.write_baseline(roots=['Game/Runtime/Boot.cs'])
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'Game/Runtime/Generated').mkdir()
+        self.git('mv', 'Game/Runtime/Boot.cs', 'Game/Runtime/Generated/Boot.cs')
+        self.write_baseline()
+        self.commit_all('hide')
+        code, output = self.run_main('--base-ref', 'HEAD~1')
+        self.assertEqual(1, code)
+        self.assertIn('left the layer-root baseline', output)
+
     def test_layer_root_file_moved_to_a_system_folder_may_leave_the_baseline(self):
         self.source('Game/Runtime/Boot.cs', 2)
         self.write_baseline(roots=['Game/Runtime/Boot.cs'])

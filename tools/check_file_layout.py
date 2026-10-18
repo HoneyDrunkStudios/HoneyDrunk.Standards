@@ -311,9 +311,10 @@ def check(root, settings, baseline, base=None, renames=None):
         layer_roots = set(settings['layerRoots'])
         for path in sorted(base_roots - allowed_roots):
             current = moved_to.get(path, path)
-            if current not in allowed_roots and _folder(current) in layer_roots and (root / current).is_file():
-                errors.append((current, 'left the layer-root baseline but is still in a layer root; a file leaves it only by '
-                                        'moving to a system folder or being deleted, not by being excluded or marked generated'))
+            survives = current not in allowed_roots and (root / current).is_file()
+            if survives and (current not in files or _folder(current) in layer_roots):
+                errors.append((current, 'left the layer-root baseline but is still in a layer root or out of the check; a file leaves it '
+                                        'only by moving to a system folder or being deleted, not by being excluded or marked generated'))
     return errors, warnings
 
 

@@ -13,6 +13,8 @@ public sealed class CommentsAnalyzerTests
     [InlineData("// throw exception;")]
     [InlineData("// break;")]
     [InlineData("// continue;")]
+    [InlineData("// retries++;")]
+    [InlineData("// --remaining;")]
     public async Task CommentedOutStatement_IsReported(string comment)
     {
         var diagnostics = await RunAsync(Method(comment));

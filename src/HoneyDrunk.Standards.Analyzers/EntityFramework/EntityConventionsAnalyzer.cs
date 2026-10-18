@@ -175,8 +175,13 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<(AttributeData Attribute, Location Owner)> MappingAttributesOn(ITypeSymbol entity)
     {
-        var owners = new List<ISymbol> { entity };
-        owners.AddRange(entity.GetMembers().Where(member => member is IPropertySymbol or IFieldSymbol));
+        // EF maps inherited members too, so walk the base types declared in this project.
+        var owners = new List<ISymbol>();
+        for (var type = entity; type is not null && type.Locations.Any(candidate => candidate.IsInSource); type = type.BaseType)
+        {
+            owners.Add(type);
+            owners.AddRange(type.GetMembers().Where(member => member is IPropertySymbol or IFieldSymbol));
+        }
         foreach (var owner in owners)
         {
             var ownerLocation = owner.Locations.FirstOrDefault() ?? Location.None;

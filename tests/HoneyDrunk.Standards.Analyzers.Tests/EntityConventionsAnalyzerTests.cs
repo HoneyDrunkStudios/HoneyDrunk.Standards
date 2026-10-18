@@ -85,6 +85,22 @@ public sealed class EntityConventionsAnalyzerTests
     }
 
     [Fact]
+    public async Task MappingAttributeOnInheritedMember_IsReported()
+    {
+        var diagnostics = await RunAsync("""
+            public abstract class AuditedEntity { [Timestamp] public byte[] Version { get; set; } = []; }
+            public sealed class OrderEntity : AuditedEntity { }
+            public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
+            {
+                public void Configure(EntityTypeBuilder<OrderEntity> builder) => builder.ToTable("Order");
+            }
+            """);
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0103");
+        diagnostics[0].GetMessage().Should().Contain("[Timestamp]");
+    }
+
+    [Fact]
     public async Task ValidationAttributesOnContracts_AreNotReported()
     {
         var diagnostics = await RunAsync("""

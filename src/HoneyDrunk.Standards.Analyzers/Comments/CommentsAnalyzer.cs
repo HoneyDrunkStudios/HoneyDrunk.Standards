@@ -136,7 +136,12 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
         // jump statements like "break;" or "throw error;" are code on their own.
         return HasCodeMarker(line) || parsed.Kind() is SyntaxKind.BreakStatement or SyntaxKind.ContinueStatement
             or SyntaxKind.ThrowStatement or SyntaxKind.ReturnStatement or SyntaxKind.YieldReturnStatement
-            or SyntaxKind.YieldBreakStatement or SyntaxKind.GotoStatement;
+            or SyntaxKind.YieldBreakStatement or SyntaxKind.GotoStatement
+            || parsed is Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionStatementSyntax
+            {
+                Expression.RawKind: (int)SyntaxKind.PostIncrementExpression or (int)SyntaxKind.PreIncrementExpression
+                    or (int)SyntaxKind.PostDecrementExpression or (int)SyntaxKind.PreDecrementExpression,
+            };
     }
 
     private static bool LooksLikeCodeBlock(List<string> lines)

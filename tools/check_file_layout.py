@@ -32,23 +32,37 @@ class LayoutError(Exception):
 
 
 def load_config(root, config_path):
+    """Settings from the config at config_path (repository-relative POSIX path)."""
     try:
-        config = json.loads(config_path.read_text(encoding='utf-8'))
-    except (OSError, ValueError) as exc:
+        text = (root / config_path).read_text(encoding='utf-8')
+    except OSError as exc:
         raise LayoutError(f'cannot read config {config_path}: {exc}') from exc
-    if config.get('schemaVersion') != SCHEMA_VERSION:
-        raise LayoutError(f'{config_path}: schemaVersion must be {SCHEMA_VERSION}')
+    return parse_config(text, config_path, config_path)
+
+
+def parse_config(text, config_path, origin):
+    try:
+        config = json.loads(text)
+    except ValueError as exc:
+        raise LayoutError(f'{origin}: invalid JSON: {exc}') from exc
+    if not isinstance(config, dict) or config.get('schemaVersion') != SCHEMA_VERSION:
+        raise LayoutError(f'{origin}: schemaVersion must be {SCHEMA_VERSION}')
     sources = config.get('sources')
     if not sources or not all(isinstance(s, str) for s in sources):
-        raise LayoutError(f'{config_path}: sources must list the owned source directories')
+        raise LayoutError(f'{origin}: sources must list the owned source directories')
     settings = {**DEFAULTS, **{k: config[k] for k in DEFAULTS if k in config}}
     if not 0 < settings['warnLines'] < settings['failLines']:
-        raise LayoutError(f'{config_path}: warnLines must be positive and below failLines')
-    settings['sources'] = [_relative(root, root / s) for s in sources]
-    settings['layerRoots'] = [_relative(root, root / s) for s in config.get('layerRoots', [])]
+        raise LayoutError(f'{origin}: warnLines must be positive and below failLines')
+    settings['sources'] = [_normal(s) for s in sources]
+    settings['layerRoots'] = [_normal(s) for s in config.get('layerRoots', [])]
     settings['excludeDirectories'] = EXCLUDED_DIRECTORIES | set(config.get('excludeDirectories', []))
-    settings['baseline'] = config.get('baseline', _relative(root, config_path.with_name('file-layout-baseline.json')))
+    default_baseline = posixpath.join(posixpath.dirname(config_path), 'file-layout-baseline.json')
+    settings['baseline'] = _normal(config.get('baseline', default_baseline))
     return settings
+
+
+def _normal(path):
+    return posixpath.normpath(path.replace(chr(92), '/'))
 
 
 def _relative(root, path):
@@ -102,8 +116,8 @@ def _git_show(root, ref, path):
     return result.stdout if result.returncode == 0 else None
 
 
-def baseline_at(root, ref, config_path):
-    """The baseline committed at ref, found through the config committed there.
+def base_state(root, ref, config_path):
+    """(settings, baseline) as committed at ref, found through the config committed there.
 
     None only on first adoption, when ref has no layout config. A config moved since ref is followed
     to its old path; a config deleted since ref, or one whose baseline is missing, fails closed, so
@@ -119,14 +133,20 @@ def baseline_at(root, ref, config_path):
             if deleted.endswith('.json') and _is_layout_config(_git_show(root, ref, deleted)):
                 raise LayoutError(f'{ref} has a layout config at {deleted} that this change removes; keep its path or move it with git mv')
         return None
-    try:
-        path = json.loads(config_text).get('baseline', posixpath.join(posixpath.dirname(config_path), 'file-layout-baseline.json'))
-    except (ValueError, AttributeError) as exc:
-        raise LayoutError(f'{ref}:{config_path}: invalid layout config: {exc}') from exc
-    text = _git_show(root, ref, path)
+    settings = parse_config(config_text, config_path, f'{ref}:{config_path}')
+    text = _git_show(root, ref, settings['baseline'])
     if text is None:
-        raise LayoutError(f'{ref} has the layout config but not its baseline {path}')
-    return read_baseline(text, f'{ref}:{path}')
+        raise LayoutError(f'{ref} has the layout config but not its baseline {settings["baseline"]}')
+    return settings, read_baseline(text, f'{ref}:{settings["baseline"]}')
+
+
+def weakened(settings, base):
+    """How the config loosens the rules compared with the base config; loosening is an owner decision."""
+    changes = [f'{key} raised from {base[key]} to {settings[key]}' for key in DEFAULTS if settings[key] > base[key]]
+    changes += [f'source {s} removed' for s in base['sources'] if s not in settings['sources']]
+    changes += [f'layer root {s} removed' for s in base['layerRoots'] if s not in settings['layerRoots']]
+    changes += [f'directory {d} excluded' for d in sorted(settings['excludeDirectories'] - base['excludeDirectories'])]
+    return changes
 
 
 def renamed_paths(root, ref):
@@ -166,10 +186,10 @@ def root_files(files, settings):
     return sorted(path for path in files if path.rpartition('/')[0] in roots)
 
 
-def check(root, settings, baseline, base_baseline=None, renames=None):
+def check(root, settings, baseline, base=None, renames=None):
     """Return (errors, warnings) as lists of (path, message).
 
-    base_baseline is the baseline at the base ref; renames maps a moved file's new path to its old one.
+    base is (settings, baseline) at the base ref; renames maps a moved file's new path to its old one.
     """
     errors, warnings = [], []
     files = owned_files(root, settings)
@@ -210,7 +230,10 @@ def check(root, settings, baseline, base_baseline=None, renames=None):
             warnings.append((folder, f'{count} C# files in one folder (guideline {settings["maxFilesPerFolder"]}). '
                                      'Give each system its own subfolder; put new files for a system there, not here.'))
 
-    if base_baseline is not None:
+    if base is not None:
+        base_settings, base_baseline = base
+        for change in weakened(settings, base_settings):
+            errors.append((settings.get('config', ''), f'{change} compared with the base; the layout rules only ever tighten'))
         for path, lines in sorted(oversized.items()):
             before = base_baseline['oversizedFiles'].get(path)
             if before is None and renames and path in renames:
@@ -267,7 +290,9 @@ def main(argv=None):
     args = parser.parse_args(argv)
     root = args.root.resolve()
     try:
-        settings = load_config(root, root / args.config)
+        config_path = _relative(root, root / args.config)
+        settings = load_config(root, config_path)
+        settings['config'] = config_path
         baseline_path = root / settings['baseline']
         if args.init_baseline:
             if baseline_path.exists():
@@ -282,7 +307,7 @@ def main(argv=None):
             write_json(baseline_path, updated_baseline(root, settings, baseline))
             print(f'Updated {settings["baseline"]}')
             return 0
-        base = baseline_at(root, args.base_ref, _relative(root, root / args.config)) if args.base_ref else None
+        base = base_state(root, args.base_ref, config_path) if args.base_ref else None
         renames = renamed_paths(root, args.base_ref) if base is not None else None
         errors, warnings = check(root, settings, baseline, base, renames)
     except (LayoutError, OSError) as exc:

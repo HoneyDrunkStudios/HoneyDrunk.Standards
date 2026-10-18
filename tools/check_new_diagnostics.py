@@ -25,20 +25,23 @@ def changed_lines(root, base_ref):
         ['git', '-c', 'core.quotePath=false', 'diff', '--unified=0', '--find-renames', '--no-color', '--no-ext-diff', base_ref, 'HEAD', '--', '*.cs'],
         cwd=root, capture_output=True, text=True, encoding='utf-8', check=True,
     ).stdout
-    changes, path, new_file = {}, None, False
+    # File headers come only between 'diff --git' and the first hunk, so an added line such as
+    # '++ i;' (shown as '+++ i;') is never read as one.
+    changes, path, new_file, in_header = {}, None, False, False
     for line in diff.splitlines():
         if line.startswith('diff --git '):
-            path, new_file = None, False
-        elif line.startswith('new file mode') or line == '--- /dev/null':
+            path, new_file, in_header = None, False, True
+        elif in_header and (line.startswith('new file mode') or line == '--- /dev/null'):
             new_file = True
-        elif line.startswith('+++ '):
+        elif in_header and line.startswith('+++ '):
             target = line[4:]
             path = None if target == '/dev/null' else target[2:] if target.startswith('b/') else target
             if path is not None:
                 changes[path] = None if new_file else set()
-        elif path is not None and changes[path] is not None:
+        elif line.startswith('@@'):
+            in_header = False
             match = HUNK.match(line)
-            if match:
+            if match and path is not None and changes[path] is not None:
                 start, count = int(match.group(1)), int(match.group(2) or 1)
                 changes[path].update(range(start, start + count))
     return changes

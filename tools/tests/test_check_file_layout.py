@@ -262,6 +262,28 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(2, code, output.getvalue())
         self.assertIn('that this change removes', output.getvalue())
 
+    def assert_config_change(self, change, expected_code, expected_text=None):
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        self.write_config({**CONFIG, **change})
+        code, output = self.run_main('--base-ref', 'HEAD')
+        self.assertEqual(expected_code, code, output)
+        if expected_text:
+            self.assertIn(expected_text, output)
+
+    def test_raising_a_limit_against_base_fails(self):
+        self.assert_config_change({'failLines': 20}, 1, 'failLines raised from 10 to 20')
+
+    def test_removing_a_layer_root_against_base_fails(self):
+        self.assert_config_change({'layerRoots': ['Game/Core']}, 1, 'layer root Game/Runtime removed')
+
+    def test_excluding_a_directory_against_base_fails(self):
+        self.assert_config_change({'excludeDirectories': ['Trade']}, 1, 'directory Trade excluded')
+
+    def test_tightening_the_config_against_base_passes(self):
+        self.assert_config_change({'failLines': 9, 'maxFilesPerFolder': 2}, 0)
+
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')
         self.git('add', 'layout.json')

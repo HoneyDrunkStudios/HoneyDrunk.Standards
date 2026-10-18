@@ -72,6 +72,15 @@ class NewDiagnosticsTests(unittest.TestCase):
         self.commit()
         self.assertEqual(1, self.run_main(self.sarif([('SA1402', 'Core/Old.cs', 7)]))[0])
 
+    def test_added_increment_line_is_not_read_as_a_file_header(self):
+        target = self.root / 'Core/Old.cs'
+        lines = target.read_text().splitlines(keepends=True)
+        lines[2] = '++ i;\n'
+        lines[8] = 'class Second { }\n'
+        target.write_text(''.join(lines))
+        self.commit()
+        self.assertEqual(1, self.run_main(self.sarif([('SA1402', 'Core/Old.cs', 9)]))[0])
+
     def test_existing_violation_on_untouched_line_passes(self):
         self.write('Core/Old.cs', 10, changed={7})
         self.commit()

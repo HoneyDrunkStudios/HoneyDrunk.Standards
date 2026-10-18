@@ -72,7 +72,14 @@ def parse_config(text, config_path, origin):
     outside = [path for path in (*settings['sources'], *settings['layerRoots'], settings['baseline']) if not _inside(path)]
     if outside:
         raise LayoutError(f'{origin}: paths must stay inside the repository: {", ".join(outside)}')
+    uncovered = [r for r in settings['layerRoots'] if not any(_within(r, s) for s in settings['sources'])]
+    if uncovered:
+        raise LayoutError(f'{origin}: layer roots must be inside a source, or the check never sees them: {", ".join(uncovered)}')
     return settings
+
+
+def _within(path, folder):
+    return folder == '.' or path == folder or path.startswith(folder + '/')
 
 
 def _inside(path):

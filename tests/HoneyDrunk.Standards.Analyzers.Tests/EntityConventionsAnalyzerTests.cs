@@ -49,6 +49,22 @@ public sealed class EntityConventionsAnalyzerTests
     }
 
     [Fact]
+    public async Task GenericBaseConfiguration_IsNotAnEntity()
+    {
+        var diagnostics = await RunAsync("""
+            public abstract class AuditedConfiguration<T> : IEntityTypeConfiguration<T> where T : class
+            {
+                public virtual void Configure(EntityTypeBuilder<T> builder) => builder.ToTable(typeof(T).Name);
+            }
+            public sealed class OrderEntity { }
+            public sealed class OrderEntityConfiguration : AuditedConfiguration<OrderEntity> { }
+            public sealed class ShopDbContext : DbContext { public DbSet<OrderEntity> Orders { get; set; } = null!; }
+            """);
+
+        diagnostics.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task EntityKnownOnlyFromConfiguration_IsStillAnEntity()
     {
         var diagnostics = await RunAsync("""

@@ -86,8 +86,9 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
         ConcurrentDictionary<ITypeSymbol, byte> configured,
         ConcurrentBag<(ITypeSymbol Entity, Location Location)> dbSets)
     {
+        // A generic base configuration (BaseConfiguration<T>) configures no entity of its own.
         var configuredEntity = ef.ConfiguredEntity(type);
-        if (configuredEntity is not null)
+        if (configuredEntity is INamedTypeSymbol)
         {
             configured.TryAdd(configuredEntity, 0);
             entities.TryAdd(configuredEntity, 0);
@@ -120,7 +121,11 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
         var name = "the entity";
         if (method.TypeArguments.Length == 1)
         {
-            entities.TryAdd(method.TypeArguments[0], 0);
+            if (method.TypeArguments[0] is INamedTypeSymbol)
+            {
+                entities.TryAdd(method.TypeArguments[0], 0);
+            }
+
             name = method.TypeArguments[0].Name;
         }
 

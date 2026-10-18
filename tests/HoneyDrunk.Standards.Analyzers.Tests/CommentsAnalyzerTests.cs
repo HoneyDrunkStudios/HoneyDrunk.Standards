@@ -15,6 +15,7 @@ public sealed class CommentsAnalyzerTests
     [InlineData("// continue;")]
     [InlineData("// retries++;")]
     [InlineData("// --remaining;")]
+    [InlineData("// int retries;")]
     public async Task CommentedOutStatement_IsReported(string comment)
     {
         var diagnostics = await RunAsync(Method(comment));

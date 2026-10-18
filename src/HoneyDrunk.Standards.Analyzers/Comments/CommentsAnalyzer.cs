@@ -141,6 +141,11 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
             {
                 Expression.RawKind: (int)SyntaxKind.PostIncrementExpression or (int)SyntaxKind.PreIncrementExpression
                     or (int)SyntaxKind.PostDecrementExpression or (int)SyntaxKind.PreDecrementExpression,
+            }
+            // A declaration with a built-in type ("int retries;") cannot be prose.
+            || parsed is Microsoft.CodeAnalysis.CSharp.Syntax.LocalDeclarationStatementSyntax
+            {
+                Declaration.Type: Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax,
             };
     }
 

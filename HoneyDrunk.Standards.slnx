@@ -13,4 +13,5 @@
   <Project Path="src\HoneyDrunk.Standards.Analyzers\HoneyDrunk.Standards.Analyzers.csproj" />
   <Project Path="src\HoneyDrunk.Standards.Tests\HoneyDrunk.Standards.Tests.csproj" />
   <Project Path="samples\Consumer.Sample\Consumer.Sample.csproj" />
+  <Project Path="tests\HoneyDrunk.Standards.Analyzers.Tests\HoneyDrunk.Standards.Analyzers.Tests.csproj" />
 </Solution>

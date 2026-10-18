@@ -61,8 +61,8 @@ HoneyDrunk test projects named `*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.I
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.3.0" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.3.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.0" PrivateAssets="all" />
 </ItemGroup>
 ```
 

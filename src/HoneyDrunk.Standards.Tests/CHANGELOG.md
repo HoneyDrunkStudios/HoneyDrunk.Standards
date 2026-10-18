@@ -2,6 +2,12 @@
 
 All notable changes to HoneyDrunk.Standards.Tests will be documented in this file.
 
+## [0.4.0] - 2026-10-18
+
+### Changed
+
+- Consume HoneyDrunk.Standards 0.4.0, which adds the architecture analyzers. Test projects are exempt from the EF rules (HD0101 to HD0105); the service-size and comment rules apply. The test stack is unchanged.
+
 ## [0.3.0] - 2026-09-26
 
 ### Changed

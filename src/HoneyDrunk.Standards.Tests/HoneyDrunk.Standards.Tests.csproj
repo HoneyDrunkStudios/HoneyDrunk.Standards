@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
 
     <PackageId>HoneyDrunk.Standards.Tests</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>ADR-0047 test-stack package for HoneyDrunk test projects: xUnit v2, NSubstitute, AwesomeAssertions, coverlet, and HoneyDrunk.Standards.</Description>
-    <PackageReleaseNotes>v0.3.0: Update the test SDK, Visual Studio runner, NSubstitute, and AwesomeAssertions; retain the xUnit v2 framework.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.4.0: Consume HoneyDrunk.Standards 0.4.0 and its architecture analyzers; the test stack is unchanged.</PackageReleaseNotes>
     <PackageTags>standards;tests;xunit;nsubstitute;awesomeassertions;coverlet;adr-0047</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

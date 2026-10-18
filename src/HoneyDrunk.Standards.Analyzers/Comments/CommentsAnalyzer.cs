@@ -39,6 +39,11 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
         foreach (var trivia in root.DescendantTrivia(descendIntoTrivia: true))
         {
             ReportUntrackedWork(context, trivia);
+            if (trivia.IsKind(SyntaxKind.MultiLineCommentTrivia))
+            {
+                ReportBlockCommentCode(context, trivia);
+            }
+
             if (!trivia.IsKind(SyntaxKind.SingleLineCommentTrivia))
             {
                 continue;
@@ -58,6 +63,20 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
         if (block.Count > 0)
         {
             ReportBlock(context, block);
+        }
+    }
+
+    private static void ReportBlockCommentCode(SyntaxTreeAnalysisContext context, SyntaxTrivia trivia)
+    {
+        var text = trivia.ToString();
+        var body = text.Substring(2, System.Math.Max(0, text.Length - 4));
+        var lines = body.Split('\n')
+            .Select(line => line.Trim().TrimStart('*').Trim())
+            .Where(line => line.Length > 0)
+            .ToList();
+        if (lines.Any(LooksLikeCodeLine) || LooksLikeCodeBlock(lines))
+        {
+            context.ReportDiagnostic(Diagnostic.Create(ArchitectureRules.CommentedOutCode, trivia.GetLocation()));
         }
     }
 

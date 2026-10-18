@@ -31,6 +31,24 @@ public sealed class CommentsAnalyzerTests
     }
 
     [Theory]
+    [InlineData("/* order.Cancel(); */")]
+    [InlineData("/*\n * var total = order.Total;\n * return total;\n */")]
+    public async Task CommentedOutCodeInBlockComment_IsReported(string comment)
+    {
+        var diagnostics = await RunAsync(Method(comment));
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0110");
+    }
+
+    [Fact]
+    public async Task ProseBlockComment_IsAllowed()
+    {
+        var diagnostics = await RunAsync(Method("/* The provider rounds half up; match it here. */"));
+
+        diagnostics.Should().BeEmpty();
+    }
+
+    [Theory]
     [InlineData("// Retry once: the provider drops the first call after a cold start.")]
     [InlineData("// The total excludes tax; tax is added at checkout.")]
     [InlineData("// See https://learn.microsoft.com/ef/core for the mapping rules.")]

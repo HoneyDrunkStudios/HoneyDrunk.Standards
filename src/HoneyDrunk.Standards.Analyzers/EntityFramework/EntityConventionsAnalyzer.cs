@@ -98,14 +98,14 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        foreach (var property in type.GetMembers().OfType<IPropertySymbol>())
+        var dbSetProperties = type.GetMembers()
+            .OfType<IPropertySymbol>()
+            .Where(property => ef.IsDbSet(property.Type) && property.Locations.FirstOrDefault() is { IsInSource: true });
+        foreach (var property in dbSetProperties)
         {
-            if (ef.IsDbSet(property.Type) && property.Locations.FirstOrDefault() is { IsInSource: true } location)
-            {
-                var entity = ((INamedTypeSymbol)property.Type).TypeArguments[0];
-                entities.TryAdd(entity, 0);
-                dbSets.Add((entity, location));
-            }
+            var entity = ((INamedTypeSymbol)property.Type).TypeArguments[0];
+            entities.TryAdd(entity, 0);
+            dbSets.Add((entity, property.Locations[0]));
         }
     }
 
@@ -180,12 +180,11 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
         foreach (var owner in owners)
         {
             var ownerLocation = owner.Locations.FirstOrDefault() ?? Location.None;
-            foreach (var attribute in owner.GetAttributes())
+            var mapping = owner.GetAttributes()
+                .Where(attribute => attribute.AttributeClass is not null && MappingAttributes.Contains(attribute.AttributeClass.ToDisplayString()));
+            foreach (var attribute in mapping)
             {
-                if (attribute.AttributeClass is not null && MappingAttributes.Contains(attribute.AttributeClass.ToDisplayString()))
-                {
-                    yield return (attribute, ownerLocation);
-                }
+                yield return (attribute, ownerLocation);
             }
         }
     }

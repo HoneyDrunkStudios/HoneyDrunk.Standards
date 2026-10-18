@@ -129,7 +129,7 @@ class NewDiagnosticsTests(unittest.TestCase):
 
     def test_malformed_sarif_fails_closed(self):
         target = self.root / 'analysis.sarif'
-        for text in ('[]', '{"runs": [null]}', '{"runs": [{"results": null}]}', '{"runs": [{"results": [1]}]}',
+        for text in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{"results": null}]}', '{"runs": [{"results": [1]}]}',
                      '{"runs": [{"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
             with self.subTest(text=text):
                 target.write_text(text)

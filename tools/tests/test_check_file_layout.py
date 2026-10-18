@@ -175,6 +175,21 @@ class FileLayoutTests(unittest.TestCase):
         self.source('Game/Runtime/Vendor/Big.cs', 50)
         self.assertEqual(0, self.run_main()[0])
 
+    def test_malformed_config_shapes_fail_closed(self):
+        self.write_baseline()
+        for change in ({'layerRoots': 'Game/Core'}, {'sources': 'Game'}, {'excludeDirectories': 'Vendor'},
+                       {'failLines': '800'}, {'maxFilesPerFolder': 0}, {'baseline': ['x.json']}, {'layerRoot': ['Game/Core']}):
+            with self.subTest(change=change):
+                self.write_config({**CONFIG, **change})
+                self.assertEqual(2, self.run_main()[0])
+
+    def test_malformed_baseline_shapes_fail_closed(self):
+        for data in ({'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},
+                     {'schemaVersion': 1, 'oversizedFiles': {}, 'layerRootFiles': 'Game/Runtime/Boot.cs'}):
+            with self.subTest(data=data):
+                (self.root / 'layout-baseline.json').write_text(json.dumps(data))
+                self.assertEqual(2, self.run_main()[0])
+
     def test_invalid_limits_fail_closed(self):
         self.write_config({**CONFIG, 'warnLines': 20})
         self.write_baseline()

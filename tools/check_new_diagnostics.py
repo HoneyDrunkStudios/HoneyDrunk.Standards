@@ -22,7 +22,7 @@ HUNK = re.compile(r'^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@')
 def changed_lines(root, base_ref):
     """Map each changed file to the set of its added lines, or None when the whole file is new."""
     diff = subprocess.run(
-        ['git', '-c', 'core.quotePath=false', 'diff', '--unified=0', '--find-renames', '--no-color', '--no-ext-diff', base_ref, 'HEAD', '--', '*.cs'],
+        ['git', '-c', 'core.quotePath=false', 'diff', '--unified=0', '--find-renames', '--no-color', '--no-ext-diff', '--text', base_ref, 'HEAD', '--', '*.cs'],
         cwd=root, capture_output=True, text=True, encoding='utf-8', check=True,
     ).stdout
     # File headers come only between 'diff --git' and the first hunk, so an added line such as

@@ -82,6 +82,13 @@ class NewDiagnosticsTests(unittest.TestCase):
         self.commit()
         self.assertEqual(1, self.run_main(self.sarif([('SA1402', 'Core/Old.cs', 9)]))[0])
 
+    def test_binary_diff_attribute_does_not_hide_changed_lines(self):
+        (self.root / '.gitattributes').write_text('*.cs -diff' + chr(10))
+        self.commit()
+        self.write('Core/Old.cs', 10, changed={7})
+        self.commit()
+        self.assertEqual(1, self.run_main(self.sarif([('SA1402', 'Core/Old.cs', 7)]))[0])
+
     def test_existing_violation_on_untouched_line_passes(self):
         self.write('Core/Old.cs', 10, changed={7})
         self.commit()

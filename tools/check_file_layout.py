@@ -121,6 +121,18 @@ def is_generated(path, text):
     return GENERATED_MARKER in head
 
 
+def _has_link(root, relative):
+    """Whether any folder on the way from root to relative is a symlink, whose target a change could silently move."""
+    current = root
+    for part in relative.split('/'):
+        if part in ('', '.'):
+            continue
+        current = current / part
+        if current.is_symlink():
+            return True
+    return False
+
+
 def owned_files(root, settings):
     """Map each owned C# file (repository-relative POSIX path) to its line count."""
     files = {}
@@ -129,6 +141,8 @@ def owned_files(root, settings):
         start = root / source
         if not start.is_dir():
             raise LayoutError(f'source directory {source} does not exist')
+        if _has_link(root, source):
+            raise LayoutError(f'source {source} is or goes through a symlink; list the real folder as the source')
         for directory, subdirectories, names in os.walk(start):
             subdirectories[:] = sorted(d for d in subdirectories if d not in excluded)
             linked = [d for d in subdirectories if os.path.islink(os.path.join(directory, d))]
@@ -142,7 +156,7 @@ def owned_files(root, settings):
                 path = Path(directory) / name
                 text = path.read_text(encoding='utf-8-sig', errors='replace')
                 if not is_generated(path, text):
-                    # Lexical, not resolved: a symlinked source keeps its configured path.
+                    # Lexical, not resolved, so keys use the folder names the config uses.
                     files[Path(os.path.relpath(path, root)).as_posix()] = len(text.splitlines())
     return files
 

@@ -57,6 +57,26 @@ public sealed class DataAccessAnalyzerTests
     }
 
     [Fact]
+    public async Task ConstructingTheContextOutsideDataService_IsReported()
+    {
+        var diagnostics = await RunAsync("public static class Seeder { public static object Run() => new ShopDbContext(); }");
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+    }
+
+    [Fact]
+    public async Task ContextReturnedByAMethod_IsReported()
+    {
+        var diagnostics = await RunAsync("""
+            public sealed class ContextSource { public ShopDbContext Get() => null!; }
+            public sealed class OrderService(ContextSource source) { public object Orders() => source.Get().Orders; }
+            """);
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Contain("HD0102");
+        diagnostics.Select(diagnostic => diagnostic.GetMessage()).Should().Contain(message => message.Contains("'OrderService'"));
+    }
+
+    [Fact]
     public async Task EntityFrameworkInfrastructure_IsAllowed()
     {
         var diagnostics = await RunAsync("""

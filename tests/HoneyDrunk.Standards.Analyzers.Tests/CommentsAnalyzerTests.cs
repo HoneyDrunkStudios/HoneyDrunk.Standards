@@ -10,6 +10,9 @@ public sealed class CommentsAnalyzerTests
     [InlineData("// var total = order.Lines.Sum(line => line.Price);")]
     [InlineData("// await repository.SaveAsync(order);")]
     [InlineData("// return Results.Ok(order);")]
+    [InlineData("// throw exception;")]
+    [InlineData("// break;")]
+    [InlineData("// continue;")]
     public async Task CommentedOutStatement_IsReported(string comment)
     {
         var diagnostics = await RunAsync(Method(comment));
@@ -53,6 +56,7 @@ public sealed class CommentsAnalyzerTests
     [InlineData("// The total excludes tax; tax is added at checkout.")]
     [InlineData("// See https://learn.microsoft.com/ef/core for the mapping rules.")]
     [InlineData("// Arrange")]
+    [InlineData("// See above;")]
     public async Task IntentComments_AreAllowed(string comment)
     {
         var diagnostics = await RunAsync(Method(comment));

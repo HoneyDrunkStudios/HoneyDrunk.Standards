@@ -19,7 +19,9 @@ public sealed class DataAccessAnalyzer : DiagnosticAnalyzer
         OperationKind.FieldReference,
         OperationKind.PropertyReference,
         OperationKind.ParameterReference,
-        OperationKind.LocalReference);
+        OperationKind.LocalReference,
+        OperationKind.ObjectCreation,
+        OperationKind.Invocation);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(ArchitectureRules.DataAccessOutsideDataService);

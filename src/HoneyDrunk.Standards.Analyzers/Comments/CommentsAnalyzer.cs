@@ -119,10 +119,25 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool LooksLikeCodeLine(string line) =>
-        line.EndsWith(";", System.StringComparison.Ordinal)
-        && HasCodeMarker(line)
-        && Parses(line);
+    private static bool LooksLikeCodeLine(string line)
+    {
+        if (!line.EndsWith(";", System.StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var parsed = Parse(line);
+        if (parsed is null)
+        {
+            return false;
+        }
+
+        // Prose such as "see above;" parses as a declaration, so a bare declaration needs a code marker;
+        // jump statements like "break;" or "throw error;" are code on their own.
+        return HasCodeMarker(line) || parsed.Kind() is SyntaxKind.BreakStatement or SyntaxKind.ContinueStatement
+            or SyntaxKind.ThrowStatement or SyntaxKind.ReturnStatement or SyntaxKind.YieldReturnStatement
+            or SyntaxKind.YieldBreakStatement or SyntaxKind.GotoStatement;
+    }
 
     private static bool LooksLikeCodeBlock(List<string> lines)
     {
@@ -137,9 +152,11 @@ public sealed class CommentsAnalyzer : DiagnosticAnalyzer
 
     private static bool HasCodeMarker(string text) => CodeMarkers.Any(marker => text.Contains(marker));
 
-    private static bool Parses(string statement)
+    private static bool Parses(string statement) => Parse(statement) is not null;
+
+    private static Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax? Parse(string statement)
     {
         var parsed = SyntaxFactory.ParseStatement(statement);
-        return parsed.FullSpan.Length == statement.Length && !parsed.GetDiagnostics().Any();
+        return parsed.FullSpan.Length == statement.Length && !parsed.GetDiagnostics().Any() ? parsed : null;
     }
 }

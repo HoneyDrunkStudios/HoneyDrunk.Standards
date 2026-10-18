@@ -2,10 +2,12 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 TOOLS = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('check_file_layout', TOOLS / 'check_file_layout.py')
@@ -25,6 +27,10 @@ CONFIG = {
 
 class FileLayoutTests(unittest.TestCase):
     def setUp(self):
+        environment = mock.patch.dict(os.environ)
+        environment.start()
+        self.addCleanup(environment.stop)
+        os.environ.pop('GITHUB_ACTIONS', None)
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
@@ -148,6 +154,12 @@ class FileLayoutTests(unittest.TestCase):
         self.source('Game/Core/obj/Release/Temp.cs', 50)
         self.source('Game/Library/Cache.cs', 50)
         self.assertEqual(0, self.run_main()[0])
+
+    def test_github_actions_output_is_annotations(self):
+        self.write_baseline()
+        self.source('Game/Core/Trade/Haggle.cs', 11)
+        os.environ['GITHUB_ACTIONS'] = 'true'
+        self.assertIn('::error file=Game/Core/Trade/Haggle.cs::11 lines', self.run_main()[1])
 
     def test_custom_excluded_directory_is_ignored(self):
         self.write_config({**CONFIG, 'excludeDirectories': ['Vendor']})

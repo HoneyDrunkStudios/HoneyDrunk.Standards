@@ -2,10 +2,12 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 TOOLS = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('check_new_diagnostics', TOOLS / 'check_new_diagnostics.py')
@@ -15,6 +17,10 @@ SPEC.loader.exec_module(DIAGNOSTICS)
 
 class NewDiagnosticsTests(unittest.TestCase):
     def setUp(self):
+        environment = mock.patch.dict(os.environ)
+        environment.start()
+        self.addCleanup(environment.stop)
+        os.environ.pop('GITHUB_ACTIONS', None)
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
@@ -104,6 +110,13 @@ class NewDiagnosticsTests(unittest.TestCase):
         code, output = self.run_main(self.sarif([('SA1402', 'Core/New.cs', 4), ('SA1402', 'Core/New.cs', 4)]))
         self.assertEqual(1, code)
         self.assertEqual(1, output.count('SA1402:'))
+
+    def test_github_actions_output_is_annotations(self):
+        self.write('Core/New.cs', 5)
+        self.commit()
+        os.environ['GITHUB_ACTIONS'] = 'true'
+        output = self.run_main(self.sarif([('SA1402', 'Core/New.cs', 4)]))[1]
+        self.assertIn('::error file=Core/New.cs,line=4::SA1402: m', output)
 
     def test_unknown_base_ref_fails_closed(self):
         output = io.StringIO()

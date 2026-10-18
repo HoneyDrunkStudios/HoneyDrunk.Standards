@@ -24,6 +24,8 @@ HoneyDrunk.Standards is a **zero-configuration** NuGet package that automaticall
 - ✅ **ADR-0047 Test Stack** - xUnit v2, NSubstitute, AwesomeAssertions, and coverlet for `*.Tests.*` projects
 - ✅ **Coverage Templates** - Tiered coverlet runsettings for ADR-0047 / ADR-0036 coverage targets
 - ✅ **Test Flake Guardrail** - `Thread.Sleep` is banned in test projects via `HD0051`
+- ✅ **Architecture Rules** - `HD0101`-`HD0106`: entities end with `Entity` and are mapped explicitly, only data services touch the database, services stay small
+- ✅ **Comment Rules** - `HD0110`/`HD0111`: no commented-out code, no untracked TODOs
 
 All of this happens **automatically** when you add the package. No manual configuration needed.
 
@@ -41,7 +43,7 @@ Add the package to your project:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.3.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -89,6 +91,7 @@ You should see:
 - **Async suffix** - `GetUserAsync` naming
 - **XML documentation** - Required for public APIs
 - **Nullable annotations** - Explicit `?` for nullability
+- **Architecture rules** - See [Enforced Architecture Rules](HoneyDrunk.Standards/docs/CONVENTIONS.md#enforced-architecture-rules)
 
 ### ⚙️ Build-Time Features
 
@@ -103,8 +106,8 @@ Test projects should reference both packages:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.3.0" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.3.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.0" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -244,7 +247,7 @@ cd HoneyDrunk.Standards
 dotnet pack -c Release -o ./artifacts
 
 # Test in your project
-dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.3.0
+dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.4.0
 ```
 
 ---

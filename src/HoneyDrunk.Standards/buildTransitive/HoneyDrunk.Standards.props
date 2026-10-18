@@ -51,6 +51,18 @@
   <Import Project="$(MSBuildThisFileDirectory)HoneyDrunk.Tests.props" />
 
   <!-- ============================================
+       Architecture analyzer switches
+       ============================================ -->
+  <PropertyGroup>
+    <!-- A project whose whole purpose is EF Core plumbing (for example HoneyDrunk.Data) sets this to true;
+         HD0102 (data access only in data services) then does not apply to it. -->
+    <HD_IsDataInfrastructure Condition="'$(HD_IsDataInfrastructure)' == ''">false</HD_IsDataInfrastructure>
+  </PropertyGroup>
+  <ItemGroup>
+    <CompilerVisibleProperty Include="HD_IsDataInfrastructure" />
+  </ItemGroup>
+
+  <!-- ============================================
        Minimal NoWarn List
        ============================================ -->
   <PropertyGroup>

@@ -11,6 +11,7 @@ This document owns shared engineering conventions. Apply language-specific rules
 - [Analyzer Rationale](#analyzer-rationale)
 - [Commit Messages](#commit-messages)
 - [Architectural Patterns](#architectural-patterns)
+- [Enforced Architecture Rules](#enforced-architecture-rules)
 - [Code review](#code-review)
 - [Agent workflow and instruction files](#agent-workflow-and-instruction-files)
 
@@ -321,7 +322,7 @@ Pure mapping lives in its own named file and translates already-selected data. I
 
 For ordinary updates, load tracked entities, change intended properties and let EF detect changes. Do not add custom mutation bags, generic change bindings or `Update` calls on already tracked entities. Respect existing transaction ownership, immutable history, idempotency, rowversion and retry boundaries. EF tracking cannot decide which business facts need a new historical version.
 
-Use only Fluent mappings that express a real contract or differ from conventions. Preserve keys, names, ownership relationships, delete behavior, lengths, precision, collation, indexes/filters, concurrency tokens, converters/comparers and immutability protections when required. Do not remove a mapping just because it looks redundant; verify the effective model and deployed schema.
+Map every entity explicitly in its own Fluent configuration class: table, key, column types, lengths, precision, nullability, relationships, delete behavior, indexes/filters, concurrency tokens, converters/comparers and immutability protections. Do not leave any of these to an EF convention or an attribute (see [Entity Framework and SQL](#entity-framework-and-sql)). Do not remove a mapping because it looks redundant; verify the effective model and deployed schema.
 
 Every application-owned SQL table and column needs accurate metadata describing meaning and relevant ownership/time semantics. Indexes need a demonstrated query or constraint. Keep schema, EF mappings and schema tests aligned. Where a SQL project/DACPAC owns schema, do not introduce EF migrations as a second owner. Preserve separately owned shared Audit and Outbox schema.
 
@@ -336,6 +337,60 @@ Use the repository's current tests and lockfiles. The shared .NET test package s
 Use the pinned SDK and language settings; do not hardcode a remembered "latest" C# version into instructions. Follow `.editorconfig`, nullable annotations, public API XML documentation and the actual analyzer configuration. Comments explain non-obvious intent, constraints or trade-offs; do not add comments to every function or repeat obvious code.
 
 Repository Markdown uses a descriptive H1 and hierarchical headings, fenced examples and valid links. Frontmatter is required only by a real consuming schema (for example a publishing pipeline), not for every README. Do not invent blog fields, a categories file or validator enforcement. Check paths and anchors when moving documents.
+
+## Enforced Architecture Rules
+
+The package's analyzers enforce the parts of the [architectural patterns](#architectural-patterns) that a compiler can check. They report warnings, which the package's `TreatWarningsAsErrors` default makes build errors. Review still owns the rest: what a service decides, whether a mapping is complete, whether a comment is useful.
+
+| Rule | Checks |
+|---|---|
+| `HD0101` | An EF Core entity type's name ends with `Entity` |
+| `HD0102` | Only a type named `*DataService` or `*UnitOfWork` (or EF infrastructure) uses a `DbContext`, `DbSet` or `IDbContextFactory` |
+| `HD0103` | No mapping attributes on an entity or its members |
+| `HD0104` | Every entity in a `DbSet` has an `IEntityTypeConfiguration<T>` class |
+| `HD0105` | No inline `ModelBuilder.Entity` configuration |
+| `HD0106` | A `*Service` class has at most 10 public or internal methods and 300 lines across its partials |
+| `HD0110` | No commented-out code |
+| `HD0111` | A `TODO`, `FIXME`, `HACK` or `XXX` comment links the issue that tracks it |
+
+### Services and data services
+
+Endpoints call services; services call data services; only data services reach the database.
+
+- **Services** (`OrderService`) own one use case's rules and orchestration. They take and return contracts or domain values, call data services and other services through focused interfaces, and never hold a `DbContext`.
+- **Data services** (`OrderDataService`) own queries, commands, locking and transactions through EF Core. They make no business decisions. A `*UnitOfWork` type that owns the transaction boundary counts as data access too.
+- `HD0102` reports any field, property, parameter or local of a `DbContext`, `DbSet` or `IDbContextFactory` type used outside a `*DataService` or `*UnitOfWork` type (a type nested inside one counts as inside). EF's own infrastructure is exempt: the `DbContext` itself, `IEntityTypeConfiguration` classes, the design-time factory, migrations and the model snapshot, and interceptors. Test projects are exempt, and so is a project whose whole purpose is EF plumbing (such as HoneyDrunk.Data), which sets `<HD_IsDataInfrastructure>true</HD_IsDataInfrastructure>`. Startup code that migrates the database, and health checks that query it, call a data service too.
+- `HD0106` keeps services small: split a service by use case before it passes 10 public or internal methods or 300 lines. Private helpers do not count toward the method limit. A repository may lower the limits, or raise them with a written reason, in its `.globalconfig`:
+
+```ini
+honeydrunk.service_max_methods = 8
+honeydrunk.service_max_lines = 250
+```
+
+### Entity Framework and SQL
+
+Entity Framework mapping is explicit code, reviewed like any other contract, and never left to conventions or attributes.
+
+- These rules cover production schema; test projects, whose fixtures build throwaway models, are exempt. An entity is any type in a `DbSet<T>`, configured by an `IEntityTypeConfiguration<T>`, or passed to `ModelBuilder.Entity<T>()`. Its name ends with `Entity` (`HD0101`), so a persistence type is never mistaken for a contract or a domain model. Contracts do not expose entities.
+- Each entity declared in the project has its own configuration class (`HD0104`; an entity from a referenced library is configured there), applied in `OnModelCreating` with `ApplyConfigurationsFromAssembly` or `ApplyConfiguration`. `OnModelCreating` does not configure entities inline (`HD0105`).
+- The configuration states the table and schema, the key, each column's type, length, precision and nullability, relationships with their delete behavior, indexes and concurrency tokens. Do not rely on an EF convention to choose any of these.
+- Entities carry no mapping attributes (`HD0103`): `[Key]`, `[Table]`, `[Column]`, `[Required]`, `[MaxLength]`, `[StringLength]`, `[ForeignKey]`, `[NotMapped]`, `[DatabaseGenerated]`, `[Index]`, `[Precision]` and the rest of the EF and data-annotation mapping set. Validation attributes on request contracts are fine.
+- The schema has one owner. Where a SQL project (DACPAC) owns it, keep the EF configuration aligned with it and do not add EF migrations; see [EF and SQL](#ef-and-sql).
+
+### Comments
+
+Comments stay allowed: a comment that records why (a constraint, a trade-off, a provider's quirk) is information the code cannot carry. What is forbidden is the comment used as a shortcut:
+
+- **No commented-out code** (`HD0110`). Delete it; version control keeps the history.
+- **No untracked deferred work** (`HD0111`). A `TODO`, `FIXME`, `HACK` or `XXX` names the issue that tracks it (`TODO(#42)`, an issue URL or a `KEY-123` key), or the work is finished before merge.
+- **No unexplained suppression.** A `#pragma warning disable` or `[SuppressMessage]` carries its justification (`SA1404`), and a rule is never switched off for a whole project to get a build through.
+- **No narration.** A comment that restates the next line, or a public member without its XML documentation, is a review finding.
+
+### Adopting the rules in an existing repository
+
+Upgrade the package and fix the violations in the same change. Rename entities and add configuration classes without changing table or column names (configure `ToTable` and `HasColumnName` where a convention chose them), and move data access into data services. Where one change cannot fix every violation, list the rule in the project's `WarningsNotAsErrors` with a dated reason in the same file, and gate new violations with [`tools/check_new_diagnostics.py`](#analyzer-rules-on-new-code) so the backlog only shrinks. Never set a rule's severity to `none` or `NoWarn` it to pass a build.
+
+---
 
 ## Code review
 

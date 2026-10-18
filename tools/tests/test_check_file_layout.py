@@ -4,6 +4,7 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -220,6 +221,17 @@ class FileLayoutTests(unittest.TestCase):
                 self.assertEqual(2, self.run_main('--update-baseline')[0])
                 self.assertEqual(2, self.run_main('--init-baseline')[0])
         self.assertEqual('{"keep": true}', outside.read_text())
+
+    def test_baseline_behind_a_symlink_outside_the_repository_fails_closed(self):
+        outside = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, outside, True)
+        try:
+            (self.root / 'link').symlink_to(outside, target_is_directory=True)
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        self.write_config({**CONFIG, 'baseline': 'link/baseline.json'})
+        self.assertEqual(2, self.run_main('--init-baseline')[0])
+        self.assertFalse((outside / 'baseline.json').exists())
 
     def test_unrelated_json_at_base_does_not_block_first_adoption(self):
         (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": ["Game"]}')

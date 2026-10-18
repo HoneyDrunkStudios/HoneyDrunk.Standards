@@ -51,7 +51,8 @@ class NewDiagnosticsTests(unittest.TestCase):
                 'artifactLocation': {'uri': path}, 'region': {'startLine': line}}}]}
                 for rule, path, line in results]
         target = self.root / 'analysis.sarif'
-        target.write_text(json.dumps({'version': version, 'runs': [{'results': entries}]}))
+        tool = {'name': 'csc'} if version == '1.0.0' else {'driver': {'name': 'csc'}}
+        target.write_text(json.dumps({'version': version, 'runs': [{'tool': tool, 'results': entries}]}))
         return target
 
     def run_main(self, sarif, *extra):
@@ -129,8 +130,10 @@ class NewDiagnosticsTests(unittest.TestCase):
 
     def test_malformed_sarif_fails_closed(self):
         target = self.root / 'analysis.sarif'
-        for text in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{"results": null}]}', '{"runs": [{"results": [1]}]}',
-                     '{"runs": [{"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
+        tool = '"tool": {"name": "csc"}, '
+        for text in ('[]', '{}', '{"runs": []}', '{"runs": [null]}', '{"runs": [{}]}', '{"runs": [{"tool": {}}]}',
+                     '{"runs": [{' + tool + '"results": null}]}', '{"runs": [{' + tool + '"results": [1]}]}',
+                     '{"runs": [{' + tool + '"results": [{"ruleId": "SA1402", "locations": [null]}]}]}'):
             with self.subTest(text=text):
                 target.write_text(text)
                 self.assertEqual(2, self.run_main(target)[0])

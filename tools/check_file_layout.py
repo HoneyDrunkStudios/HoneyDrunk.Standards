@@ -378,6 +378,10 @@ def main(argv=None):
         settings = load_config(root, config_path)
         settings['config'] = config_path
         baseline_path = root / settings['baseline']
+        try:
+            baseline_path.resolve().relative_to(root)
+        except ValueError:
+            raise LayoutError(f'baseline {settings["baseline"]} resolves outside the repository') from None
         if args.init_baseline:
             if baseline_path.exists():
                 parser.error(f'{settings["baseline"]} exists; a baseline is created once and then only shrinks')

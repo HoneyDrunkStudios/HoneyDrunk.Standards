@@ -296,6 +296,32 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(2, code, output.getvalue())
         self.assertIn('already has a layout config at layout.json', output.getvalue())
 
+    def test_switching_from_a_non_json_config_fails_closed(self):
+        self.write_config({**CONFIG})
+        (self.root / 'layout.json').rename(self.root / 'layout.config')
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'copy.config').write_text((self.root / 'layout.config').read_text())
+        self.commit_all('copy')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            code = LAYOUT.main(['--root', str(self.root), '--config', 'copy.config', '--base-ref', 'HEAD~1'])
+        self.assertEqual(2, code, output.getvalue())
+        self.assertIn('already has a layout config at layout.config', output.getvalue())
+
+    def test_moved_layer_root_file_keeps_its_entry(self):
+        self.source('Game/Runtime/Boot.cs', 2)
+        self.write_config({**CONFIG, 'layerRoots': ['Game/Core', 'Game/Runtime', 'Game/Shell']})
+        self.write_baseline(roots=['Game/Runtime/Boot.cs'])
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'Game/Shell').mkdir()
+        self.git('mv', 'Game/Runtime/Boot.cs', 'Game/Shell/Boot.cs')
+        self.write_baseline(roots=['Game/Shell/Boot.cs'])
+        self.commit_all('move')
+        self.assertEqual(0, self.run_main('--base-ref', 'HEAD~1')[0])
+
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')
         self.git('add', 'layout.json')

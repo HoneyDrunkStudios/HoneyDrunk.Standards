@@ -167,7 +167,7 @@ def renamed_paths(root, ref):
 
 def _layout_configs_at(root, ref):
     """Every layout config committed anywhere at ref, so a moved, copied or deleted config is never first adoption."""
-    result = subprocess.run(['git', '-c', 'core.quotePath=false', 'grep', '-l', '-F', '"sources"', ref, '--', '*.json'],
+    result = subprocess.run(['git', '-c', 'core.quotePath=false', 'grep', '-l', '-I', '-F', '"sources"', ref],
                             cwd=root, capture_output=True, text=True, encoding='utf-8', check=False)
     if result.returncode not in (0, 1):
         raise LayoutError(f'cannot search {ref} for layout configs: {result.stderr.strip()}')
@@ -244,8 +244,10 @@ def check(root, settings, baseline, base=None, renames=None):
                 errors.append((path, 'added to the baseline; the baseline only ever loses entries. Split the file instead.'))
             elif lines > before:
                 errors.append((path, f'baseline raised from {before} to {lines}; the baseline only ever loses entries or lowers counts'))
-        for path in sorted(allowed_roots - set(base_baseline['layerRootFiles'])):
-            errors.append((path, 'added to the layer-root baseline; the baseline only ever loses entries'))
+        base_roots = set(base_baseline['layerRootFiles'])
+        for path in sorted(allowed_roots - base_roots):
+            if (renames or {}).get(path) not in base_roots:
+                errors.append((path, 'added to the layer-root baseline; the baseline only ever loses entries'))
     return errors, warnings
 
 

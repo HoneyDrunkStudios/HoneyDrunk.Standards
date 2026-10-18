@@ -531,6 +531,16 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(2, code)
         self.assertIn('more than one layout config', output)
 
+    def test_adding_a_second_layout_config_fails_closed(self):
+        self.write_baseline()
+        self.git('init', '-q')
+        self.commit_all()
+        (self.root / 'other.json').write_text(json.dumps({**CONFIG, 'sources': ['Game/Core'], 'layerRoots': ['Game/Core']}))
+        self.commit_all('second config')
+        code, output = self.run_main('--base-ref', 'HEAD~1')
+        self.assertEqual(2, code)
+        self.assertIn('adds another layout config (other.json)', output)
+
     def test_config_at_base_without_its_baseline_fails_closed(self):
         self.git('init', '-q')
         self.git('add', 'layout.json')

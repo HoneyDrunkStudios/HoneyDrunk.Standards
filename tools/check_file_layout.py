@@ -423,6 +423,11 @@ def main(argv=None):
             print(f'Updated {settings["baseline"]}')
             return 0
         base = base_state(root, args.base_ref, config_path) if args.base_ref else None
+        if args.base_ref:
+            # A second config added by this change would make every later comparison ambiguous.
+            extra = [path for path in _layout_configs_at(root, 'HEAD') if path != config_path]
+            if extra:
+                raise LayoutError(f'this change adds another layout config ({", ".join(extra)}); a repository has exactly one')
         renames = renamed_paths(root, args.base_ref) if base is not None else None
         errors, warnings = check(root, settings, baseline, base, renames)
     except (LayoutError, OSError) as exc:

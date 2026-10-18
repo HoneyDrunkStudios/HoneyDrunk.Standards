@@ -101,7 +101,9 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
 
         var dbSetProperties = type.GetMembers()
             .OfType<IPropertySymbol>()
-            .Where(property => ef.IsDbSet(property.Type) && property.Locations.FirstOrDefault() is { IsInSource: true });
+            .Where(property => ef.IsDbSet(property.Type)
+                && property.Locations.FirstOrDefault() is { IsInSource: true }
+                && ((INamedTypeSymbol)property.Type).TypeArguments[0] is INamedTypeSymbol);
         foreach (var property in dbSetProperties)
         {
             var entity = ((INamedTypeSymbol)property.Type).TypeArguments[0];

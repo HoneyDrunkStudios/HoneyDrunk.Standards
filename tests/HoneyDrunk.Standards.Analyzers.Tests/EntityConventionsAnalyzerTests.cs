@@ -65,6 +65,19 @@ public sealed class EntityConventionsAnalyzerTests
     }
 
     [Fact]
+    public async Task GenericContextBase_IsNotAnEntity()
+    {
+        var diagnostics = await RunAsync("""
+            public abstract class AuditedDbContext<TAudit> : DbContext where TAudit : class
+            {
+                public DbSet<TAudit> AuditRecords { get; set; } = null!;
+            }
+            """);
+
+        diagnostics.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task EntityKnownOnlyFromConfiguration_IsStillAnEntity()
     {
         var diagnostics = await RunAsync("""

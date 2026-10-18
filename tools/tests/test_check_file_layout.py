@@ -391,6 +391,14 @@ class FileLayoutTests(unittest.TestCase):
     def test_excluding_a_directory_against_base_fails(self):
         self.assert_config_change({'excludeDirectories': ['Trade']}, 1, 'directory Trade excluded')
 
+    def test_removing_a_source_against_base_fails(self):
+        self.write_config({**CONFIG, 'sources': ['Game/Core', 'Game/Runtime'], 'layerRoots': ['Game/Core']})
+        self.assert_config_change({'sources': ['Game/Core'], 'layerRoots': ['Game/Core']}, 1, 'source Game/Runtime removed')
+
+    def test_widening_sources_to_a_parent_passes(self):
+        self.write_config({**CONFIG, 'sources': ['Game/Core', 'Game/Runtime']})
+        self.assert_config_change({'sources': ['Game']}, 0)
+
     def test_tightening_the_config_against_base_passes(self):
         self.assert_config_change({'failLines': 9, 'maxFilesPerFolder': 2}, 0)
 

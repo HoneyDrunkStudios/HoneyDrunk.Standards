@@ -177,7 +177,7 @@ def base_state(root, ref, config_path):
 def weakened(settings, base):
     """How the config loosens the rules compared with the base config; loosening is an owner decision."""
     changes = [f'{key} raised from {base[key]} to {settings[key]}' for key in DEFAULTS if settings[key] > base[key]]
-    changes += [f'source {s} removed' for s in base['sources'] if s not in settings['sources']]
+    changes += [f'source {s} removed' for s in base['sources'] if not any(_within(s, c) for c in settings['sources'])]
     changes += [f'layer root {s} removed' for s in base['layerRoots'] if s not in settings['layerRoots']]
     changes += [f'directory {d} excluded' for d in sorted(settings['excludeDirectories'] - base['excludeDirectories'])]
     return changes

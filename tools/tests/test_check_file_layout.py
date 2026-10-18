@@ -183,6 +183,25 @@ class FileLayoutTests(unittest.TestCase):
                 self.write_config({**CONFIG, **change})
                 self.assertEqual(2, self.run_main()[0])
 
+    def test_paths_outside_the_repository_fail_closed(self):
+        outside = self.root.parent / f'{self.root.name}-outside.json'
+        self.addCleanup(lambda: outside.unlink(missing_ok=True))
+        outside.write_text('{"keep": true}')
+        for change in ({'baseline': f'../{outside.name}'}, {'baseline': str(outside)}, {'sources': ['../Game']}):
+            with self.subTest(change=change):
+                self.write_config({**CONFIG, **change})
+                self.assertEqual(2, self.run_main('--update-baseline')[0])
+                self.assertEqual(2, self.run_main('--init-baseline')[0])
+        self.assertEqual('{"keep": true}', outside.read_text())
+
+    def test_unrelated_json_at_base_does_not_block_first_adoption(self):
+        (self.root / 'metadata.json').write_text('{"schemaVersion": 1, "sources": "generated"}')
+        self.git('init', '-q')
+        self.git('add', 'Game', 'metadata.json')
+        self.git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-qm', 'base')
+        self.write_baseline()
+        self.assertEqual(0, self.run_main('--base-ref', 'HEAD')[0])
+
     def test_malformed_baseline_shapes_fail_closed(self):
         for data in ([], 'baseline', None, {'schemaVersion': 1, 'oversizedFiles': [], 'layerRootFiles': []},
                      {'schemaVersion': 1, 'oversizedFiles': {}, 'layerRootFiles': 'Game/Runtime/Boot.cs'}):

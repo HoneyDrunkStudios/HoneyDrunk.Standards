@@ -10,7 +10,7 @@ Rules (see HoneyDrunk.Standards/docs/CONVENTIONS.md, "File size and folder layou
 import argparse
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import posixpath
 import subprocess
 import sys
@@ -69,7 +69,14 @@ def parse_config(text, config_path, origin):
     settings['layerRoots'] = [_normal(s) for s in config.get('layerRoots', [])]
     settings['excludeDirectories'] = EXCLUDED_DIRECTORIES | set(config.get('excludeDirectories', []))
     settings['baseline'] = _normal(config.get('baseline', default_baseline))
+    outside = [path for path in (*settings['sources'], *settings['layerRoots'], settings['baseline']) if not _inside(path)]
+    if outside:
+        raise LayoutError(f'{origin}: paths must stay inside the repository: {", ".join(outside)}')
     return settings
+
+
+def _inside(path):
+    return not posixpath.isabs(path) and not PureWindowsPath(path).drive and path != '..' and not path.startswith('../')
 
 
 def _string_list(value):
@@ -193,10 +200,10 @@ def _layout_configs_at(root, ref):
 
 def _is_layout_config(text):
     try:
-        data = json.loads(text or '')
-    except ValueError:
+        parse_config(text or '', '.', 'candidate')
+    except LayoutError:
         return False
-    return isinstance(data, dict) and data.get('schemaVersion') == SCHEMA_VERSION and 'sources' in data
+    return True
 
 
 def root_files(files, settings):

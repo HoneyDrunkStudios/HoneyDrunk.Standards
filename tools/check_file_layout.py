@@ -272,11 +272,28 @@ def check(root, settings, baseline, base=None, renames=None):
                 errors.append((path, 'added to the baseline; the baseline only ever loses entries. Split the file instead.'))
             elif lines > before:
                 errors.append((path, f'baseline raised from {before} to {lines}; the baseline only ever loses entries or lowers counts'))
+        errors += _dropped_while_oversized(root, settings, oversized, base_baseline, renames or {})
         base_roots = set(base_baseline['layerRootFiles'])
         for path in sorted(allowed_roots - base_roots):
             if (renames or {}).get(path) not in base_roots:
                 errors.append((path, 'added to the layer-root baseline; the baseline only ever loses entries'))
     return errors, warnings
+
+
+def _dropped_while_oversized(root, settings, oversized, base_baseline, renames):
+    """Base entries that left the baseline although their file is still over the limit (now excluded or generated)."""
+    moved_to = {old: new for new, old in renames.items()}
+    found = []
+    for path in sorted(set(base_baseline['oversizedFiles']) - set(oversized)):
+        if moved_to.get(path) in oversized:
+            continue
+        current = root / moved_to.get(path, path)
+        if current.is_file():
+            lines = len(current.read_text(encoding='utf-8-sig', errors='replace').splitlines())
+            if lines > settings['failLines']:
+                found.append((path, f'left the baseline but still has {lines} lines; a file leaves the baseline only by '
+                                    'shrinking to the limit or being deleted, not by being excluded or marked generated'))
+    return found
 
 
 def updated_baseline(root, settings, baseline):

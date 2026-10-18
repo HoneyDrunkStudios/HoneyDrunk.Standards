@@ -120,6 +120,11 @@ def owned_files(root, settings):
             raise LayoutError(f'source directory {source} does not exist')
         for directory, subdirectories, names in os.walk(start):
             subdirectories[:] = sorted(d for d in subdirectories if d not in excluded)
+            linked = [d for d in subdirectories if os.path.islink(os.path.join(directory, d))]
+            if linked:
+                # os.walk does not follow links, so a linked folder would escape every rule unseen.
+                where = Path(os.path.relpath(os.path.join(directory, linked[0]), root)).as_posix()
+                raise LayoutError(f'{where} is a symlinked folder inside a source; list its target as a source instead')
             for name in sorted(names):
                 if not name.endswith('.cs'):
                     continue

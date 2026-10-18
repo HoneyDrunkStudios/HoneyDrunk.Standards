@@ -182,6 +182,17 @@ class FileLayoutTests(unittest.TestCase):
         self.assertEqual(1, code)
         self.assertIn('Linked/Core/Boot.cs: a layer root takes no new C# files', output)
 
+    def test_symlinked_folder_inside_a_source_fails_closed(self):
+        (self.root / 'Actual').mkdir()
+        try:
+            (self.root / 'Game/Core/Linked').symlink_to(self.root / 'Actual', target_is_directory=True)
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        self.write_baseline()
+        code, output = self.run_main()
+        self.assertEqual(2, code)
+        self.assertIn('Game/Core/Linked is a symlinked folder inside a source', output)
+
     def test_custom_excluded_directory_is_ignored(self):
         self.write_config({**CONFIG, 'excludeDirectories': ['Vendor']})
         self.write_baseline()

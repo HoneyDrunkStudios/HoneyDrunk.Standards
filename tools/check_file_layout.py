@@ -154,6 +154,9 @@ def owned_files(root, settings):
                 if not name.endswith('.cs'):
                     continue
                 path = Path(directory) / name
+                if path.is_symlink():
+                    where = Path(os.path.relpath(path, root)).as_posix()
+                    raise LayoutError(f'{where} is a symlinked C# file; scan the real source file instead')
                 text = path.read_text(encoding='utf-8-sig', errors='replace')
                 if not is_generated(path, text):
                     # Lexical, not resolved, so keys use the folder names the config uses.

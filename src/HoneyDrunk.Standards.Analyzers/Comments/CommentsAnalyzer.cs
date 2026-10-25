@@ -15,7 +15,7 @@ namespace HoneyDrunk.Standards.Analyzers.Comments;
 public sealed class CommentsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly Regex DeferredWork = new(@"\b(TODO|FIXME|HACK|XXX)\b", RegexOptions.CultureInvariant);
-    private static readonly Regex TrackingReference = new(@"#\d+|https?://|\b[A-Z][A-Z0-9]+-\d+\b", RegexOptions.CultureInvariant);
+    private static readonly Regex TrackingReference = new(@"#\d+|https?://[^\s/?#]+/(?:[^\s/?#]+/)*(?:issues|pull|tickets)/\d+\b|\b[A-Z][A-Z0-9]+-\d+\b", RegexOptions.CultureInvariant);
 
     // Prose rarely contains these; a comment line without any of them is not treated as code.
     private static readonly string[] CodeMarkers = { "(", "=", ".", "[", "=>", "return", "await", "new ", "var " };

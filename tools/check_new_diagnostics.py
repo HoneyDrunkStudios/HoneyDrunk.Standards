@@ -77,13 +77,13 @@ def _repository_path(root, uri):
         return None
 
 
-def _has_tool(run):
+def _has_tool(run, version):
     """A run names the analyzer that produced it: tool.driver in SARIF 2.1, tool.name in the 1.0 Roslyn writes."""
     tool = run.get('tool')
     if not isinstance(tool, dict):
         return False
-    driver = tool.get('driver')
-    name = driver.get('name') if isinstance(driver, dict) else tool.get('name')
+    metadata = tool.get('driver') if version == '2.1.0' else tool
+    name = metadata.get('name') if isinstance(metadata, dict) else None
     return isinstance(name, str) and bool(name.strip())
 
 
@@ -94,7 +94,7 @@ def _results(sarif):
         raise ValueError(f'{sarif}: not a SARIF {" or ".join(SARIF_VERSIONS)} log')
     runs = data.get('runs')
     # A log without runs is no analyzer evidence at all, so it must not pass as a clean one.
-    if not isinstance(runs, list) or not runs or not all(isinstance(run, dict) and _has_tool(run) for run in runs):
+    if not isinstance(runs, list) or not runs or not all(isinstance(run, dict) and _has_tool(run, data['version']) for run in runs):
         raise ValueError(f'{sarif}: not a SARIF log')
     results = []
     for run in runs:

@@ -10,6 +10,12 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
+### Fixed
+
+- HD0102 checks unused EF dependency declarations as well as operations, with one diagnostic per member.
+- HD0104 requires a concrete, non-generic entity configuration class; inherited concrete implementations remain supported.
+- HD0111 no longer treats arbitrary documentation URLs as tracked deferred work.
+
 ## [0.4.0] - 2026-10-18
 
 ### Added

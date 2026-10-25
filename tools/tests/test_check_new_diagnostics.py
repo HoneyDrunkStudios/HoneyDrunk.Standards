@@ -68,6 +68,24 @@ class NewDiagnosticsTests(unittest.TestCase):
         self.assertEqual(1, code)
         self.assertIn('Core/New.cs:4: SA1402', output)
 
+    def test_tool_metadata_must_match_declared_sarif_version(self):
+        self.write('Core/New.cs', 5)
+        self.commit()
+        for version, tool in [('2.1.0', {'name': 'csc'}), ('1.0.0', {'driver': {'name': 'csc'}})]:
+            with self.subTest(version=version):
+                sarif = self.sarif([], version)
+                sarif.write_text(json.dumps({'version': version, 'runs': [{'tool': tool}]}))
+                code, output = self.run_main(sarif)
+                self.assertEqual(2, code)
+                self.assertIn('not a SARIF log', output)
+
+    def test_clean_tool_metadata_for_both_versions_passes(self):
+        self.write('Core/New.cs', 5)
+        self.commit()
+        for version in ['1.0.0', '2.1.0']:
+            with self.subTest(version=version):
+                self.assertEqual(0, self.run_main(self.sarif([], version))[0])
+
     def test_violation_on_changed_line_fails(self):
         self.write('Core/Old.cs', 10, changed={7})
         self.commit()

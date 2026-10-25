@@ -67,6 +67,36 @@ class FileLayoutTests(unittest.TestCase):
         self.write_baseline()
         self.assertEqual((0, 'File layout: 0 error(s), 0 advisory warning(s)\n'), self.run_main())
 
+    def test_retargeted_csharp_symlink_cannot_drop_a_baseline_entry(self):
+        self.source('Actual/Big.cs', 12)
+        self.source('Actual/Small.cs', 1)
+        link = self.root / 'Game/Core/Trade/Linked.cs'
+        try:
+            link.symlink_to(self.root / 'Actual/Big.cs')
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        self.write_baseline({'Game/Core/Trade/Linked.cs': 12})
+        before = (self.root / 'layout-baseline.json').read_bytes()
+        link.unlink()
+        link.symlink_to(self.root / 'Actual/Small.cs')
+        for arguments in [(), ('--update-baseline',)]:
+            with self.subTest(arguments=arguments):
+                code, output = self.run_main(*arguments)
+                self.assertEqual(2, code)
+                self.assertIn('symlinked C# file', output)
+                self.assertEqual(before, (self.root / 'layout-baseline.json').read_bytes())
+
+    def test_generated_and_dangling_csharp_symlinks_cannot_initialize_a_baseline(self):
+        link = self.root / 'Game/Core/Trade/Linked.g.cs'
+        try:
+            link.symlink_to(self.root / 'Missing.cs')
+        except OSError:
+            self.skipTest('creating symlinks needs a privilege this machine does not grant')
+        code, output = self.run_main('--init-baseline')
+        self.assertEqual(2, code)
+        self.assertIn('symlinked C# file', output)
+        self.assertFalse((self.root / 'layout-baseline.json').exists())
+
     def test_file_over_warn_limit_is_advisory(self):
         self.write_baseline()
         self.source('Game/Core/Trade/Haggle.cs', 6)

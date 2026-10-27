@@ -13,6 +13,20 @@ public sealed class EntityConventionsAnalyzerTests
         using Microsoft.EntityFrameworkCore.Metadata.Builders;
         """;
 
+    [Theory]
+    [InlineData("public interface IOrderConfiguration : IEntityTypeConfiguration<OrderEntity> { }")]
+    [InlineData("public abstract class OrderConfiguration : IEntityTypeConfiguration<OrderEntity> { public abstract void Configure(EntityTypeBuilder<OrderEntity> builder); }")]
+    [InlineData("public class OrderConfiguration<T> : IEntityTypeConfiguration<OrderEntity> { public void Configure(EntityTypeBuilder<OrderEntity> builder) { } }")]
+    public async Task NonConcreteConfiguration_DoesNotSatisfyEntityMapping(string configuration)
+    {
+        var diagnostics = await RunAsync("""
+            public sealed class OrderEntity { }
+            public sealed class ShopDbContext : DbContext { public DbSet<OrderEntity> Orders { get; set; } = null!; }
+            """ + configuration);
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0104");
+    }
+
     [Fact]
     public async Task CompliantModel_ReportsNothing()
     {

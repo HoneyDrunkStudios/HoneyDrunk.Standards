@@ -90,7 +90,10 @@ public sealed class EntityConventionsAnalyzer : DiagnosticAnalyzer
         var configuredEntity = ef.ConfiguredEntity(type);
         if (configuredEntity is INamedTypeSymbol)
         {
-            configured.TryAdd(configuredEntity, 0);
+            if (type.TypeKind == TypeKind.Class && !type.IsAbstract && !type.IsGenericType)
+            {
+                configured.TryAdd(configuredEntity, 0);
+            }
             entities.TryAdd(configuredEntity, 0);
         }
 

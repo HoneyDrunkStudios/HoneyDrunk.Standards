@@ -69,6 +69,9 @@ public sealed class CommentsAnalyzerTests
 
     [Theory]
     [InlineData("// TODO: handle refunds")]
+    [InlineData("// TODO handle retries, see https://learn.microsoft.com/dotnet")]
+    [InlineData("/* FIXME see https://github.com/org/repo/issues */")]
+    [InlineData("/// <summary>TODO see https://example.com/docs.</summary>")]
     [InlineData("// FIXME this breaks on leap years")]
     [InlineData("/* HACK: skip validation */")]
     [InlineData("/// <summary>TODO describe this.</summary>")]
@@ -83,6 +86,10 @@ public sealed class CommentsAnalyzerTests
     [InlineData("// TODO(#42): handle refunds")]
     [InlineData("// TODO handle refunds, see https://github.com/HoneyDrunkStudios/HoneyDrunk.Payments/issues/42")]
     [InlineData("// TODO PAY-42 handle refunds")]
+    [InlineData("// TODO see https://gitlab.com/team/project/-/issues/42")]
+    [InlineData("// TODO see https://github.com/team/project/pull/42")]
+    [InlineData("// TODO see https://tracker.example.com/browse/PAY-42")]
+    [InlineData("// TODO see https://tracker.example.com/tickets/42")]
     public async Task TrackedDeferredWork_IsAllowed(string comment)
     {
         var diagnostics = await RunAsync(comment + "\npublic sealed class Order { }");

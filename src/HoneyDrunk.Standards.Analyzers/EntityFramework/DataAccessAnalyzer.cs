@@ -44,18 +44,66 @@ public sealed class DataAccessAnalyzer : DiagnosticAnalyzer
 
         // One diagnostic per offending member keeps a long method from drowning the build output.
         var reported = new ConcurrentDictionary<ISymbol, byte>(SymbolEqualityComparer.Default);
+        context.RegisterSymbolAction(symbolContext => AnalyzeDeclaration(ef, symbolContext),
+            SymbolKind.Field, SymbolKind.Property, SymbolKind.Method);
         context.RegisterOperationAction(operationContext => Analyze(ef, operationContext, reported), References);
     }
 
-    private static void Analyze(EfSymbols ef, OperationAnalysisContext context, ConcurrentDictionary<ISymbol, byte> reported)
+    private static void AnalyzeDeclaration(EfSymbols ef, SymbolAnalysisContext context)
     {
-        var type = context.Operation.Type;
-        if (!ef.IsDataAccessType(type) || IsAllowed(ef, context.ContainingSymbol.ContainingType))
+        var symbol = context.Symbol;
+        var type = DeclaredDataAccessType(ef, symbol);
+        if (symbol.IsImplicitlyDeclared || type is null || IsAllowed(ef, symbol.ContainingType)
+            || symbol is IMethodSymbol { AssociatedSymbol: not null })
         {
             return;
         }
 
-        if (reported.TryAdd(context.ContainingSymbol, 0))
+        var location = symbol.Locations.FirstOrDefault(candidate => candidate.IsInSource);
+        if (location is not null)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(ArchitectureRules.DataAccessOutsideDataService,
+                location, symbol.ContainingType?.Name ?? symbol.Name, type.Name));
+        }
+    }
+
+    private static ITypeSymbol? DeclaredDataAccessType(EfSymbols ef, ISymbol symbol)
+    {
+        var type = symbol switch
+        {
+            IFieldSymbol field => field.Type,
+            IPropertySymbol property => property.Type,
+            IMethodSymbol method => method.ReturnType,
+            _ => null,
+        };
+        if (ef.IsDataAccessType(type))
+        {
+            return type;
+        }
+
+        var parameters = symbol switch
+        {
+            IMethodSymbol method => method.Parameters,
+            IPropertySymbol property => property.Parameters,
+            _ => ImmutableArray<IParameterSymbol>.Empty,
+        };
+        return parameters.Select(parameter => parameter.Type).FirstOrDefault(ef.IsDataAccessType);
+    }
+
+    private static void Analyze(EfSymbols ef, OperationAnalysisContext context, ConcurrentDictionary<ISymbol, byte> reported)
+    {
+        var member = context.ContainingSymbol is IMethodSymbol { AssociatedSymbol: { } associated }
+            ? associated : context.ContainingSymbol;
+        var type = context.Operation.Type;
+        if (!ef.IsDataAccessType(type) || IsAllowed(ef, member.ContainingType)
+            || (!member.IsImplicitlyDeclared
+                && member is not IMethodSymbol { MethodKind: MethodKind.AnonymousFunction or MethodKind.LocalFunction }
+                && DeclaredDataAccessType(ef, member) is not null))
+        {
+            return;
+        }
+
+        if (reported.TryAdd(member, 0))
         {
             var owner = context.ContainingSymbol.ContainingType?.Name ?? context.ContainingSymbol.Name;
             context.ReportDiagnostic(Diagnostic.Create(

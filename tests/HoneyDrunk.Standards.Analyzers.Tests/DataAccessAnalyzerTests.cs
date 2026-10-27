@@ -12,6 +12,32 @@ public sealed class DataAccessAnalyzerTests
         public sealed class ShopDbContext : DbContext { public DbSet<OrderEntity> Orders { get; set; } = null!; }
         """;
 
+    [Theory]
+    [InlineData("public interface IOrders { ShopDbContext Context { get; } }")]
+    [InlineData("public interface IOrders { DbSet<OrderEntity> Orders { get; } }")]
+    [InlineData("public interface IOrders { void Load(IDbContextFactory<ShopDbContext> factory); }")]
+    [InlineData("public sealed class OrderService { private ShopDbContext _db = null!; }")]
+    [InlineData("public sealed class OrderService { public void Load(ShopDbContext db) { } }")]
+    [InlineData("public sealed class OrderService(ShopDbContext db) { }")]
+    [InlineData("public sealed class OrderService { public ShopDbContext Load() => null!; }")]
+    public async Task UnusedDataAccessDeclaration_IsReported(string source)
+    {
+        var diagnostics = await RunAsync(source);
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+    }
+
+    [Theory]
+    [InlineData("public sealed class OrderService { public void Load(ShopDbContext db) { db.Orders.Add(new OrderEntity()); } }")]
+    [InlineData("public sealed class OrderService { public ShopDbContext Context => new ShopDbContext(); }")]
+    [InlineData("public sealed class OrderService { private ShopDbContext _db = new ShopDbContext(); }")]
+    public async Task DeclarationAndOperations_ReportOnlyOncePerMember(string source)
+    {
+        var diagnostics = await RunAsync(source);
+
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+    }
+
     [Fact]
     public async Task DataService_MayUseTheContext()
     {
@@ -39,7 +65,9 @@ public sealed class DataAccessAnalyzerTests
             }
             """);
 
-        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+        // The constructor declares the dependency and Place uses it: two distinct members.
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102", "HD0102");
+        diagnostics.Select(diagnostic => diagnostic.Location.SourceSpan).Distinct().Should().HaveCount(2);
         diagnostics[0].GetMessage().Should().Contain("'OrderService' uses").And.Contain("*DataService");
     }
 
@@ -53,7 +81,7 @@ public sealed class DataAccessAnalyzerTests
             }
             """);
 
-        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102", "HD0102");
     }
 
     [Fact]
@@ -62,6 +90,17 @@ public sealed class DataAccessAnalyzerTests
         var diagnostics = await RunAsync("public static class Seeder { public static object Run() => new ShopDbContext(); }");
 
         diagnostics.Select(diagnostic => diagnostic.Id).Should().Equal("HD0102");
+    }
+
+    [Theory]
+    [InlineData("public sealed class Seeder { public object Run() { ShopDbContext Create() => new ShopDbContext(); return Create(); } }")]
+    [InlineData("public sealed class Seeder { public object Run() { System.Func<ShopDbContext> create = () => new ShopDbContext(); return create; } }")]
+    public async Task NestedFunctionReturningContext_IsStillReported(string source)
+    {
+        var diagnostics = await RunAsync(source);
+
+        diagnostics.Should().NotBeEmpty();
+        diagnostics.Select(diagnostic => diagnostic.Id).Should().AllBe("HD0102");
     }
 
     [Fact]

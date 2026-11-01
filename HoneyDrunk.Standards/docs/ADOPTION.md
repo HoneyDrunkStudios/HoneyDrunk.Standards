@@ -10,7 +10,7 @@ Once published to NuGet.org or a private feed:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.1" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -47,7 +47,7 @@ While developing or testing standards changes:
 
 3. Add the package reference:
    ```xml
-   <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
+   <PackageReference Include="HoneyDrunk.Standards" Version="0.4.1" PrivateAssets="all" />
    ```
 
 4. Restore packages:
@@ -61,8 +61,8 @@ HoneyDrunk test projects named `*.Tests.Unit`, `*.Tests.Integration`, `*.Tests.I
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.0" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.0" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.1" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.1" PrivateAssets="all" />
 </ItemGroup>
 ```
 

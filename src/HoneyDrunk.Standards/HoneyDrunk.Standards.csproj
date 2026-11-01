@@ -7,10 +7,10 @@
 
     <!-- Package Metadata -->
     <PackageId>HoneyDrunk.Standards</PackageId>
-    <Version>0.4.0</Version>
+    <Version>0.4.1</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>Build-transitive standards package enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk repositories.</Description>
-    <PackageReleaseNotes>v0.4.0: Add the HoneyDrunk architecture analyzers (entity naming and explicit EF mapping, data access only in data services, service size) and the comment rules (no commented-out code, no untracked TODO).</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.4.1: Detect unused EF dependencies (HD0102), require concrete entity configurations (HD0104), and require issue references for deferred work (HD0111).</PackageReleaseNotes>
     <PackageTags>standards;analyzers;style;build-transitive;conventions;csharp14</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

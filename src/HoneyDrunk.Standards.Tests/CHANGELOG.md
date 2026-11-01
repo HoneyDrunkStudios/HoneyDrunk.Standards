@@ -2,6 +2,12 @@
 
 All notable changes to HoneyDrunk.Standards.Tests will be documented in this file.
 
+## [0.4.1] - 2026-11-01
+
+### Changed
+
+- Consume HoneyDrunk.Standards 0.4.1 for the HD0102, HD0104 and HD0111 analyzer fixes.
+
 ## [0.4.0] - 2026-10-18
 
 ### Changed

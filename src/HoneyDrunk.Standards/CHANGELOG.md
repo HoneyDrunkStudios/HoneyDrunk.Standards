@@ -10,6 +10,8 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-01
+
 ### Fixed
 
 - HD0102 checks unused EF dependency declarations as well as operations, with one diagnostic per member.

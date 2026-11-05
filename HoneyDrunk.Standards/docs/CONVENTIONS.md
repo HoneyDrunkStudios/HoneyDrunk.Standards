@@ -186,6 +186,12 @@ Core/
 
 Shared foundations, such as the root of the saved state and the save format, keep folders of their own. A game whose Core is still organized by kind (`State`, `Data`, `Simulation`) moves to system folders one system at a time in separate refactoring changes; new systems get their own folder from the start.
 
+### Save and resume regressions
+
+When changing a transition that affects saved progress, exercise it through the game's normal entry point. At an affected point where the game permits saving, use the production writer and load the result into a fresh session. Take the next action in both the resumed and uninterrupted sessions and compare the outcome that matters to the player. For example, if a resource is reserved before an action finishes, verify that the reservation survives reload and that finishing the action consumes it once.
+
+When changing load validation, pair a valid save with a damaged fixture that violates the changed invariant. Check that supported saves resume and that damaged input follows the game's documented recovery path. If a change writes related records separately, exercise a failure between the writes. Verify the expected recovery on the first load and that a second load preserves the recovered progress.
+
 ### Partial classes split by system
 
 When one class is split into partial parts by system, as a simulation facade often is, each part goes in its system's folder: `Core/Board/ShopSimulation.Board.cs`, not `Core/Simulation/ShopSimulation.Board.cs` beside every other part. C# allows the parts of a partial class in any folder of the same assembly. The file name is the class name plus the system (`ShopSimulation.Board.cs`), and the class's root part stays where the class is introduced.

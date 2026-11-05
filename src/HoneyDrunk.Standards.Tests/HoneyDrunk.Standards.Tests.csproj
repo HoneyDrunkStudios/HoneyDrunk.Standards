@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
 
     <PackageId>HoneyDrunk.Standards.Tests</PackageId>
-    <Version>0.4.1</Version>
+    <Version>0.4.2</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>ADR-0047 test-stack package for HoneyDrunk test projects: xUnit v2, NSubstitute, AwesomeAssertions, coverlet, and HoneyDrunk.Standards.</Description>
-    <PackageReleaseNotes>v0.4.1: Consume HoneyDrunk.Standards 0.4.1 with the corrected architecture and comment analyzers.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.4.2: Update the test SDK to 18.11.0, runner to 4.0.1, coverlet to 10.1.0, and Standards to 0.4.2; retain xUnit v2.</PackageReleaseNotes>
     <PackageTags>standards;tests;xunit;nsubstitute;awesomeassertions;coverlet;adr-0047</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -30,12 +30,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\samples\Consumer.Sample\Consumer.Sample.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="none" />
     <PackageReference Include="xunit" Version="2.9.3" PrivateAssets="none" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0" PrivateAssets="none" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" PrivateAssets="none" />
     <PackageReference Include="NSubstitute" Version="6.2.0" PrivateAssets="none" />
     <PackageReference Include="AwesomeAssertions" Version="9.6.0" PrivateAssets="none" />
-    <PackageReference Include="coverlet.collector" Version="10.0.1" PrivateAssets="none" />
+    <PackageReference Include="coverlet.collector" Version="10.1.0" PrivateAssets="none" />
   </ItemGroup>
 
 </Project>

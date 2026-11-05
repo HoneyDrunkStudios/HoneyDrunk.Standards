@@ -47,7 +47,7 @@ Add the package to your project:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.1" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.2" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -110,8 +110,8 @@ Test projects should reference both packages:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.1" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.1" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.2" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.2" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -120,11 +120,11 @@ Test projects should reference both packages:
 - `IsPackable=false`
 - `IsTestProject=true`
 - xUnit `2.9.3`
-- `xunit.runner.visualstudio` `4.0.0`
-- `Microsoft.NET.Test.Sdk` `18.10.1`
+- `xunit.runner.visualstudio` `4.0.1`
+- `Microsoft.NET.Test.Sdk` `18.11.0`
 - `NSubstitute` `6.2.0`
 - `AwesomeAssertions` `9.6.0`
-- `coverlet.collector` `10.0.1`
+- `coverlet.collector` `10.1.0`
 
 Runtime projects must reference only `HoneyDrunk.Standards`, so they do not receive these test packages. Moq and FluentAssertions are intentionally absent per ADR-0047 D2.
 
@@ -251,7 +251,7 @@ cd HoneyDrunk.Standards
 dotnet pack -c Release -o ./artifacts
 
 # Test in your project
-dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.4.1
+dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.4.2
 ```
 
 ---

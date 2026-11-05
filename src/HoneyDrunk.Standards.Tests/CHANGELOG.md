@@ -2,6 +2,12 @@
 
 All notable changes to HoneyDrunk.Standards.Tests will be documented in this file.
 
+## [0.4.2] - 2026-11-05
+
+### Changed
+
+- Consume Standards 0.4.2 and update Microsoft.NET.Test.Sdk to 18.11.0, xunit.runner.visualstudio to 4.0.1, and coverlet.collector to 10.1.0. Retain xUnit v2 2.9.3, NSubstitute 6.2.0, and AwesomeAssertions 9.6.0.
+
 ## [0.4.1] - 2026-11-01
 
 ### Changed

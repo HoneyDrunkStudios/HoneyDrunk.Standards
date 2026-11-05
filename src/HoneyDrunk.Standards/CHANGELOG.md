@@ -10,6 +10,13 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-11-05
+
+### Fixed
+
+- HD0106 counts authored partial declarations and methods using Roslyn generated-code classification. Generated logging partials no longer inflate service size; oversized authored partials still produce diagnostics.
+- The test-stack package consumes the corrected Standards package; test-tool versions remain unchanged from 0.4.2.
+
 ## [0.4.2] - 2026-11-05
 
 ### Changed

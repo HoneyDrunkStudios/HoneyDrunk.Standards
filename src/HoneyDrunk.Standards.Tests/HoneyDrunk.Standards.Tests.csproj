@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
 
     <PackageId>HoneyDrunk.Standards.Tests</PackageId>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <Authors>HoneyDrunk Studios</Authors>
     <Description>ADR-0047 test-stack package for HoneyDrunk test projects: xUnit v2, NSubstitute, AwesomeAssertions, coverlet, and HoneyDrunk.Standards.</Description>
-    <PackageReleaseNotes>v0.4.2: Update the test SDK to 18.11.0, runner to 4.0.1, coverlet to 10.1.0, and Standards to 0.4.2; retain xUnit v2.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.4.3: Exclude generated partial declarations and methods from HD0106 while preserving limits on authored services.</PackageReleaseNotes>
     <PackageTags>standards;tests;xunit;nsubstitute;awesomeassertions;coverlet;adr-0047</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

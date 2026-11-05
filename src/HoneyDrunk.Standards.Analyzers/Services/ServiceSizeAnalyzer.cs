@@ -1,14 +1,17 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace HoneyDrunk.Standards.Analyzers.Services;
 
 /// <summary>
 /// HD0106: a class named *Service (business or data) stays small: at most a configured number of
-/// public or internal methods and of lines across all its partial declarations.
+/// public or internal methods and of lines across its authored partial declarations.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ServiceSizeAnalyzer : DiagnosticAnalyzer
@@ -25,31 +28,58 @@ public sealed class ServiceSizeAnalyzer : DiagnosticAnalyzer
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterSymbolAction(Analyze, SymbolKind.NamedType);
+        context.RegisterCompilationStartAction(Start);
     }
 
-    private static void Analyze(SymbolAnalysisContext context)
+    private static void Start(CompilationStartAnalysisContext context)
     {
-        var type = (INamedTypeSymbol)context.Symbol;
-        if (type.TypeKind != TypeKind.Class || !type.Name.EndsWith("Service", System.StringComparison.Ordinal))
+        var authored = new ConcurrentDictionary<INamedTypeSymbol, ConcurrentBag<SyntaxReference>>(SymbolEqualityComparer.Default);
+        context.RegisterSyntaxNodeAction(syntaxContext =>
         {
-            return;
-        }
+            var declaration = (TypeDeclarationSyntax)syntaxContext.Node;
+            if (syntaxContext.SemanticModel.GetDeclaredSymbol(declaration, syntaxContext.CancellationToken) is INamedTypeSymbol type
+                && type.TypeKind == TypeKind.Class
+                && type.Name.EndsWith("Service", System.StringComparison.Ordinal))
+            {
+                authored.GetOrAdd(type, _ => new ConcurrentBag<SyntaxReference>()).Add(declaration.GetReference());
+            }
+        }, SyntaxKind.ClassDeclaration, SyntaxKind.RecordDeclaration);
 
-        var declarations = type.DeclaringSyntaxReferences;
+        // Syntax callbacks honor Roslyn's generated-code classification. A mixed symbol's
+        // DeclaringSyntaxReferences also includes source-generator partials, which must not count.
+        context.RegisterCompilationEndAction(endContext =>
+        {
+            foreach (var pair in authored)
+            {
+                Analyze(endContext, pair.Key, pair.Value);
+            }
+        });
+    }
+
+    private static void Analyze(
+        CompilationAnalysisContext context,
+        INamedTypeSymbol type,
+        ConcurrentBag<SyntaxReference> authored)
+    {
+        var declarations = type.DeclaringSyntaxReferences
+            .Where(reference => authored.Any(source => source.SyntaxTree == reference.SyntaxTree && source.Span == reference.Span))
+            .ToImmutableArray();
         if (declarations.IsEmpty)
         {
             return;
         }
 
         var options = context.Options.AnalyzerConfigOptionsProvider.GetOptions(declarations[0].SyntaxTree);
-        var location = type.Locations[0];
+        var firstDeclaration = (TypeDeclarationSyntax)declarations[0].GetSyntax(context.CancellationToken);
+        var location = firstDeclaration.Identifier.GetLocation();
 
         var methods = type.GetMembers()
             .OfType<IMethodSymbol>()
             .Count(method => method.MethodKind == MethodKind.Ordinary
                 && !method.IsImplicitlyDeclared
-                && method.DeclaredAccessibility is Accessibility.Public or Accessibility.Internal or Accessibility.ProtectedOrInternal);
+                && method.DeclaredAccessibility is (Accessibility.Public or Accessibility.Internal or Accessibility.ProtectedOrInternal)
+                && method.DeclaringSyntaxReferences.Any(reference => declarations.Any(source =>
+                    source.SyntaxTree == reference.SyntaxTree && source.Span.Contains(reference.Span))));
         var maxMethods = Read(options, MaxMethodsOption, DefaultMaxMethods);
         if (methods > maxMethods)
         {

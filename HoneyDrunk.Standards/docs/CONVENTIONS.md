@@ -482,7 +482,7 @@ The package's analyzers enforce the parts of the [architectural patterns](#archi
 | `HD0103` | No mapping attributes on an entity or its members |
 | `HD0104` | Every entity in a `DbSet` has an `IEntityTypeConfiguration<T>` class |
 | `HD0105` | No inline `ModelBuilder.Entity` configuration |
-| `HD0106` | A `*Service` class has at most 10 public or internal methods and 300 lines across its partials |
+| `HD0106` | A `*Service` class has at most 10 authored public or internal methods and 300 lines across its authored partials |
 | `HD0110` | No commented-out code |
 | `HD0111` | A `TODO`, `FIXME`, `HACK` or `XXX` comment links the issue that tracks it |
 
@@ -493,7 +493,7 @@ Endpoints call services; services call data services; only data services reach t
 - **Services** (`OrderService`) own one use case's rules and orchestration. They take and return contracts or domain values, call data services and other services through focused interfaces, and never hold a `DbContext`.
 - **Data services** (`OrderDataService`) own queries, commands, locking and transactions through EF Core. They make no business decisions. A `*UnitOfWork` type that owns the transaction boundary counts as data access too.
 - `HD0102` reports field/property types and method returns/parameters even when unused, plus operations on a `DbContext`, `DbSet` or `IDbContextFactory` type used outside a `*DataService` or `*UnitOfWork` type (a type nested inside one counts as inside). EF's own infrastructure is exempt: the `DbContext` itself, `IEntityTypeConfiguration` classes, the design-time factory, migrations and the model snapshot, and interceptors. Test projects are exempt, and so is a project whose whole purpose is EF plumbing (such as HoneyDrunk.Data), which sets `<HD_IsDataInfrastructure>true</HD_IsDataInfrastructure>`. Startup code that migrates the database, and health checks that query it, call a data service too.
-- `HD0106` keeps services small: split a service by use case before it passes 10 public or internal methods or 300 lines. Private helpers do not count toward the method limit. A repository may lower the limits, or raise them with a written reason, in its `.globalconfig`:
+- `HD0106` keeps services small: split a service by use case before it passes 10 authored public or internal methods or 300 lines across authored partial declarations. Private helpers do not count toward the method limit. Roslyn-classified generated partials, including generated logging implementations, do not inflate either count; an oversized authored part still reports a diagnostic. A repository may lower the limits, or raise them with a written reason, in its `.globalconfig`:
 
 ```ini
 honeydrunk.service_max_methods = 8

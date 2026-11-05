@@ -55,7 +55,8 @@ internal static class ArchitectureRules
         "Services stay small",
         "Service '{0}' has {1} {2} (limit {3}); split it by use case into smaller services",
         Architecture,
-        "#services-and-data-services");
+        "#services-and-data-services",
+        WellKnownDiagnosticTags.CompilationEnd);
 
     public static readonly DiagnosticDescriptor CommentedOutCode = Create(
         "HD0110",

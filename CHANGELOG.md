@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - See the canonical changelogs above for in-flight changes.
 
+## [0.4.3] - 2026-11-05
+
+### Fixed
+
+- HD0106 counts authored partial declarations and methods using Roslyn generated-code classification. Generated logging partials no longer inflate service size; oversized authored partials still produce diagnostics.
+- The test-stack package consumes the corrected Standards package; test-tool versions remain unchanged from 0.4.2.
+
 ## [0.4.2] - 2026-11-05
 
 ### Changed

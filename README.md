@@ -47,7 +47,7 @@ Add the package to your project:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.2" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.3" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -110,8 +110,8 @@ Test projects should reference both packages:
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.2" PrivateAssets="all" />
-  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.2" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards" Version="0.4.3" PrivateAssets="all" />
+  <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.3" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -251,7 +251,7 @@ cd HoneyDrunk.Standards
 dotnet pack -c Release -o ./artifacts
 
 # Test in your project
-dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.4.2
+dotnet add package HoneyDrunk.Standards --source ./artifacts --version 0.4.3
 ```
 
 ---

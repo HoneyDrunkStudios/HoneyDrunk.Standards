@@ -5,7 +5,7 @@ Build-transitive standards package enforcing shared conventions, analyzers, and 
 ## Install
 
 ```bash
-dotnet add package HoneyDrunk.Standards --version 0.4.2
+dotnet add package HoneyDrunk.Standards --version 0.4.3
 ```
 
 ## Public API

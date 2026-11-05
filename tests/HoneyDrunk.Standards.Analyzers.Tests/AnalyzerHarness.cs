@@ -44,9 +44,15 @@ internal static class AnalyzerHarness
         string source,
         bool withEntityFramework = true,
         IReadOnlyDictionary<string, string>? globalOptions = null,
-        IReadOnlyDictionary<string, string>? fileOptions = null)
+        IReadOnlyDictionary<string, string>? fileOptions = null,
+        IReadOnlyDictionary<string, string>? additionalSources = null)
     {
         var trees = new List<SyntaxTree> { CSharpSyntaxTree.ParseText(source, path: "Source.cs") };
+        if (additionalSources is not null)
+        {
+            trees.AddRange(additionalSources.Select(pair => CSharpSyntaxTree.ParseText(pair.Value, path: pair.Key)));
+        }
+
         if (withEntityFramework)
         {
             trees.Add(CSharpSyntaxTree.ParseText(EntityFramework, path: "EntityFramework.cs"));

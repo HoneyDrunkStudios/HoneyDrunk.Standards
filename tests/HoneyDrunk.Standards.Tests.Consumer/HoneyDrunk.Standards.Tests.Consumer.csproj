@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.2" PrivateAssets="all" />
+    <PackageReference Include="HoneyDrunk.Standards.Tests" Version="0.4.3" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

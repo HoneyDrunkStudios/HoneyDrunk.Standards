@@ -63,7 +63,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     for name in DLLS:
         shutil.copy2(ROOT / "unity/src/bin/Release/netstandard2.0" / name, output / name)
-        (output / (name + ".meta")).write_text(plugin_meta(name), encoding="utf-8")
+        (output / (name + ".meta")).write_text(plugin_meta(name), encoding="utf-8", newline="\n")
     for name in ("HoneyDrunk.Unity.ruleset", "Microsoft.Unity.Analyzers.LICENSE.txt"):
         shutil.copy2(ROOT / "unity/profile" / name, output / name)
     shutil.copy2(ROOT / "LICENSE", output / "HoneyDrunk.Standards.LICENSE.txt")
@@ -75,7 +75,7 @@ def main():
         "microsoftUnityAnalyzers": "1.28.0",
         "files": {name: hashlib.sha256((output / name).read_bytes()).hexdigest() for name in sorted(files)},
     }
-    (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     verify(output)
     subprocess.run([sys.executable, str(ROOT / "unity/tests/test_distribution.py"), str(output)], check=True)
     print("Unity profile verified and staged: " + str(output))

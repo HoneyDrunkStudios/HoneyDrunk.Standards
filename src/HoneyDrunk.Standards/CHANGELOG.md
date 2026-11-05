@@ -10,6 +10,13 @@ The canonical, full history for this package lives at
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-11-05
+
+### Changed
+
+- Update embedded Microsoft.CodeAnalysis.NetAnalyzers from 10.0.401 to 10.0.403. Refresh the companion test SDK, runner and coverage collector.
+- Preserve the server Roslyn 4.14 and separate Unity Roslyn 4.3 compiler API baselines. Retain the newer StyleCop 1.2 beta instead of downgrading to its older stable release.
+
 ## [0.4.1] - 2026-11-01
 
 ### Fixed

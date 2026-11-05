@@ -27,7 +27,7 @@ for mutation in ("hash", "label", "platform", "license", "stale-dll", "unexpecte
             path = root / name
             text = path.read_text(encoding="utf-8")
             text = text.replace("RoslynAnalyzer", "WrongLabel") if mutation in ("hash", "label") else text.replace("enabled: 0", "enabled: 1")
-            path.write_text(text, encoding="utf-8")
+            path.write_text(text, encoding="utf-8", newline="\n")
             if mutation != "hash":
                 manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
                 manifest["files"][name] = hashlib.sha256(path.read_bytes()).hexdigest()

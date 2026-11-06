@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - See the canonical changelogs above for in-flight changes.
 
+## [0.4.4] - 2026-11-05
+
+### Changed
+
+- Refresh StyleCop to 1.3.171-beta and embed analyzer payloads using generated package paths. Preserve compiler profiles, Unity payload and diagnostic severities.
+- Align the companion test-stack package at 0.4.4. See the canonical package histories above for details.
+
 ## [0.4.3] - 2026-11-05
 
 ### Fixed

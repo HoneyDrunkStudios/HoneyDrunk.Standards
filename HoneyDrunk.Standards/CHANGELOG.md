@@ -5,6 +5,14 @@ All notable changes to HoneyDrunk.Standards will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4] - 2026-11-05
+
+### Changed
+
+- Refresh the existing StyleCop prerelease dependency from 1.2.0-beta.556 to 1.3.171-beta, including upstream reliability and collection-expression fixes. Preserve the server Roslyn 4.14 and separate Unity Roslyn 4.3 profiles and existing diagnostic severities.
+- Embed StyleCop analyzer/code-fix DLLs from the direct package's generated path property. The newer package ships the DLLs directly instead of using the old Unstable dependency, so the previous cache-path assumption would package stale or missing binaries.
+- Keep the companion test-stack version aligned at 0.4.4. No runtime library API or Unity profile payload is changed.
+
 ## Unreleased
 
 ## [0.4.3] - 2026-11-05

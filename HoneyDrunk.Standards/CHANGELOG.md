@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Document approval-bound operations: immutable authorization snapshots, separate creation/polling rules, expiry checks after waits, one-use approval identities and atomic consumption, terminal exception propagation, and focused regression scenarios. This is review guidance, not new analyzer enforcement.
+
 ## [0.4.3] - 2026-11-05
 
 ### Fixed

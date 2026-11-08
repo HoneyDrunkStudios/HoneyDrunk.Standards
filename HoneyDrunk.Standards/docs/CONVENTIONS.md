@@ -463,6 +463,33 @@ Every application-owned SQL table and column needs accurate metadata describing 
 
 Use asynchronous I/O and propagate cancellation. Avoid `.Result`, `.Wait()` and `async void` except framework event handlers. Use injected `TimeProvider` at host-facing boundaries when time affects behavior; capture operation time once and pass it into pure rules. Keep provider SDKs inside their owning adapters. Verify real shared-node contracts and implementation rather than inferring availability from a name or catalog.
 
+### Approval-bound operations
+
+Bind an approval to the exact actor, tenant/resource scope, action and arguments that will be used. Validate and snapshot those values before awaiting a gate, then use that same snapshot for the approval identity, the gate request and the authorized operation. An `IReadOnlyList<T>` backed by an exposed array is still mutable through a cast; a read-only wrapper around a caller-owned collection still changes when its owner edits it. Copy the collection and protect its contents from mutation, including mutable elements that affect authorization.
+
+For example, hashing scope A, awaiting approval, then reading a caller's collection again to issue scope B is unsafe. The approved operation must retain scope A even if the caller edits or replaces its original collection while the gate is pending. Keep this protection in the owning request/authorization boundary using the existing contracts; it does not require a new shared framework.
+
+Separate the rules for creating a request from the rules for polling an existing one. A minimum lead time can reject a new request without preventing an already pending request from being checked during its final valid interval. Do not extend its expiry or change its identity just to make polling succeed.
+
+For approvals that authorize one use, distinguish a stable lookup key for identical pending work from the identity of each approval instance. Poll the pending instance without recreating it. A later, separately approved execution needs a new instance identity; an old response must not consume or authorize its replacement. Keep approval consumption atomic with identity and expiry checks in the authority that owns that state. A process-local lock covers only that process; shared or durable approval state needs equivalent coordination at its owner.
+
+Check the clock again after asynchronous approval work, at the point where authority is issued or consumed. An operation-start timestamp is useful for consistent business calculations, but cannot prove that approval is still valid after a wait. Reject an approval at or after expiry. For example, a gate call that starts before expiry and returns `Approved` after expiry must not authorize dispatch. Preserve any stronger revocation or dispatch-time checks required by the owning contract.
+
+Preserve configured terminal exceptions through intermediate gate and tool adapters so the owning lifecycle/host can apply its stop policy. Converting a budget stop into an ordinary tool failure can let an execution continue even when retries are disabled. Follow the existing exception contract, including cancellation and cleanup; do not invent a dependency on an exception type that the consumed package does not expose.
+
+Use the owning repository's tests to exercise these boundaries:
+
+| Scenario | Required observation |
+| --- | --- |
+| Caller mutates authorization inputs while the gate is suspended | The approved scope/arguments remain the validated snapshot |
+| Existing request is polled inside its minimum creation lead time | Polling remains possible until actual expiry |
+| Gate returns approval at or after expiry | No authority is issued or consumed and no operation dispatches |
+| Two callers consume the same one-use approval | At most one dispatch is authorized |
+| Identical work is separately approved again; an old response arrives late | The new instance can authorize once; the old response cannot consume it |
+| A configured terminal exception comes from a gate/tool adapter | It reaches the designated owner with cleanup preserved; no retry or continued execution hides the stop |
+
+These are review and behavioral-test conventions. The Standards analyzers do not prove approval scope, freshness or distributed consumption semantics.
+
 ### Tests and documentation
 
 Use the repository's current tests and lockfiles. The shared .NET test package supplies xUnit, NSubstitute and AwesomeAssertions; do not introduce Moq or FluentAssertions from old examples. Preserve repository-specific naming and supported framework constraints. Test changed behavior, failure paths and meaningful contracts, without mirroring implementation or fabricating coverage thresholds. Existing required CI, coverage and security gates remain in force.
@@ -537,7 +564,7 @@ Before proposing consolidation, name the existing helper, contract or owning nod
 
 ### Failure, trust and state
 
-Trace null/empty/invalid inputs, precision/time semantics, cancellation, async work, partial failure and recovery. Check authentication/authorization and tenant predicates across queries, caches, background work and provider callbacks; protect secrets and personal data in errors, logs and artifacts. For agent features, treat prompts, retrieved content and model output as untrusted data; preserve tool/approval scope, context isolation and human override.
+Trace null/empty/invalid inputs, precision/time semantics, cancellation, async work, partial failure and recovery. Check authentication/authorization and tenant predicates across queries, caches, background work and provider callbacks; protect secrets and personal data in errors, logs and artifacts. For agent features, treat prompts, retrieved content and model output as untrusted data; preserve tool/approval scope, context isolation and human override. Apply the [approval-bound operations](#approval-bound-operations) checks at asynchronous authorization and dispatch boundaries.
 
 Inspect transactions, immutable history, concurrency tokens/leases, idempotency and duplicate/out-of-order delivery. A retry must be bounded and safe for the side effect; a non-transient denial or budget stop must not be retried into success. Check migration/backfill/rollback compatibility with the actual schema owner and preserve audit attribution and correlation across boundaries.
 

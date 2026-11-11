@@ -53,10 +53,16 @@ jobs:
           echo "Publishing version: $VERSION"
           echo "Publishing tag: $VERSION_TAG"
 
+  package-consumers:
+    if: github.event_name != 'workflow_dispatch' || !inputs.verify-trust-only
+    uses: ./.github/workflows/package-consumers.yml
+    permissions:
+      contents: read
+
   release:
     if: github.event_name != 'workflow_dispatch' || !inputs.verify-trust-only
     name: Build, Pack & Publish
-    needs: prepare
+    needs: [prepare, package-consumers]
     # Reusable workflow permissions are the maximum allowed set; release.yml narrows permissions per internal job.
     permissions:
       contents: write
@@ -65,7 +71,7 @@ jobs:
       security-events: write
     uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/release.yml@e3aa37c20dffe55155d95793465bcb6d94f280a2
     with:
-      dotnet-version: '10.0.x'
+      dotnet-version: '11.0.100'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
       project-path: 'HoneyDrunk.Standards.slnx'
@@ -106,7 +112,7 @@ jobs:
         persist-credentials: false
     - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 11.0.100
     - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
         name: nuget-packages

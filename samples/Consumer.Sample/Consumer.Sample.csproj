@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -12,9 +12,10 @@
     <NoWarn>$(NoWarn);CA1016</NoWarn>
   </PropertyGroup>
 
-  <!-- Reference HoneyDrunk.Standards for local testing -->
+  <!-- Keep the normal source reference. The isolated package gate omits this build-only
+       reference so it cannot shadow the real package in the consumer test graph. -->
   <ItemGroup>
-    <ProjectReference Include="..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" PrivateAssets="all" Condition="'$(VerifyBuiltStandardsPackages)' != 'true'" />
   </ItemGroup>
 
 </Project>

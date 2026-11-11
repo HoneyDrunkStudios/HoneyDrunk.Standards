@@ -7,7 +7,7 @@ Open `HoneyDrunk.Standards.slnx` from the repository root. Production projects l
 
 [![Validate](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/HoneyDrunkStudios/HoneyDrunk.Standards/actions/workflows/validate-pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
+[![.NET 11](https://img.shields.io/badge/.NET-11.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/11.0)
 
 > **Build-transitive standards package** enforcing shared conventions, analyzers, and deterministic builds across HoneyDrunk Studios repositories.
 
@@ -339,3 +339,9 @@ HoneyDrunk.Standards is part of the **Hive** ecosystem - a collection of tools, 
 
 </div>
 
+
+### .NET 11 tooling and package compatibility
+
+The repository builds with SDK 11.0.100. Build-only Standards packages retain their .NET 10 dependency groups so both .NET 10 and .NET 11 consumers receive the canonical test stack. The analyzer and Unity profiles retain their supported targets.
+
+Run `bash tools/verify-package-consumers.sh` with SDKs 10.0.404 and 11.0.100 installed to pack locally and execute both consumer smoke tests on both runtimes. The check uses isolated package caches and source mapping so a published package cannot hide a local packaging regression. PR and release workflows require this check.

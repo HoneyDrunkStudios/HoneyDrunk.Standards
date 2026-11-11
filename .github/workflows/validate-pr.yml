@@ -10,6 +10,7 @@ on:
       - '**.slnx'
       - '**.props'
       - '**.targets'
+      - 'global.json'
       - '**/.editorconfig'
       - '**/stylecop.json'
       - '**/*.runsettings'
@@ -25,10 +26,15 @@ permissions:
   security-events: write # Required by the reusable PR Core CodeQL job
 
 jobs:
+  package-consumers:
+    uses: ./.github/workflows/package-consumers.yml
+    permissions:
+      contents: read
+
   pr-validation:
     uses: HoneyDrunkStudios/HoneyDrunk.Actions/.github/workflows/pr-core.yml@main
     with:
-      dotnet-version: '10.0.x'
+      dotnet-version: '11.0.100'
       configuration: 'Release'
       runs-on: 'ubuntu-latest'
       working-directory: '.'

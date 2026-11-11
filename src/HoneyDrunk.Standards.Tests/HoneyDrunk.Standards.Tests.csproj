@@ -17,6 +17,8 @@
     <RepositoryType>git</RepositoryType>
 
     <IsPackable>true</IsPackable>
+    <!-- Package-only project; execute its smoke tests through the real package consumer. -->
+    <IsTestProject>false</IsTestProject>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <NoWarn>$(NoWarn);NU5128;NU5100;CA1016</NoWarn>
@@ -28,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\Consumer.Sample\Consumer.Sample.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\HoneyDrunk.Standards\HoneyDrunk.Standards.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="none" />
     <PackageReference Include="xunit" Version="2.9.3" PrivateAssets="none" />

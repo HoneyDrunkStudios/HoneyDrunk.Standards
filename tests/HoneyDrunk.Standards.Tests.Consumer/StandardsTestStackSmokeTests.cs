@@ -3,7 +3,7 @@ using Consumer.Sample;
 using NSubstitute;
 using Xunit;
 
-namespace HoneyDrunk.Standards.Tests;
+namespace HoneyDrunk.Standards.Tests.Consumer;
 
 public sealed class StandardsTestStackSmokeTests
 {

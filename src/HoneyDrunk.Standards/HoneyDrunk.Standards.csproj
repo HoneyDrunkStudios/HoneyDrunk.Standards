@@ -31,7 +31,7 @@
 
   <!-- Version constants used by PackageReferences and analyzer embedding -->
   <PropertyGroup>
-    <_StyleCopPackageVersion>1.3.171-beta</_StyleCopPackageVersion>
+    <_StyleCopPackageVersion>1.3.180</_StyleCopPackageVersion>
     <_NetAnalyzersVersion>10.0.403</_NetAnalyzersVersion>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);HD_EmbedAnalyzerDlls</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>

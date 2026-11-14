@@ -121,14 +121,14 @@ Test projects should reference both packages:
 - `IsTestProject=true`
 - xUnit `2.9.3`
 - `xunit.runner.visualstudio` `4.0.1`
-- `Microsoft.NET.Test.Sdk` `18.11.0`
+- `Microsoft.NET.Test.Sdk` `18.12.0`
 - `NSubstitute` `6.2.0`
 - `AwesomeAssertions` `9.6.0`
 - `coverlet.collector` `10.1.0`
 
 Runtime projects must reference only `HoneyDrunk.Standards`, so they do not receive these test packages. Moq and FluentAssertions are intentionally absent per ADR-0047 D2.
 
-The 0.3.0 refresh retains the custom analyzer's Roslyn compiler API baseline at 4.14.0 for earlier .NET 10 compiler hosts. The existing StyleCop 1.2 beta remains in place because the stable release is older. Other analyzer and test-tool dependencies use the current stable releases recorded above and in the project files.
+The 0.3.0 refresh retains the custom analyzer's Roslyn compiler API baseline at 4.14.0 for earlier .NET 10 compiler hosts. StyleCop now uses stable 1.3.180 in place of the earlier 1.3 beta. Other analyzer and test-tool dependencies use the current stable releases recorded above and in the project files.
 
 ### 📊 Coverage Runsettings Templates
 

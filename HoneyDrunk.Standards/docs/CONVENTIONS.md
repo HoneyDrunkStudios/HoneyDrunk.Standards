@@ -582,6 +582,8 @@ Formatting, lint, deterministic schema checks and analyzer policy belong in CI. 
 
 ## Agent workflow and instruction files
 
+For products with a feature or behavior map, link it from the root `AGENTS.md`. Give each important route a fixture, a safe command, observable assertions and an evidence location. Update the map and the affected check together when the route, fixture or result changes. During review, compare the published route and command to the source and look for evidence of the changed behavior. Record the tested revision, working-tree changes, fixture boundary and unrun platforms with the result.
+
 Use one root `AGENTS.md` per repository as the shared entrypoint. Put scope, important boundaries, links to maintained standards and actual verification commands there. Keep deeper engineering detail in ordinary docs and current product specifications/ADRs/progress in their existing owners. Do not create a duplicate universal `SPEC.md`, `RULES.md` or roadmap. Such names are ordinary documents unless a specific tool is explicitly configured to read them.
 
 HoneyDrunk deliberately does not keep separate `CLAUDE.md`, `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md` or nested agent entrypoints. Tool compatibility is a trade-off, not proof that all clients load the root automatically:

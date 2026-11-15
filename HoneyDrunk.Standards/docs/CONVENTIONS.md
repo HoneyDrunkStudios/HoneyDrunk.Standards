@@ -459,6 +459,28 @@ Map every entity explicitly in its own Fluent configuration class: table, key, c
 
 Every application-owned SQL table and column needs accurate metadata describing meaning and relevant ownership/time semantics. Indexes need a demonstrated query or constraint. Keep schema, EF mappings and schema tests aligned. Where a SQL project/DACPAC owns schema, do not introduce EF migrations as a second owner. Preserve separately owned shared Audit and Outbox schema.
 
+### Bounded queries and incomplete evidence
+
+Define which records a result represents before limiting it. For a list of a workload's newest approvals, apply the workload predicate before ordering and taking the page; filtering an already limited global page can hide every relevant approval. Match searches against the full supported search fields before shortening returned text. Keep authorization predicates at their trusted boundary even when a provider also filters.
+
+Trace a claimed read bound through the provider. Taking 50 items after `ToListAsync` bounds the response, not the materialized source rows. Use an existing source-side ordered, limited operation when the workload requires one, with the intended direction and a deterministic tie-breaker. Taking the earliest 50 and reversing them does not produce the newest 50. State what the bound covers: limiting root rows does not also bound related graphs, database scanning/sorting or total work across pages. Verify the real provider and consumed package contract before proposing a caller change.
+
+An empty filtered page is not proof that no match exists. Prefer a source query scoped to the required records; otherwise follow the provider's continuation contract with bounded page sizes and an overall work/deadline budget. If a lookup must establish absence before creating or recovering a record, reach authoritative exhaustion or an equivalent source-side existence check first. A failed page or an exhausted budget leaves the answer incomplete; do not turn it into permission to create a duplicate. Even a complete read does not prevent a concurrent insert: preserve the owning write boundary's uniqueness or idempotency protection. For a deliberately partial display, expose that limitation instead of implying an exhaustive list. A full page without a continuation indicator may be incomplete; it does not prove that another record exists.
+
+Keep coverage claims tied to the evidence actually available. Retention that keeps only 1,000 runs cannot by itself establish complete totals for a window containing more runs. Preserve the required history or aggregates, or expose the supported coverage and its gaps. Likewise, statistics scoped to a whole project do not prove a selected producer's history, and rounded timestamps at a window boundary may be ambiguous. Preserve the provider's scope, precision and uncertainty through the response and its presentation; do not report an uncertain exclusion as a complete zero.
+
+Exercise the affected query boundary in the owning repository:
+
+| Scenario | Required observation |
+| --- | --- |
+| More than a page of unrelated newer records precedes one relevant record | The scoped query finds it, or the consumer explicitly reports incomplete coverage |
+| An idempotency/recovery match is on a later page, or that page fails | The existing record is reused; failure to establish absence does not create a duplicate |
+| A search term occurs beyond the returned excerpt | The full-field match remains discoverable while the returned excerpt stays bounded |
+| A large history contains equal ordering timestamps | The provider applies the intended order, tie-breaker and limit before materializing root matches; assert provider behavior, not just response length |
+| Retention removes part of a reporting window, or provider scope/precision cannot support a classification | Totals and classifications disclose the evidence boundary instead of claiming complete coverage |
+
+These are review and behavioral-test conventions, not analyzer enforcement. A method named `Take` cannot establish source translation, query intent or evidence completeness. Preserve documented best-effort reads and existing public contracts; broader provider or response changes belong in their owning repositories.
+
 ### Asynchrony and integration
 
 Use asynchronous I/O and propagate cancellation. Avoid `.Result`, `.Wait()` and `async void` except framework event handlers. Use injected `TimeProvider` at host-facing boundaries when time affects behavior; capture operation time once and pass it into pure rules. Keep provider SDKs inside their owning adapters. Verify real shared-node contracts and implementation rather than inferring availability from a name or catalog.
@@ -571,6 +593,8 @@ Inspect transactions, immutable history, concurrency tokens/leases, idempotency 
 ### Performance and operations
 
 Use a real changed execution path and expected workload to identify N+1 queries, missing pagination, unbounded queues/fan-out/retries, blocking I/O, hot-path allocations, resource leaks or unsafe cache invalidation. Recommend indexes or caching from demonstrated access patterns, not blanket rules. Keep useful diagnostic context without sensitive payloads or unbounded telemetry cardinality. Check actual caller permissions, workflow events/conditions, artifact provenance, rollout/rollback targets and resource ownership where delivery changes. Source validation does not establish live deployment, recovery or cost approval.
+
+Apply [bounded queries and incomplete evidence](#bounded-queries-and-incomplete-evidence) when a result is limited, paginated, filtered or aggregated from retained history. Check both source work and the truth of the consumer's completeness claim.
 
 ### Evidence and reporting
 
